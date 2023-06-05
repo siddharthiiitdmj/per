@@ -5,6 +5,10 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
+import { useSession } from 'next-auth/react'
+import { ReactNode } from 'react'
+import BlankLayout from 'src/@core/layouts/BlankLayout'
+
 const Home = () => {
   return (
     <Grid container spacing={6}>

@@ -27,11 +27,15 @@
       "apexcharts/*": [
         "./node_modules/apexcharts-clevision/*"
       ],
+      "next-auth": [
+        "./node_modules/next-auth"
+      ],
     }
   },
   "include": [
     "src",
-    "declaration.d.ts"
+    "declaration.d.ts",
+    "src/types/next-auth.d.ts",
   ],
   "exclude": [
     "node_modules"
