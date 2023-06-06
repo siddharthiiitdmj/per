@@ -28,10 +28,15 @@ import { Toaster } from 'react-hot-toast'
 // ** Component Imports
 import UserLayout from 'src/layouts/UserLayout'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
-import AclGuard from 'src/layouts/components/auth/UserAclGuard'
-import AuthGuard from 'src/layouts/components/auth/UserAuthGuard'
-import GuestGuard from 'src/layouts/components/auth/UserGuestGuard'
+// import AclGuard from 'src/layouts/components/auth/UserAclGuard'
+// import AuthGuard from 'src/layouts/components/auth/UserAuthGuard'
+// import GuestGuard from 'src/layouts/components/auth/UserGuestGuard'
 import { SessionProvider } from 'next-auth/react'
+
+import AclGuard from 'src/@core/components/auth/AclGuard'
+import AuthGuard from 'src/@core/components/auth/AuthGuard'
+import GuestGuard from 'src/@core/components/auth/GuestGuard'
+import { AuthProvider } from 'src/context/AuthContext'
 
 // ** Spinner Import
 import Spinner from 'src/@core/components/spinner'
@@ -125,7 +130,9 @@ const App = (props: ExtendedAppProps) => {
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
+      
       <SessionProvider session={pageProps.session}>
+      <AuthProvider>
         <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
           <SettingsConsumer>
             {({ settings }) => {
@@ -144,7 +151,9 @@ const App = (props: ExtendedAppProps) => {
             }}
           </SettingsConsumer>
         </SettingsProvider>
+        </AuthProvider>
       </SessionProvider>
+      
     </CacheProvider>
   )
 }

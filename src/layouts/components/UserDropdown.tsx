@@ -22,6 +22,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { useAuth } from 'src/hooks/useAuth'
 
 interface Props {
   settings: Settings
@@ -45,6 +46,8 @@ const UserDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const { logout } = useAuth()
+
 
   // ** Vars
   const { direction } = settings
@@ -76,9 +79,7 @@ const UserDropdown = (props: Props) => {
   }
 
   const handleLogout = () => {
-    signOut({ callbackUrl: '/', redirect: false }).then(() => {
-      router.asPath = '/'
-    })
+    logout()
     handleDropdownClose()
   }
 
