@@ -142,11 +142,12 @@ const LoginPage = () => {
     const { email, password } = data
     signIn('credentials', { email, password, redirect: false }).then(async res => {
       if (res && res.ok) {
-        const session = await getSession();
+        const session = await getSession()
         window.localStorage.setItem('userData', JSON.stringify(session?.user) || 'present')
+
         // const returnUrl = router.query.returnUrl
         // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-        router.push('/home')
+        router.push('/overview')
         window.location.reload()
       } else {
         setError('email', {

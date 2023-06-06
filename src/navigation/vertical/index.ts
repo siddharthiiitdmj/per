@@ -4,21 +4,41 @@ import { VerticalNavItemsType } from 'src/@core/layouts/types'
 const navigation = (): VerticalNavItemsType => {
   return [
     {
-      title: 'Home',
-      path: '/home',
-      icon: 'mdi:home-outline',
+      title: 'Overview',
+      path: '/overview',
+      icon: 'mdi:home-outline'
     },
     {
-      title: 'Second Page',
-      path: '/second-page',
-      icon: 'mdi:email-outline',
+      title: 'Devices',
+      path: '/devices',
+      icon: 'ph:devices-duotone'
     },
     {
-      path: '/acl',
+      path: '/events',
       action: 'read',
       subject: 'acl-page',
-      title: 'Access Control',
-      icon: 'mdi:shield-outline',
+      title: 'Events',
+      icon: 'mdi:events-check'
+    },
+    {
+      title: 'Users',
+      path: '/users',
+      icon: 'ph:users-duotone'
+    },
+    {
+      title: 'Integrations',
+      path: '/integrations',
+      icon: 'grommet-icons:connect'
+    },
+    {
+      title: 'Payments',
+      path: '/payments',
+      icon: 'fluent-mdl2:money'
+    },
+    {
+      title: 'Configurations',
+      path: '/configurations',
+      icon: 'icon-park-outline:config'
     }
   ]
 }

@@ -12,7 +12,6 @@ import { AuthValuesType, UserDataType } from './types'
 
 import { getSession, signIn, signOut, useSession } from 'next-auth/react'
 
-
 // ** Defaults
 const defaultProvider: AuthValuesType = {
   user: null,
@@ -76,13 +75,14 @@ const AuthProvider = ({ children }: Props) => {
         console.log(res)
         const session = await getSession()
         window.localStorage.setItem('userData', JSON.stringify(session?.user) || 'present')
+
         // const returnUrl = router.query.returnUrl
         // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-        router.push('/home')
+        router.push('/overview')
         window.location.reload()
       }
     })
-    console.log("shreyash")
+    console.log('shreyash')
   }
 
   const handleLogout = () => {
