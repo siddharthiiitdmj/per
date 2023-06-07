@@ -91,7 +91,7 @@ const AuthProvider = ({ children }: Props) => {
   const handleLogout = async () => {
     setUser(null)
     window.localStorage.removeItem('userData')
-    await signOut({ redirect: false }).then(()=>{
+    await signOut({ redirect: false }).then(() => {
       router.push('/login')
     })
   }

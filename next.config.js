@@ -6,6 +6,16 @@ const path = require('path')
 // Remove this if you're not using Fullcalendar features
 
 module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.example.com',
+        port: '',
+        pathname: '/account123/**'
+      }
+    ]
+  },
   trailingSlash: true,
   reactStrictMode: false,
   webpack: config => {

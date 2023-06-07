@@ -48,6 +48,9 @@ const UserDropdown = (props: Props) => {
   const router = useRouter()
   const { logout } = useAuth()
   const session = useSession()
+  console.log(session)
+
+  const userImg = session?.data?.user?.image ? session.data.user.image : '/images/avatars/1.png'
 
   // ** Vars
   const { direction } = settings
@@ -95,12 +98,7 @@ const UserDropdown = (props: Props) => {
           horizontal: 'right'
         }}
       >
-        <Avatar
-          alt='John Doe'
-          onClick={handleDropdownOpen}
-          sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
-        />
+        <Avatar alt='John Doe' onClick={handleDropdownOpen} sx={{ width: 40, height: 40 }} src={userImg} />
       </Badge>
       <Menu
         anchorEl={anchorEl}
@@ -120,7 +118,7 @@ const UserDropdown = (props: Props) => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar alt='John Doe' src={userImg} sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography sx={{ fontWeight: 600 }}>{session?.data?.user.name}</Typography>
@@ -131,7 +129,7 @@ const UserDropdown = (props: Props) => {
           </Box>
         </Box>
         <Divider sx={{ mt: '0 !important' }} />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/user-profile/profile')}>
           <Box sx={styles}>
             <Icon icon='mdi:account-outline' />
             Profile
@@ -150,7 +148,7 @@ const UserDropdown = (props: Props) => {
           </Box>
         </MenuItem>
         <Divider />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/pages/account-settings/account')}>
           <Box sx={styles}>
             <Icon icon='mdi:cog-outline' />
             Settings
