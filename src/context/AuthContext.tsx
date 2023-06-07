@@ -53,7 +53,7 @@ const AuthProvider = ({ children }: Props) => {
             })
             window.localStorage.setItem('userData', JSON.stringify(Session?.user))
             if (router.pathname.includes('login')) {
-              router.replace('/home')
+              router.replace('/overview')
             }
             setLoading(false)
           }
@@ -86,7 +86,6 @@ const AuthProvider = ({ children }: Props) => {
         window.location.reload()
       }
     })
-    console.log('shreyash')
   }
 
   const handleLogout = async () => {
