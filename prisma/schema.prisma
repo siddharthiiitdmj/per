@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid()) @db.Uuid
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  role           UserRole  @default(admin)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  accounts   Account[]
+  DeviceInfo DeviceInfo[]
+}
+
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model DeviceInfo {
+  UID          String   @id @db.Uuid
+  DeviceID     String   @db.Uuid
+  userID       String?  @db.Uuid
+  IP           String
+  isVPNSpoofed Boolean
+  isVirtualOS  Boolean
+  isEmulator   Boolean
+  isAppSpoofed Boolean
+  isAppPatched Boolean
+  isAppCloned  Boolean
+  Latitude     Float
+  Longitude    Float
+  OS           String
+  Kernel       String
+  devicemodel  String
+  devicename   String
+  nodename     String
+  createdAt    DateTime
+  updatedAt    DateTime
+  user         User?    @relation(fields: [userID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum UserRole {
+  admin
+  client
+}
