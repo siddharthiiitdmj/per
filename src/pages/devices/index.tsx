@@ -77,7 +77,7 @@ const TableStickyHeader = () => {
   useEffect(() => {
     setIsLoading(true)
     axios
-      .get('http://localhost:3000/api/fakedata/getdata')
+      .get('http://localhost:3000/api/fakedata/getdevices')
       .then(res => {
         const fetchedData = res.data as Data[]
 
