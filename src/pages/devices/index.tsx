@@ -14,31 +14,30 @@ import axios from 'axios'
 
 interface Column {
   id:
-    | 'uid'
-    | 'deviceId'
-    | 'os'
-    | 'kernel'
+    | 'UID'
+    | 'DeviceID'
+    | 'OS'
+    | 'Kernel'
     | 'isVPNSpoofed'
     | 'isVirtualOS'
-    | 'isAPPSpoofed'
-    | 'timestamp'
-    | 'deviceModel'
+    | 'isAppSpoofed'
+    | 'devicemodel'
   label: string
   minWidth?: number
   format?: (value: number) => string
 }
 
 const columns: readonly Column[] = [
-  { id: 'uid', label: 'uid' },
-  { id: 'deviceId', label: 'deviceId' },
+  { id: 'UID', label: 'UID' },
+  { id: 'DeviceID', label: 'DeviceID' },
   {
-    id: 'os',
-    label: 'os',
+    id: 'OS',
+    label: 'OS',
     format: (value: number) => value.toLocaleString('en-US')
   },
   {
-    id: 'kernel',
-    label: 'kernel',
+    id: 'Kernel',
+    label: 'Kernel',
     format: (value: number) => value.toLocaleString('en-US')
   },
   {
@@ -47,51 +46,50 @@ const columns: readonly Column[] = [
     format: (value: number) => value.toFixed(2)
   },
   { id: 'isVirtualOS', label: 'isVirtualOS' },
-  { id: 'isAPPSpoofed', label: 'isAPPSpoofed' },
+  { id: 'isAppSpoofed', label: 'isAppSpoofed' },
   {
-    id: 'deviceModel',
-    label: 'deviceModel',
+    id: 'devicemodel',
+    label: 'devicemodel',
     format: (value: number) => value.toLocaleString('en-US')
   },
-  { id: 'timestamp', label: 'timestamp' }
 ]
 
 interface Data {
-  uid: string
-  deviceId: string
-  os: string
-  kernel: number
+  UID: string
+  DeviceID: string
+  OS: string
+  Kernel: number
   isVPNSpoofed: boolean
   isVirtualOS: boolean
-  isAPPSpoofed: boolean
-  deviceModel: string
-  timestamp: Date
+  isAppSpoofed: boolean
+  devicemodel: string
 }
 
 function createData(
-  uid: string,
-  deviceId: string,
-  os: string,
-  kernel: number,
+  UID: string,
+  DeviceID: string,
+  OS: string,
+  Kernel: number,
   isVPNSpoofed: boolean,
   isVirtualOS: boolean,
-  isAPPSpoofed: boolean,
-  deviceModel: string,
-  timestamp: Date
+  isAppSpoofed: boolean,
+  devicemodel: string,
 ): Data {
-  return { uid, deviceId, os, kernel, isVPNSpoofed, isVirtualOS, isAPPSpoofed, deviceModel, timestamp }
+  return { UID, DeviceID, OS, Kernel, isVPNSpoofed, isVirtualOS, isAppSpoofed, devicemodel }
 }
 
 const TableStickyHeader = () => {
-  // const rows = [createData('uid_01', 'd_01', 'iOS', 4.45, true, true, false, 'iPhone', '2021-07-20T18:31:30.084Z')]
+  // const rows = [createData('UID_01', 'd_01', 'iOS', 4.45, true, true, false, 'iPhone', '2021-07-20T18:31:30.084Z')]
   const [deviceData, setDeviceData] = useState<Data[]>([])
   const [rows, setRows] = useState<Data[]>([])
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     axios
-      .get('http://localhost:3000/api/devices/')
+      .get('http://localhost:3000/api/fakedata/getdata')
       .then(res => {
         const fetchedData = res.data as Data[]
+        
         setDeviceData(fetchedData)
 
         return fetchedData
@@ -99,24 +97,20 @@ const TableStickyHeader = () => {
       .then(fetchedData => {
         const newRows = fetchedData.map(item =>
           createData(
-            item.uid,
-            item.deviceId,
-            item.os,
-            item.kernel,
+            item.UID,
+            item.DeviceID,
+            item.OS,
+            item.Kernel,
             item.isVPNSpoofed,
             item.isVirtualOS,
-            item.isAPPSpoofed,
-            item.deviceModel,
-            item.timestamp
+            item.isAppSpoofed,
+            item.devicemodel,
           )
         )
-
         return Promise.all(newRows)
       })
       .then(newRows => {
         setRows(newRows)
-        console.log('deviceData: ', typeof deviceData[0].timestamp)
-        console.log('typeof timestamp: ', typeof newRows[0].timestamp)
       })
       .catch(error => {
         console.error('Error fetching device data:', error)
@@ -125,7 +119,7 @@ const TableStickyHeader = () => {
 
   // ** States
   const [page, setPage] = useState<number>(0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(25)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -145,7 +139,6 @@ const TableStickyHeader = () => {
               {columns.map(column => (
                 <TableCell key={column.id} align='left' sx={{ minWidth: column.minWidth }}>
                   {column.label}
-                  {column.label === 'timestamp' ? <button>filter</button> : null}
                 </TableCell>
               ))}
             </TableRow>
@@ -153,7 +146,7 @@ const TableStickyHeader = () => {
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
               return (
-                <TableRow hover role='checkbox' tabIndex={-1} key={row.uid}>
+                <TableRow hover role='checkbox' tabIndex={-1} key={row.UID}>
                   {columns.map(column => {
                     const value = row[column.id]
 
