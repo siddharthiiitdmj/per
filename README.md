@@ -3,7 +3,7 @@
 To run the application, run following commands in order : 
 
 ```
-npm install
-npx prisma generate
-npm run dev
+yarn install
+yarn prisma generate
+yarn dev
 ```
