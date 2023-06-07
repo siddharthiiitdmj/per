@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent } from 'react'
+import { useState, ReactNode, MouseEvent, useEffect } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -45,6 +45,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+import getCurrentUser from 'src/actions/getCurrentUser'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -123,6 +124,7 @@ const LoginPage = () => {
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const { login } = useAuth()
+  
 
   // ** Vars
   const { skin } = settings
@@ -356,7 +358,7 @@ const LoginPage = () => {
                   <LinkStyled href='/register'>Create an account</LinkStyled>
                 </Typography>
               </Box>
-              {/* <Divider sx={{ my: theme => `${theme.spacing(5)} !important` }}>or</Divider>
+              <Divider sx={{ my: theme => `${theme.spacing(5)} !important` }}>or</Divider>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IconButton
                   href='/'
@@ -366,7 +368,7 @@ const LoginPage = () => {
                 >
                   <Icon icon='mdi:google' />
                 </IconButton>
-              </Box> */}
+              </Box>
             </form>
           </BoxWrapper>
         </Box>

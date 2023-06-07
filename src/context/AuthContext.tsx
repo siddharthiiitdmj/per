@@ -51,6 +51,10 @@ const AuthProvider = ({ children }: Props) => {
               username: 'johndoe',
               email: 'admin@materio.com'
             })
+            window.localStorage.setItem('userData', JSON.stringify(Session?.user))
+            if (router.pathname.includes('login')) {
+              router.replace('/home')
+            }
             setLoading(false)
           }
         })
@@ -85,11 +89,12 @@ const AuthProvider = ({ children }: Props) => {
     console.log('shreyash')
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setUser(null)
     window.localStorage.removeItem('userData')
-    signOut({ redirect: false })
-    router.push('/login')
+    await signOut({ redirect: false }).then(()=>{
+      router.push('/login')
+    })
   }
 
   const values = {
