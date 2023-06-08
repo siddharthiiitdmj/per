@@ -1,5 +1,6 @@
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
+import { omit } from 'lodash'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -21,7 +22,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         data: { image: imgSrc }
       })
 
-      return res.status(200).json(updatedUser)
+      //exclude password field from the response for security purposes
+      const userWithoutPassword = omit(updatedUser, 'hashedPassword')
+
+      return res.status(200).json(userWithoutPassword)
     }
 
     if (req.method === 'GET') {
