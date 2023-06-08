@@ -13,15 +13,7 @@ import TablePagination from '@mui/material/TablePagination'
 import axios from 'axios'
 
 interface Column {
-  id:
-    | 'UID'
-    | 'DeviceID'
-    | 'OS'
-    | 'Kernel'
-    | 'isVPNSpoofed'
-    | 'isVirtualOS'
-    | 'isAppSpoofed'
-    | 'devicemodel'
+  id: 'UID' | 'DeviceID' | 'OS' | 'Kernel' | 'isVPNSpoofed' | 'isVirtualOS' | 'isAppSpoofed' | 'devicemodel'
   label: string
   minWidth?: number
   format?: (value: number) => string
@@ -51,7 +43,7 @@ const columns: readonly Column[] = [
     id: 'devicemodel',
     label: 'devicemodel',
     format: (value: number) => value.toLocaleString('en-US')
-  },
+  }
 ]
 
 interface Data {
@@ -73,24 +65,21 @@ function createData(
   isVPNSpoofed: boolean,
   isVirtualOS: boolean,
   isAppSpoofed: boolean,
-  devicemodel: string,
+  devicemodel: string
 ): Data {
   return { UID, DeviceID, OS, Kernel, isVPNSpoofed, isVirtualOS, isAppSpoofed, devicemodel }
 }
 
 const TableStickyHeader = () => {
-  // const rows = [createData('UID_01', 'd_01', 'iOS', 4.45, true, true, false, 'iPhone', '2021-07-20T18:31:30.084Z')]
-  const [deviceData, setDeviceData] = useState<Data[]>([])
   const [rows, setRows] = useState<Data[]>([])
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
+    setIsLoading(true)
     axios
-      .get('http://localhost:3000/api/fakedata/getdata')
+      .get('http://localhost:3000/api/fakedata/getdevices')
       .then(res => {
         const fetchedData = res.data as Data[]
-        
-        setDeviceData(fetchedData)
 
         return fetchedData
       })
@@ -104,13 +93,15 @@ const TableStickyHeader = () => {
             item.isVPNSpoofed,
             item.isVirtualOS,
             item.isAppSpoofed,
-            item.devicemodel,
+            item.devicemodel
           )
         )
+
         return Promise.all(newRows)
       })
       .then(newRows => {
         setRows(newRows)
+        setIsLoading(false)
       })
       .catch(error => {
         console.error('Error fetching device data:', error)

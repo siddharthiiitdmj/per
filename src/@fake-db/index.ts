@@ -1,3 +1,6 @@
-import mock from './mock' 
+import mock from './mock'
 
- mock.onAny().passThrough()
+import './pages/pricing'
+import './pages/profile'
+
+mock.onAny().passThrough()
