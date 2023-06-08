@@ -11,5 +11,5 @@ yarn dev
 To get a lightweight GUI for viewing and editing database tables, run:
 
 ```
-npx prisma studio
+yarn prisma studio
 ```
