@@ -24,6 +24,8 @@ import * as yup from 'yup'
 import toast from 'react-hot-toast'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import axios from 'axios'
+import { getSession } from 'next-auth/react'
 
 interface State {
   showNewPassword: boolean
@@ -35,6 +37,12 @@ const defaultValues = {
   newPassword: '',
   currentPassword: '',
   confirmNewPassword: ''
+}
+
+interface FormData {
+  currentPassword: string
+  newPassword: string
+  confirmNewPassword: string
 }
 
 const schema = yup.object().shape({
@@ -66,6 +74,7 @@ const ChangePasswordCard = () => {
     reset,
     control,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm({ defaultValues, resolver: yupResolver(schema) })
 
@@ -81,9 +90,27 @@ const ChangePasswordCard = () => {
     setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword })
   }
 
-  const onPasswordFormSubmit = () => {
-    toast.success('Password Changed Successfully')
-    reset(defaultValues)
+  const onPasswordFormSubmit = async (data: FormData) => {
+    const { currentPassword, newPassword} = data
+    await getSession().then(session => {
+      const email = session?.user.email
+      axios
+        .post('/api/passchange', {
+          email,
+          currentPassword,
+          newPassword
+        })
+        .then(() => {
+          toast.success('Password Changed Successfully')
+          reset(defaultValues)
+        })
+        .catch(error => {
+          setError('currentPassword', {
+            type: 'manual',
+            message: `${error.response.data.error}`
+          })
+        })
+    })
   }
 
   return (
