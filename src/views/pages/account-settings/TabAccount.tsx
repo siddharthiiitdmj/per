@@ -1,5 +1,8 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent } from 'react'
+import { useState, ElementType, ChangeEvent, useEffect } from 'react'
+import axios from 'axios'
+
+import { useSession } from 'next-auth/react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -92,6 +95,10 @@ const TabAccount = () => {
   const [imgSrc, setImgSrc] = useState<string>('/images/avatars/1.png')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
 
+  const session = useSession()
+
+  const email = session?.data?.user?.email
+
   // ** Hooks
   const {
     control,
@@ -111,6 +118,21 @@ const TabAccount = () => {
     setSecondDialogOpen(true)
   }
 
+  useEffect(() => {
+    const postData = async () => {
+      try {
+        const response = await axios.post('http://localhost:3000/api/fakedata/getusers', {
+          email,
+          imgSrc
+        })
+        console.log('Response:', response.data)
+      } catch (error) {
+        console.error('Error:', error)
+      }
+    }
+
+    postData()
+  }, [imgSrc])
   const handleInputImageChange = (file: ChangeEvent) => {
     const reader = new FileReader()
     const { files } = file.target as HTMLInputElement
