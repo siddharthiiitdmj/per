@@ -1,5 +1,6 @@
 // ** React Imports
-import { useState, ChangeEvent, useEffect } from 'react'
+import { useState, ChangeEvent } from 'react'
+import axios from 'axios'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
@@ -10,7 +11,7 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
-import axios from 'axios'
+import { NextPageContext } from 'next/types'
 
 interface Column {
   id: 'UID' | 'DeviceID' | 'OS' | 'Kernel' | 'isVPNSpoofed' | 'isVirtualOS' | 'isAppSpoofed' | 'devicemodel'
@@ -70,44 +71,11 @@ function createData(
   return { UID, DeviceID, OS, Kernel, isVPNSpoofed, isVirtualOS, isAppSpoofed, devicemodel }
 }
 
-const TableStickyHeader = () => {
-  const [rows, setRows] = useState<Data[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+interface Props {
+  rows: Data[]
+}
 
-  useEffect(() => {
-    setIsLoading(true)
-    axios
-      .get('http://localhost:3000/api/fakedata/getdevices')
-      .then(res => {
-        const fetchedData = res.data as Data[]
-
-        return fetchedData
-      })
-      .then(fetchedData => {
-        const newRows = fetchedData.map(item =>
-          createData(
-            item.UID,
-            item.DeviceID,
-            item.OS,
-            item.Kernel,
-            item.isVPNSpoofed,
-            item.isVirtualOS,
-            item.isAppSpoofed,
-            item.devicemodel
-          )
-        )
-
-        return Promise.all(newRows)
-      })
-      .then(newRows => {
-        setRows(newRows)
-        setIsLoading(false)
-      })
-      .catch(error => {
-        console.error('Error fetching device data:', error)
-      })
-  }, [])
-
+const TableStickyHeader = ({ rows }: Props) => {
   // ** States
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(25)
@@ -174,6 +142,35 @@ const TableStickyHeader = () => {
       />
     </>
   )
+}
+
+export const getServerSideProps = async (context: NextPageContext) => {
+  try {
+    const res = await axios.get('http://localhost:3000/api/fakedata/getdevices')
+    const fetchedData = res.data as Data[]
+
+    const rows = fetchedData.map(item =>
+      createData(
+        item.UID,
+        item.DeviceID,
+        item.OS,
+        item.Kernel,
+        item.isVPNSpoofed,
+        item.isVirtualOS,
+        item.isAppSpoofed,
+        item.devicemodel
+      )
+    )
+
+    return {
+      props: { rows }
+    }
+  } catch (error) {
+    console.error('Error fetching device data:', error)
+    return {
+      props: { rows: [] }
+    }
+  }
 }
 
 export default TableStickyHeader
