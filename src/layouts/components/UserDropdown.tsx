@@ -48,7 +48,6 @@ const UserDropdown = (props: Props) => {
   const router = useRouter()
   const { logout } = useAuth()
   const session = useSession()
-  console.log(session)
 
   const userImg = session?.data?.user?.image ? session.data.user.image : '/images/avatars/1.png'
 

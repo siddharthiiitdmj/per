@@ -41,6 +41,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 // ** Styled Components
 const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -143,6 +144,7 @@ const Register = () => {
       .post('/api/register', data)
       .then(() => {
         router.replace('/login')
+        toast.success("Account created successfully, login to continue!")
       })
       .catch(error => {
         setError('email', {
