@@ -2,8 +2,6 @@
 import { useState, ElementType, ChangeEvent, useEffect } from 'react'
 import axios from 'axios'
 
-import { useSession } from 'next-auth/react'
-
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -92,12 +90,12 @@ const TabAccount = () => {
   const [inputValue, setInputValue] = useState<string>('')
   const [userInput, setUserInput] = useState<string>('yes')
   const [formData, setFormData] = useState<Data>(initialData)
-  const [imgSrc, setImgSrc] = useState<string>('/images/avatars/1.png')
+  const [imgSrc, setImgSrc] = useState<string>('')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
 
-  const session = useSession()
-
-  const email = session?.data?.user?.email
+  const storedUserData = localStorage.getItem('userData')
+  const userData = JSON.parse(storedUserData)
+  const email = userData?.email
 
   // ** Hooks
   const {
@@ -119,19 +117,21 @@ const TabAccount = () => {
   }
 
   useEffect(() => {
-    const postData = async () => {
-      try {
-        const response = await axios.post('http://localhost:3000/api/fakedata/getusers', {
-          email,
-          imgSrc
-        })
-        console.log('Response:', response.data)
-      } catch (error) {
-        console.error('Error:', error)
+    if (imgSrc !== '') {
+      const postData = async () => {
+        try {
+          const response = await axios.post('http://localhost:3000/api/fakedata/getusers', {
+            email,
+            imgSrc
+          })
+          console.log('Response:', response.data)
+        } catch (error) {
+          console.error('Error:', error)
+        }
       }
-    }
 
-    postData()
+      postData()
+    }
   }, [imgSrc])
   const handleInputImageChange = (file: ChangeEvent) => {
     const reader = new FileReader()
@@ -162,7 +162,7 @@ const TabAccount = () => {
           <form>
             <CardContent sx={{ pb: theme => `${theme.spacing(10)}` }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ImgStyled src={imgSrc} alt='Profile Pic' />
+                <ImgStyled src={imgSrc ? imgSrc : '/images/avatars/1.png'} alt='Profile Pic' />
                 <div>
                   <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
                     Upload New Photo
