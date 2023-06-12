@@ -141,10 +141,10 @@ const Register = () => {
   const onSubmit = (data: FormData) => {
     const { name, email, password } = data
     axios
-      .post('/api/register', data)
+      .post('/api/users/register', data)
       .then(() => {
         router.replace('/login')
-        toast.success("Account created successfully, login to continue!")
+        toast.success('Account created successfully, login to continue!')
       })
       .catch(error => {
         setError('email', {
@@ -272,13 +272,7 @@ const Register = () => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
-                      autoFocus
-                      label='Name'
-                      value={value}
-                      onBlur={onBlur}
-                      onChange={onChange}
-                    />
+                    <TextField autoFocus label='Name' value={value} onBlur={onBlur} onChange={onChange} />
                   )}
                 />
                 {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}

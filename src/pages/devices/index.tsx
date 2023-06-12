@@ -146,7 +146,7 @@ const TableStickyHeader = ({ rows }: Props) => {
 
 export const getServerSideProps = async (context: NextPageContext) => {
   try {
-    const res = await axios.get('http://localhost:3000/api/fakedata/getdevices')
+    const res = await axios.get('http://localhost:3000/api/devices/all')
     const fetchedData = res.data as Data[]
 
     const rows = fetchedData.map(item =>
@@ -167,6 +167,7 @@ export const getServerSideProps = async (context: NextPageContext) => {
     }
   } catch (error) {
     console.error('Error fetching device data:', error)
+
     return {
       props: { rows: [] }
     }

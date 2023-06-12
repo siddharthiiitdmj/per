@@ -91,11 +91,11 @@ const ChangePasswordCard = () => {
   }
 
   const onPasswordFormSubmit = async (data: FormData) => {
-    const { currentPassword, newPassword} = data
+    const { currentPassword, newPassword } = data
     await getSession().then(session => {
       const email = session?.user.email
       axios
-        .post('/api/passchange', {
+        .post('/api/users/passchange', {
           email,
           currentPassword,
           newPassword

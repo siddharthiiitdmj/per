@@ -13,7 +13,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import { NextPageContext } from 'next/types'
 
-
 interface Column {
   id: 'id' | 'name' | 'email' | 'role' | 'createdAt'
   label: string
@@ -126,14 +125,14 @@ const TableStickyHeader = ({ rows }: Props) => {
   )
 }
 
-
 export const getServerSideProps = async (context: NextPageContext) => {
   try {
-    const res = await axios.get('http://localhost:3000/api/fakedata/getusers')
+    const res = await axios.get('http://localhost:3000/api/users/all')
     const fetchedData = res.data as Data[]
 
     const rows = fetchedData.map(item => {
       const createdAt = new Date(item.createdAt).toISOString() // Convert to ISO 8601 string
+
       return createData(item.id, item.name, item.email, item.role, createdAt)
     })
 
@@ -144,6 +143,7 @@ export const getServerSideProps = async (context: NextPageContext) => {
     }
   } catch (error) {
     console.error('Error fetching user data:', error)
+
     return {
       props: { rows: [] }
     }
