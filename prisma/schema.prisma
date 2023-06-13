@@ -18,8 +18,9 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  accounts   Account[]
-  DeviceInfo DeviceInfo[]
+  accounts    Account[]
+  DeviceInfo  DeviceInfo[]
+  UserProfile UserProfile[]
 }
 
 model Account {
@@ -41,26 +42,30 @@ model Account {
 }
 
 model DeviceInfo {
-  UID          String   @id @db.Uuid
-  DeviceID     String   @db.Uuid
-  userID       String?  @db.Uuid
-  IP           String
-  isVPNSpoofed Boolean
-  isVirtualOS  Boolean
-  isEmulator   Boolean
-  isAppSpoofed Boolean
-  isAppPatched Boolean
-  isAppCloned  Boolean
-  Latitude     Float
-  Longitude    Float
-  OS           String
-  Kernel       String
-  devicemodel  String
-  devicename   String
-  nodename     String
-  createdAt    DateTime
-  updatedAt    DateTime
-  user         User?    @relation(fields: [userID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UID               String   @id @db.Uuid
+  DeviceID          String   @db.Uuid
+  userID            String?  @db.Uuid
+  IP                String
+  isVPNSpoofed      Boolean
+  isVirtualOS       Boolean
+  isEmulator        Boolean
+  isAppSpoofed      Boolean
+  isAppPatched      Boolean
+  isAppCloned       Boolean
+  Latitude          Float
+  Longitude         Float
+  OS                String
+  Kernel            String
+  devicemodel       String
+  devicename        String
+  nodename          String
+  OS_version        String
+  Screen_resolution String
+  Cellular_network  String
+  Wifi_network      String
+  createdAt         DateTime
+  updatedAt         DateTime
+  user              User?    @relation(fields: [userID], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {
