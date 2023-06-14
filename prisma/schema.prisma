@@ -68,6 +68,22 @@ model DeviceInfo {
   user              User?    @relation(fields: [userID], references: [id], onDelete: Cascade)
 }
 
+model UserProfile {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid @unique
+  email String @unique
+  firstName String 
+  lastName String
+  organisation String
+  phoneNumber String
+  address String
+  state String
+  zipcode String
+  country String
+  language String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 enum UserRole {
   admin
   client
