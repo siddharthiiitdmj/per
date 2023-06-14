@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const { email, imgSrc } = req.body
       if (!email || !imgSrc) {
         return res.status(400).json({
-          message: 'invalid payload'
+          message: 'invalid payload 2'
         })
       }
 
@@ -31,13 +31,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const userWithoutPassword = omit(updatedUser, 'hashedPassword')
 
       return res.status(200).json(userWithoutPassword)
-    }
-
-    if (req.method === 'GET') {
-      const { email } = req.body
+    } else if (req.method === 'GET') {
+      const { email } = req.query
       if (!email) {
         return res.status(400).json({
-          message: 'invalid payload'
+          message: 'invalid query'
         })
       }
 

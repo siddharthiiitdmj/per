@@ -12,6 +12,11 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import { NextPageContext } from 'next/types'
+import SelectWithDialog from 'src/views/forms/form-elements/select/SelectWithDialog'
+import { useTheme } from '@mui/material/styles'
+
+// Third party imports
+import { ReactDatePickerProps } from 'react-datepicker'
 
 interface Column {
   id: 'UID' | 'DeviceID' | 'OS' | 'Kernel' | 'isVPNSpoofed' | 'isVirtualOS' | 'isAppSpoofed' | 'devicemodel'
@@ -79,6 +84,7 @@ const TableStickyHeader = ({ rows }: Props) => {
   // ** States
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(25)
+  const [rowData, setRowData] = useState(rows)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -89,8 +95,15 @@ const TableStickyHeader = ({ rows }: Props) => {
     setPage(0)
   }
 
+  const theme = useTheme()
+  const { direction } = theme
+  const popperPlacement: ReactDatePickerProps['popperPlacement'] = direction === 'ltr' ? 'bottom-start' : 'bottom-end'
+
   return (
     <>
+      <div style={{ marginBottom: '1rem' }}>
+        <SelectWithDialog popperPlacement={popperPlacement} setRowData={setRowData} createData={createData} />
+      </div>
       <TableContainer component={Paper} sx={{ maxHeight: 580 }}>
         <Table stickyHeader aria-label='sticky table'>
           <TableHead>
@@ -103,7 +116,7 @@ const TableStickyHeader = ({ rows }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+            {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
               return (
                 <TableRow hover role='checkbox' tabIndex={-1} key={row.UID}>
                   {columns.map(column => {
