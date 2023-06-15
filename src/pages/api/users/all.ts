@@ -5,7 +5,20 @@ import { omit } from 'lodash'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === 'GET') {
-      const users = await prisma.user.findMany()
+      const { startDate, endDate } = req.query
+
+      const filters: any = {}
+
+      if (startDate && endDate) {
+        filters.updatedAt = {
+          gte: new Date(startDate),
+          lte: new Date(endDate)
+        }
+      }
+
+      const users = await prisma.user.findMany({
+        where: filters
+      })
 
       const usersWithoutPassword = users.map(user => omit(user, 'hashedPassword'))
 

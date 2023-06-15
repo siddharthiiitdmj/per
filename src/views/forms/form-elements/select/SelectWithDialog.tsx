@@ -32,7 +32,7 @@ interface PickerProps {
   start: Date | number
 }
 
-const SelectWithDialog = ({ popperPlacement, setRowData, createData }) => {
+const SelectWithDialog = ({ popperPlacement, setRowData, createData, type }) => {
   // ** State
   const [open, setOpen] = useState<boolean>(false)
   const [startDate, setStartDate] = useState<DateType>(new Date())
@@ -77,23 +77,34 @@ const SelectWithDialog = ({ popperPlacement, setRowData, createData }) => {
 
     // console.log(sdate, typeof sdate)
     // console.log(edate, typeof edate)
+    let rows
+    if (type === 'devices') {
+      const res = await axios.get(`http://localhost:3000/api/devices/all?startDate=${sdate}&endDate=${edate}&os=${OS}`)
 
-    const res = await axios.get(`http://localhost:3000/api/devices/all?startDate=${sdate}&endDate=${edate}&os=${OS}`)
+      const fetchedData = res.data
 
-    const fetchedData = res.data
-
-    const rows = fetchedData.map(item =>
-      createData(
-        item.UID,
-        item.DeviceID,
-        item.OS,
-        item.Kernel,
-        item.isVPNSpoofed,
-        item.isVirtualOS,
-        item.isAppSpoofed,
-        item.devicemodel
+      rows = fetchedData.map(item =>
+        createData(
+          item.UID,
+          item.DeviceID,
+          item.OS,
+          item.Kernel,
+          item.isVPNSpoofed,
+          item.isVirtualOS,
+          item.isAppSpoofed,
+          item.devicemodel
+        )
       )
-    )
+    } else if (type === 'users') {
+      const res = await axios.get(`http://localhost:3000/api/users/all?startDate=${sdate}&endDate=${edate}`)
+      const fetchedData = res.data
+
+      rows = fetchedData.map(item => {
+        const createdAt = new Date(item.createdAt).toISOString() // Convert to ISO 8601 string
+
+        return createData(item.id, item.name, item.email, item.role, createdAt)
+      })
+    }
     setRowData(rows)
   }
 
@@ -106,21 +117,23 @@ const SelectWithDialog = ({ popperPlacement, setRowData, createData }) => {
         <DialogTitle>Select filters</DialogTitle>
         <DialogContent sx={{ pt: theme => `${theme.spacing(2)} !important` }}>
           <form>
-            <FormControl sx={{ mr: 4, mb: 4 }}>
-              <InputLabel id='demo-dialog-select-label'>OS</InputLabel>
-              <Select
-                label='Age'
-                labelId='demo-dialog-select-label'
-                id='demo-dialog-select'
-                defaultValue=''
-                onChange={handleOsChange}
-                value={OS}
-              >
-                <MenuItem value={'All'}>All</MenuItem>
-                <MenuItem value={'Android'}>Android</MenuItem>
-                <MenuItem value={'iOS'}>iOS</MenuItem>
-              </Select>
-            </FormControl>
+            {type === 'devices' && (
+              <FormControl sx={{ mr: 4, mb: 4 }}>
+                <InputLabel id='demo-dialog-select-label'>OS</InputLabel>
+                <Select
+                  label='Age'
+                  labelId='demo-dialog-select-label'
+                  id='demo-dialog-select'
+                  defaultValue=''
+                  onChange={handleOsChange}
+                  value={OS}
+                >
+                  <MenuItem value={'All'}>All</MenuItem>
+                  <MenuItem value={'Android'}>Android</MenuItem>
+                  <MenuItem value={'iOS'}>iOS</MenuItem>
+                </Select>
+              </FormControl>
+            )}
 
             {/* <InputLabel htmlFor='outlined-age-native-simple'>Date Range</InputLabel> */}
             <DatePickerWrapper>

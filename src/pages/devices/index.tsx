@@ -102,7 +102,12 @@ const TableStickyHeader = ({ rows }: Props) => {
   return (
     <>
       <div style={{ marginBottom: '1rem' }}>
-        <SelectWithDialog popperPlacement={popperPlacement} setRowData={setRowData} createData={createData} />
+        <SelectWithDialog
+          popperPlacement={popperPlacement}
+          setRowData={setRowData}
+          createData={createData}
+          type='devices'
+        />
       </div>
       <TableContainer component={Paper} sx={{ maxHeight: 580 }}>
         <Table stickyHeader aria-label='sticky table'>
@@ -147,7 +152,7 @@ const TableStickyHeader = ({ rows }: Props) => {
       <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100]}
         component='div'
-        count={rows.length}
+        count={rowData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
