@@ -137,15 +137,15 @@ const TabSecurity = () => {
       <Grid item xs={12}>
         <ChangePasswordCard />
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <TwoFactorAuthentication />
       </Grid>
       <Grid item xs={12}>
         <CreateApiKey />
-      </Grid>
+      </Grid> */}
 
       {/* API Key List & Access Card*/}
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Card>
           <CardHeader title='API Key List & Access' />
           <CardContent>
@@ -184,7 +184,7 @@ const TabSecurity = () => {
             })}
           </CardContent>
         </Card>
-      </Grid>
+      </Grid> */}
 
       {/* Recent Devices Card*/}
       <Grid item xs={12}>
