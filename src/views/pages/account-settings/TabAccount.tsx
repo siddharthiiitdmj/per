@@ -29,35 +29,31 @@ import { useForm, Controller } from 'react-hook-form'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { getSession } from 'next-auth/react'
+import toast from 'react-hot-toast'
 
 interface Data {
-  email: string
   state: string
   address: string
   country: string
   lastName: string
-  currency: string
   language: string
-  timezone: string
   firstName: string
-  organization: string
-  number: number | string
-  zipCode: number | string
+  organisation: string
+  phoneNumber: number | string
+  zipcode: number | string
 }
 
 const initialData: Data = {
   state: '',
-  number: '',
+  phoneNumber: '',
   address: '',
-  zipCode: '',
-  lastName: 'Doe',
-  currency: 'usd',
-  firstName: 'John',
-  language: 'arabic',
-  timezone: 'gmt-12',
-  country: 'australia',
-  email: 'john.doe@example.com',
-  organization: 'ThemeSelection'
+  zipcode: '',
+  lastName: '',
+  firstName: '',
+  language: '',
+  country: '',
+  organisation: ''
 }
 
 const ImgStyled = styled('img')(({ theme }) => ({
@@ -93,7 +89,7 @@ const TabAccount = () => {
   const [imgSrc, setImgSrc] = useState<string>('')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
 
-  const storedUserData = localStorage.getItem('userData')
+  const storedUserData = localStorage.getItem('userData') as string
   const userData = JSON.parse(storedUserData)
   const email = userData?.email
 
@@ -110,6 +106,25 @@ const TabAccount = () => {
 
   const onSubmit = () => setOpen(true)
 
+  const onFormSubmit = async () => {
+    await getSession().then(session => {
+      const email = session?.user.email
+      axios
+        .post('/api/updateprofile', {
+          email,
+          ...formData
+        })
+        .then(() => {
+          toast.success('Profile Updated Successfully')
+          setFormData(initialData)
+          window.location.reload()
+        })
+        .catch(error => {
+          toast.error(`${error.response.data.error}`)
+        })
+    })
+  }
+
   const handleConfirmation = (value: string) => {
     handleClose()
     setUserInput(value)
@@ -117,10 +132,30 @@ const TabAccount = () => {
   }
 
   useEffect(() => {
+    const getUserProfile = async () => {
+      await getSession().then(async session => {
+        const email = session?.user.email
+        try {
+          const response = await axios.get('http://localhost:3000/api/getuserprofile', {
+            params: {
+              email: email
+            }
+          });
+          setFormData(response.data)
+          console.log('Response:', response.data)
+        } catch (error) {
+          console.error('Error:', error)
+        }
+      })
+    }
+    getUserProfile();
+  },[initialData])
+
+  useEffect(() => {
     if (imgSrc !== '') {
       const postData = async () => {
         try {
-          const response = await axios.post('http://localhost:3000/api/fakedata/getusers', {
+          const response = await axios.post('http://localhost:3000/api/users/me', {
             email,
             imgSrc
           })
@@ -204,7 +239,7 @@ const TabAccount = () => {
                     onChange={e => handleFormChange('lastName', e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     type='email'
@@ -213,14 +248,14 @@ const TabAccount = () => {
                     placeholder='john.doe@example.com'
                     onChange={e => handleFormChange('email', e.target.value)}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label='Organization'
-                    placeholder='ThemeSelection'
-                    value={formData.organization}
-                    onChange={e => handleFormChange('organization', e.target.value)}
+                    placeholder=''
+                    value={formData.organisation}
+                    onChange={e => handleFormChange('organisation', e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -228,9 +263,9 @@ const TabAccount = () => {
                     fullWidth
                     type='number'
                     label='Phone Number'
-                    value={formData.number}
-                    placeholder='202 555 0111'
-                    onChange={e => handleFormChange('number', e.target.value)}
+                    value={formData.phoneNumber}
+                    placeholder=''
+                    onChange={e => handleFormChange('phoneNumber', e.target.value)}
                     InputProps={{ startAdornment: <InputAdornment position='start'>US (+1)</InputAdornment> }}
                   />
                 </Grid>
@@ -255,46 +290,31 @@ const TabAccount = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    type='number'
                     label='Zip Code'
                     placeholder='231465'
-                    value={formData.zipCode}
-                    onChange={e => handleFormChange('zipCode', e.target.value)}
+                    value={formData.zipcode}
+                    onChange={e => handleFormChange('zipcode', e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Country</InputLabel>
-                    <Select
-                      label='Country'
-                      value={formData.country}
-                      onChange={e => handleFormChange('country', e.target.value)}
-                    >
-                      <MenuItem value='australia'>Australia</MenuItem>
-                      <MenuItem value='canada'>Canada</MenuItem>
-                      <MenuItem value='france'>France</MenuItem>
-                      <MenuItem value='united-kingdom'>United Kingdom</MenuItem>
-                      <MenuItem value='united-states'>United States</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <TextField
+                    fullWidth
+                    label='Country'
+                    placeholder='US'
+                    value={formData.country}
+                    onChange={e => handleFormChange('country', e.target.value)}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Language</InputLabel>
-                    <Select
-                      label='Language'
-                      value={formData.language}
-                      onChange={e => handleFormChange('language', e.target.value)}
-                    >
-                      <MenuItem value='arabic'>Arabic</MenuItem>
-                      <MenuItem value='english'>English</MenuItem>
-                      <MenuItem value='french'>French</MenuItem>
-                      <MenuItem value='german'>German</MenuItem>
-                      <MenuItem value='portuguese'>Portuguese</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <TextField
+                    fullWidth
+                    label='Language'
+                    placeholder='English'
+                    value={formData.language}
+                    onChange={e => handleFormChange('language', e.target.value)}
+                  />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel>Timezone</InputLabel>
                     <Select
@@ -321,8 +341,8 @@ const TabAccount = () => {
                       <MenuItem value='gmt-04-clp'>(GMT-04:00) Caracas, La Paz</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                </Grid> */}
+                {/* <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel>Currency</InputLabel>
                     <Select
@@ -336,10 +356,10 @@ const TabAccount = () => {
                       <MenuItem value='bitcoin'>Bitcoin</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12}>
-                  <Button variant='contained' sx={{ mr: 4 }}>
+                  <Button variant='contained' sx={{ mr: 4 }} onClick={onFormSubmit}>
                     Save Changes
                   </Button>
                   <Button type='reset' variant='outlined' color='secondary' onClick={() => setFormData(initialData)}>
@@ -353,7 +373,7 @@ const TabAccount = () => {
       </Grid>
 
       {/* Delete Account Card */}
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Card>
           <CardHeader title='Delete Account' />
           <CardContent>
@@ -392,10 +412,10 @@ const TabAccount = () => {
             </form>
           </CardContent>
         </Card>
-      </Grid>
+      </Grid> */}
 
       {/* Deactivate Account Dialogs */}
-      <Dialog fullWidth maxWidth='xs' open={open} onClose={handleClose}>
+      {/* <Dialog fullWidth maxWidth='xs' open={open} onClose={handleClose}>
         <DialogContent
           sx={{
             pb: theme => `${theme.spacing(6)} !important`,
@@ -474,7 +494,7 @@ const TabAccount = () => {
             OK
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </Grid>
   )
 }

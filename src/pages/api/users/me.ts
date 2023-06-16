@@ -6,6 +6,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === 'POST') {
       const { email, imgSrc } = req.body
+      if (!email || !imgSrc) {
+        return res.status(400).json({
+          message: 'invalid payload 2'
+        })
+      }
 
       // Find the user with the provided email
       const user = await prisma.user.findUnique({
@@ -26,12 +31,25 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const userWithoutPassword = omit(updatedUser, 'hashedPassword')
 
       return res.status(200).json(userWithoutPassword)
-    }
+    } else if (req.method === 'GET') {
+      const { email } = req.query
+      if (!email) {
+        return res.status(400).json({
+          message: 'invalid query'
+        })
+      }
 
-    if (req.method === 'GET') {
-      const users = await prisma.user.findMany()
+      const user = await prisma.user.findUnique({
+        where: { email: email }
+      })
 
-      return res.status(200).json(users)
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' })
+      }
+
+      const userWithoutPassword = omit(user, 'hashedPassword')
+
+      return res.status(200).json(userWithoutPassword)
     }
   } catch (err) {
     console.error(err)
