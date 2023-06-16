@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 // ** Types
 import { AuthValuesType, UserDataType } from './types'
 
-import { getSession, signIn, signOut} from 'next-auth/react'
+import { getSession, signIn, signOut } from 'next-auth/react'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -73,7 +73,7 @@ const AuthProvider = ({ children }: Props) => {
   const handleLogin = async () => {
     await signIn('google').then(async res => {
       if (res && res.ok) {
-        console.log(res)
+        // console.log(res)
         const session = await getSession()
         window.localStorage.setItem('userData', JSON.stringify(session?.user) || 'present')
 

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { forwardRef, useState } from 'react'
 
 // ** MUI Imports
+import { SelectChangeEvent } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -32,14 +33,24 @@ interface PickerProps {
   start: Date | number
 }
 
-const SelectWithDialog = ({ popperPlacement, setRowData, createData, type }) => {
+const SelectWithDialog = ({
+  popperPlacement,
+  setRowData,
+  createData,
+  type
+}: {
+  popperPlacement: any
+  setRowData: any
+  createData: any
+  type: string
+}) => {
   // ** State
   const [open, setOpen] = useState<boolean>(false)
   const [startDate, setStartDate] = useState<DateType>(new Date())
   const [endDate, setEndDate] = useState<DateType>(addDays(new Date(), 15))
   const [OS, setOS] = useState('')
 
-  const handleOsChange = event => {
+  const handleOsChange = (event: SelectChangeEvent<string>) => {
     setOS(event.target.value)
   }
 
@@ -72,8 +83,8 @@ const SelectWithDialog = ({ popperPlacement, setRowData, createData, type }) => 
     setOpen(false)
 
     // const sdate = new Date(startDate)
-    const sdate = startDate.toISOString()
-    const edate = endDate.toISOString()
+    const sdate = startDate?.toISOString()
+    const edate = endDate?.toISOString()
 
     // console.log(sdate, typeof sdate)
     // console.log(edate, typeof edate)
@@ -83,7 +94,7 @@ const SelectWithDialog = ({ popperPlacement, setRowData, createData, type }) => 
 
       const fetchedData = res.data
 
-      rows = fetchedData.map(item =>
+      rows = fetchedData.map((item: any) =>
         createData(
           item.UID,
           item.DeviceID,
@@ -99,7 +110,7 @@ const SelectWithDialog = ({ popperPlacement, setRowData, createData, type }) => 
       const res = await axios.get(`http://localhost:3000/api/users/all?startDate=${sdate}&endDate=${edate}`)
       const fetchedData = res.data
 
-      rows = fetchedData.map(item => {
+      rows = fetchedData.map((item: any) => {
         const createdAt = new Date(item.createdAt).toISOString() // Convert to ISO 8601 string
 
         return createData(item.id, item.name, item.email, item.role, createdAt)
