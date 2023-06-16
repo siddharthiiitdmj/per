@@ -149,7 +149,7 @@ const Register = () => {
   const onSubmit = (data: FormData) => {
     const { name, email, password } = data
     axios
-      .post('/api/register', data)
+      .post('/api/users/register', data)
       .then(() => {
         router.replace('/login')
         toast.success('Account created successfully, login to continue!')

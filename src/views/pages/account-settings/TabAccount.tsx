@@ -155,7 +155,7 @@ const TabAccount = () => {
     if (imgSrc !== '') {
       const postData = async () => {
         try {
-          const response = await axios.post('http://localhost:3000/api/fakedata/getusers', {
+          const response = await axios.post('http://localhost:3000/api/users/me', {
             email,
             imgSrc
           })
