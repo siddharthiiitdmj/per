@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const calculateCounts = (filter: string) => {
       filterFields.forEach(field => {
-        const count: number = devices.filter(device => device[field] && device.OS === filter).length
+        const count: number = devices.filter((device: DeviceInfo) => device[field as keyof DeviceInfo] && device.OS === filter).length
         filterCounts[filter][field] = count
       })
     }

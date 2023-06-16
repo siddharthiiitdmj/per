@@ -11,8 +11,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (startDate && endDate) {
         filters.updatedAt = {
-          gte: new Date(startDate),
-          lte: new Date(endDate)
+          gte: new Date(startDate[0]),
+          lte: new Date(endDate[0])
         }
       }
 
@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         where: filters
       })
 
-      const usersWithoutPassword = users.map(user => omit(user, 'hashedPassword'))
+      const usersWithoutPassword = users.map((user: any) => omit(user, 'hashedPassword'))
 
       return res.status(200).json(usersWithoutPassword)
     } else {

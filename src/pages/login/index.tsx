@@ -1,40 +1,36 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent, useEffect } from 'react'
+import { ReactNode, useState } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
 
 // ** MUI Components
-import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
 import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import Box, { BoxProps } from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import FormControl from '@mui/material/FormControl'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import { styled, useTheme } from '@mui/material/styles'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
-import Typography, { TypographyProps } from '@mui/material/Typography'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import FormHelperText from '@mui/material/FormHelperText'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import InputLabel from '@mui/material/InputLabel'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import TextField from '@mui/material/TextField'
+import Typography, { TypographyProps } from '@mui/material/Typography'
+import { styled, useTheme } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Third Party Imports
-import * as yup from 'yup'
-import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm } from 'react-hook-form'
+import * as yup from 'yup'
 
 // ** Hooks
-import { useRouter } from 'next/router'
 import { getSession, signIn } from 'next-auth/react'
-import useBgColor from 'src/@core/hooks/useBgColor'
-import { useSettings } from 'src/@core/hooks/useSettings'
+import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 
 // ** Configs
@@ -44,42 +40,9 @@ import themeConfig from 'src/configs/themeConfig'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
-import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
-import CardContent from '@mui/material/CardContent'
 import MuiCard, { CardProps } from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
-
-// ** Styled Components
-const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: theme.spacing(20),
-  paddingRight: '0 !important',
-  [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(10)
-  }
-}))
-
-const LoginIllustration = styled('img')(({ theme }) => ({
-  maxWidth: '48rem',
-  [theme.breakpoints.down('lg')]: {
-    maxWidth: '35rem'
-  }
-}))
-
-const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  width: '100%',
-  [theme.breakpoints.up('md')]: {
-    maxWidth: 450
-  }
-}))
-
-const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  [theme.breakpoints.down('xl')]: {
-    width: '100%'
-  },
-  [theme.breakpoints.down('md')]: {
-    maxWidth: 400
-  }
-}))
 
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
@@ -126,13 +89,7 @@ const LoginPage = () => {
   // ** Hooks
   const router = useRouter()
   const theme = useTheme()
-  const bgColors = useBgColor()
-  const { settings } = useSettings()
-  const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const { login } = useAuth()
-
-  // ** Vars
-  const { skin } = settings
 
   const {
     control,
@@ -164,8 +121,6 @@ const LoginPage = () => {
       }
     })
   }
-
-  const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
 
   return (
     <Box className='content-center'>

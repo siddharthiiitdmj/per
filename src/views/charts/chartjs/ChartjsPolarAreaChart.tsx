@@ -44,9 +44,9 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
     setOS(event.target.value as string)
   }
 
-  const handleActiveDate = (event: MouseEvent<HTMLElement>, newActive: string | null) => {
+  const handleActiveDate = (event: React.MouseEvent<HTMLElement>, newActive: string | null) => {
     if (newActive !== null) {
-      setActiveDate(newActive)
+      setActiveDate(parseInt(newActive))
       console.log(newActive)
     }
   }

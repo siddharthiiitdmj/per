@@ -5,21 +5,20 @@ import { ReactNode, useState } from 'react'
 import Link from 'next/link'
 
 // ** MUI Components
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
 import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import Box, { BoxProps } from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import FormControl from '@mui/material/FormControl'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import { styled, useTheme } from '@mui/material/styles'
-import InputAdornment from '@mui/material/InputAdornment'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Typography, { TypographyProps } from '@mui/material/Typography'
 import FormHelperText from '@mui/material/FormHelperText'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import InputLabel from '@mui/material/InputLabel'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import TextField from '@mui/material/TextField'
+import Typography, { TypographyProps } from '@mui/material/Typography'
+import { styled, useTheme } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -31,61 +30,18 @@ import themeConfig from 'src/configs/themeConfig'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Hooks
-import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Demo Imports
-import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
-import { useRouter } from 'next/router'
-import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import axios from 'axios'
-import { toast } from 'react-hot-toast'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'react-hot-toast'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
-
-// ** Styled Components
-const RegisterIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: theme.spacing(20),
-  paddingRight: '0 !important',
-  [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(10)
-  }
-}))
-
-const RegisterIllustration = styled('img')(({ theme }) => ({
-  maxWidth: '46rem',
-  [theme.breakpoints.down('lg')]: {
-    maxWidth: '35rem'
-  }
-}))
-
-const TreeIllustration = styled('img')(({ theme }) => ({
-  bottom: 0,
-  left: '1.875rem',
-  position: 'absolute',
-  [theme.breakpoints.down('lg')]: {
-    left: 0
-  }
-}))
-
-const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  width: '100%',
-  [theme.breakpoints.up('md')]: {
-    maxWidth: 450
-  }
-}))
-
-const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  [theme.breakpoints.down('xl')]: {
-    width: '100%'
-  },
-  [theme.breakpoints.down('md')]: {
-    maxWidth: 400
-  }
-}))
+import * as yup from 'yup'
 
 const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontWeight: 600,
@@ -127,13 +83,6 @@ const Register = () => {
   // ** Hooks
   const router = useRouter()
   const theme = useTheme()
-  const { settings } = useSettings()
-  const hidden = useMediaQuery(theme.breakpoints.down('md'))
-
-  // ** Vars
-  const { skin } = settings
-
-  const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
 
   const {
     control,
@@ -147,7 +96,6 @@ const Register = () => {
   })
 
   const onSubmit = (data: FormData) => {
-    const { name, email, password } = data
     axios
       .post('/api/users/register', data)
       .then(() => {
@@ -159,6 +107,7 @@ const Register = () => {
           type: 'manual',
           message: 'Email or Password is invalid'
         })
+        console.log(error)
       })
   }
 

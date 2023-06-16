@@ -5,8 +5,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { os, startDate, endDate } = req.query
 
-    // console.log(os, ' - ', startDate, ' - ', endDate)
-
     // Define the filters based on the parameters received
     const filters: any = {}
 
@@ -15,9 +13,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (startDate && endDate) {
+      const startDateValue = Array.isArray(startDate) ? startDate[0] : startDate;
+      const endDateValue = Array.isArray(endDate) ? endDate[0] : endDate;
+      
       filters.updatedAt = {
-        gte: new Date(startDate),
-        lte: new Date(endDate)
+        gte: new Date(startDateValue),
+        lte: new Date(endDateValue)
       }
     }
 

@@ -4,13 +4,10 @@ import { createContext, useEffect, useState, ReactNode } from 'react'
 // ** Next Import
 import { useRouter } from 'next/router'
 
-// ** Axios
-import axios from 'axios'
-
 // ** Types
 import { AuthValuesType, UserDataType } from './types'
 
-import { getSession, signIn, signOut, useSession } from 'next-auth/react'
+import { getSession, signIn, signOut} from 'next-auth/react'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {

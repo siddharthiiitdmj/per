@@ -5,7 +5,7 @@ import { useState, SyntheticEvent, Fragment } from 'react'
 import { useRouter } from 'next/router'
 
 // ** NextAuth Import
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
