@@ -9,6 +9,8 @@ import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
+// import Grid from '@mui/material/Grid'
+
 // ** Third Party Imports
 import { Line } from 'react-chartjs-2'
 import { ChartData, ChartOptions } from 'chart.js'
@@ -30,7 +32,7 @@ const ChartjsLineChart = (props: LineProps) => {
   const [myData, setMyData] = useState(null)
   const colors = ['#fff', '#ff8131', '#28dac6', '#299aff', '#836af9', '#ffe802']
 
-  // const [timePeriod, setTimePeriod] = useState('monthly')
+  const [timePeriod, setTimePeriod] = useState('monthly')
   const [OS, setOS] = useState('All')
 
   useEffect(() => {
@@ -53,10 +55,16 @@ const ChartjsLineChart = (props: LineProps) => {
     fetchData()
   }, [OS])
 
+  // const stepSize = 0
+  // let maxValue = 160
   useEffect(() => {
     console.log(myData)
     console.log(OS)
-  }, [myData, OS])
+    console.log(timePeriod)
+
+    // maxValue = timePeriod ? Math.max(...Object.values(myData?.[timePeriod]?.isVPNSpoofed || [])) : 160
+    // console.log(maxValue)
+  }, [myData, OS, timePeriod])
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -95,8 +103,8 @@ const ChartjsLineChart = (props: LineProps) => {
   }
 
   const data: ChartData<'line'> = {
-    labels: myData ? Object.keys(myData.monthly.isVPNSpoofed) : [],
-    datasets: Object.entries(myData?.monthly || {}).map(([property, values], index) => ({
+    labels: myData ? Object.keys(myData[timePeriod].isVPNSpoofed) : [],
+    datasets: Object.entries(myData?.[timePeriod] || {}).map(([property, values], index) => ({
       fill: false,
       tension: 0.5,
       pointRadius: 1,
@@ -112,14 +120,19 @@ const ChartjsLineChart = (props: LineProps) => {
       data: Object.values(values)
     }))
   }
+
   const handleOsChange = (event: SelectChangeEvent) => {
     setOS(event.target.value as string)
+  }
+
+  const handleTimeChange = (event: SelectChangeEvent) => {
+    setTimePeriod(event.target.value as string)
   }
 
   return (
     <Card>
       <CardHeader title='New Technologies Data' subheader='Commercial networks & enterprises' />
-      <FormControl sx={{ width: 100, ml: 8 }}>
+      <FormControl sx={{ width: 100, mx: 8 }}>
         <InputLabel
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           id='controlled-select-label'
@@ -137,6 +150,26 @@ const ChartjsLineChart = (props: LineProps) => {
           <MenuItem value={'All'}>All</MenuItem>
           <MenuItem value={'Android'}>Android</MenuItem>
           <MenuItem value={'iOS'}>iOS</MenuItem>
+        </Select>
+      </FormControl>
+      <FormControl sx={{ width: 110 }}>
+        <InputLabel
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          id='controlled-select-label'
+        >
+          Time Period
+        </InputLabel>
+        <Select
+          sx={{ height: 45 }}
+          value={timePeriod}
+          label='Controlled'
+          id='controlled-select'
+          onChange={handleTimeChange}
+          labelId='controlled-select-label'
+        >
+          <MenuItem value={'daily'}>Daily</MenuItem>
+          <MenuItem value={'weekly'}>Weekly</MenuItem>
+          <MenuItem value={'monthly'}>Monthly</MenuItem>
         </Select>
       </FormControl>
       <CardContent>
