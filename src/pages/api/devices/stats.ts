@@ -1,36 +1,9 @@
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 
-interface DeviceInfo {
-  UID: string
-  DeviceID: string
-  userID: string | null
-  IP: string
-  isVPNSpoofed: boolean
-  isVirtualOS: boolean
-  isEmulator: boolean
-  isAppSpoofed: boolean
-  isAppPatched: boolean
-  isAppCloned: boolean
-  Latitude: number
-  Longitude: number
-  OS: string
-  Kernel: string
-  devicemodel: string
-  devicename: string
-  nodename: string
-  createdAt: Date
-  updatedAt: Date
-  user: {
-    id: string
-  } | null
-}
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const devices: DeviceInfo[] = await prisma.deviceInfo.findMany()
-
-    const filterFields: string[] = [
+    const booleanFields: string[] = [
       'isVPNSpoofed',
       'isVirtualOS',
       'isEmulator',
@@ -38,61 +11,101 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       'isAppPatched',
       'isAppCloned'
     ]
+    const { os } = req.query
 
-    const filterCounts: { [key: string]: { [key: string]: number } } = {
-      Android: {},
-      iOS: {}
+    const filters: any = {}
+
+    if (os && os !== 'All') {
+      filters.OS = os
     }
 
-    const calculateCounts = (filter: string) => {
-      filterFields.forEach(field => {
-        const count: number = devices.filter((device: DeviceInfo) => device[field as keyof DeviceInfo] && device.OS === filter).length
-        filterCounts[filter][field] = count
-      })
+    const result: {
+      monthly: Record<string, Record<string, number>>
+      weekly: Record<string, Record<string, number>>
+      daily: Record<string, Record<string, number>>
+    } = {
+      monthly: {},
+      weekly: {},
+      daily: {}
     }
 
-    Object.keys(filterCounts).forEach(filter => calculateCounts(filter))
+    const deviceInfos = await prisma.deviceInfo.findMany({
+      where: filters,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      select: {
+        createdAt: true,
+        isVPNSpoofed: true,
+        isVirtualOS: true,
+        isEmulator: true,
+        isAppSpoofed: true,
+        isAppPatched: true,
+        isAppCloned: true
+      }
+    })
 
-    const calculateAllCounts = () => {
-      filterCounts.All = {} // Initialize the "All" object
+    for (const field of booleanFields) {
+      result.monthly[field] = {}
+      result.weekly[field] = {}
+      result.daily[field] = {}
 
-      filterFields.forEach(field => {
-        const count: number = filterCounts.Android[field] + filterCounts.iOS[field]
-        filterCounts.All[field] = count
-      })
+      for (const deviceInfo of deviceInfos) {
+        const createdAt = deviceInfo.createdAt
+
+        // Monthly count
+        const month = createdAt.toISOString().slice(0, 7)
+        result.monthly[field][month] = (result.monthly[field][month] || 0) + (deviceInfo[field] ? 1 : 0)
+
+        // Daily count
+        const day = createdAt.toISOString().slice(0, 10)
+        result.daily[field][day] = (result.daily[field][day] || 0) + (deviceInfo[field] ? 1 : 0)
+      }
     }
 
-    calculateAllCounts()
+    // Weekly count (Monday to Sunday)
+    const sortedDeviceInfos = deviceInfos
+      .slice()
+      .sort((a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime())
+    let currentWeekStart: Date = getStartOfWeek(sortedDeviceInfos[0].createdAt)
+    let currentWeekEnd: Date = getEndOfWeek(sortedDeviceInfos[0].createdAt)
 
-    const totalDevices: { [key: string]: number } = {
-      Android: devices.filter(device => device.OS === 'Android').length,
-      iOS: devices.filter(device => device.OS === 'iOS').length,
-      ALL: devices.length
-    }
+    while (currentWeekStart >= sortedDeviceInfos[sortedDeviceInfos.length - 1].createdAt) {
+      const weekStart = currentWeekStart.toISOString().slice(0, 10)
 
-    const filterPercentages: { [key: string]: { [key: string]: string } } = {}
+      // const weekEnd = currentWeekEnd.toISOString().slice(0, 10)
 
-    const calculatePercentages = (filter: string) => {
-      filterPercentages[filter] = {}
+      for (const field of booleanFields) {
+        result.weekly[field][weekStart] = 0
 
-      filterFields.forEach(field => {
-        const percentage: number =
-          (filterCounts[filter][field] / (filter === 'All' ? devices.length : totalDevices[filter])) * 100
-        filterPercentages[filter][field] = percentage.toFixed(2)
-      })
-    }
+        for (const deviceInfo of sortedDeviceInfos) {
+          if (deviceInfo.createdAt >= currentWeekStart && deviceInfo.createdAt <= currentWeekEnd) {
+            result.weekly[field][weekStart] += deviceInfo[field] ? 1 : 0
+          }
+        }
+      }
 
-    Object.keys(filterCounts).forEach(filter => calculatePercentages(filter))
-
-    const result = {
-      totalDevices,
-      filterCounts,
-      filterPercentages
+      currentWeekStart = getStartOfWeek(new Date(currentWeekStart.getTime() - 7 * 24 * 60 * 60 * 1000))
+      currentWeekEnd = getEndOfWeek(currentWeekStart)
     }
 
     res.status(200).json(result)
   } catch (error) {
     console.error(error)
-    res.status(500).json({ error: 'Internal Server Error' })
+    res.status(500).json({ error: 'Internal server error' })
   }
+}
+
+function getStartOfWeek(date: Date): Date {
+  const day = date.getDay()
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1) // Adjust if Sunday
+
+  return new Date(date.getFullYear(), date.getMonth(), diff, 0, 0, 0, 0)
+}
+
+function getEndOfWeek(date: Date): Date {
+  const day = date.getDay()
+  const diff = date.getDate() + (7 - day) // Adjust if not Sunday
+
+  return new Date(date.getFullYear(), date.getMonth(), diff, 23, 59, 59, 999)
 }
