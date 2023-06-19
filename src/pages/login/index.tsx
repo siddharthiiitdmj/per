@@ -42,7 +42,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import MuiCard, { CardProps } from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
@@ -297,7 +296,6 @@ const LoginPage = () => {
           </form>
         </CardContent>
       </Card>
-      <FooterIllustrationsV1 />
     </Box>
   )
 }
