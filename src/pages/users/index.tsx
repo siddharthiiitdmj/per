@@ -1,5 +1,5 @@
 // ** React Imports
-import axios from 'axios'
+import api from 'src/helper/api'
 import { ChangeEvent, useState } from 'react'
 
 // ** MUI Imports
@@ -144,7 +144,7 @@ const TableStickyHeader = ({ rows }: Props) => {
 
 export const getServerSideProps = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/users/all')
+    const res = await api.get('/users/all')
     const fetchedData = res.data as Data[]
 
     const rows = fetchedData.map(item => {

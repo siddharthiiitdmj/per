@@ -1,5 +1,5 @@
 // ** React Imports
-import axios from 'axios'
+import api from 'src/helper/api'
 import { ChangeEvent, ElementType, useEffect, useState } from 'react'
 
 // ** MUI Imports
@@ -84,7 +84,6 @@ const TabAccount = () => {
   //   formState: { errors }
   // } = useForm({ defaultValues: { checkbox: false } })
 
-
   // const handleSecondDialogClose = () => setSecondDialogOpen(false)
 
   // const onSubmit = () => setOpen(true)
@@ -92,8 +91,8 @@ const TabAccount = () => {
   const onFormSubmit = async () => {
     await getSession().then(session => {
       const email = session?.user.email
-      axios
-        .post('/api/updateprofile', {
+      api
+        .post('/updateprofile', {
           email,
           ...formData
         })
@@ -119,11 +118,11 @@ const TabAccount = () => {
       await getSession().then(async session => {
         const email = session?.user.email
         try {
-          const response = await axios.get('http://localhost:3000/api/getuserprofile', {
+          const response = await api.get('/getuserprofile', {
             params: {
               email: email
             }
-          });
+          })
           setFormData(response.data)
           console.log('Response:', response.data)
         } catch (error) {
@@ -131,14 +130,14 @@ const TabAccount = () => {
         }
       })
     }
-    getUserProfile();
-  },[initialData])
+    getUserProfile()
+  }, [initialData])
 
   useEffect(() => {
     if (imgSrc !== '') {
       const postData = async () => {
         try {
-          const response = await axios.post('http://localhost:3000/api/users/me', {
+          const response = await api.post('/users/me', {
             email,
             imgSrc
           })

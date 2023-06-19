@@ -15,7 +15,7 @@ import { PolarArea } from 'react-chartjs-2'
 import { ChartData, ChartOptions } from 'chart.js'
 import { useEffect, useState } from 'react'
 
-import axios from 'axios'
+import api from 'src/helper/api'
 
 // ** Custom Components Imports
 // import OptionsMenu from 'src/@core/components/option-menu'
@@ -65,9 +65,7 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
     // console.log('Date:', startDate, ' - ', formattedStartDate)
 
     const fetchChartData = async () => {
-      const res = await axios.get(
-        `http://localhost:3000/api/devices/stats2?os=${OS}&startDate=${formattedStartDate}&endDate=${endDate}`
-      )
+      const res = await api.get(`/devices/stats2?os=${OS}&startDate=${formattedStartDate}&endDate=${endDate}`)
 
       // console.log(res.data)
       setChartData(res.data)

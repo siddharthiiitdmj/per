@@ -4,6 +4,7 @@
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
+import { useTheme } from '@mui/material/styles'
 
 // ** Styled Component
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
@@ -14,9 +15,11 @@ import ChartjsPolarAreaChart from 'src/views/charts/chartjs/ChartjsPolarAreaChar
 
 // ** Third Party Styles Import
 import 'chart.js/auto'
+import ChartjsLineChart from 'src/views/charts/chartjs/ChartjsLineChart'
 
 const ChartJS = () => {
   // ** Hook
+  const theme = useTheme()
 
   // Vars
   const yellowColor = '#ffe802'
@@ -26,6 +29,12 @@ const ChartJS = () => {
   const polarChartGreen = '#28dac6'
   const polarChartWarning = '#ff8131'
   const legendColor = '#FFF'
+  const lineChartWarning = '#ff9800'
+  const lineChartYellow = '#d4e157'
+  const lineChartPrimary = '#9e69fd'
+  const borderColor = theme.palette.divider
+  const labelColor = theme.palette.text.disabled
+  const whiteColor = '#fff'
 
   // const pieData = async () => {
   //   const res = axios.get(`http://localhost:3000/api/devices/stats2?os=${OS}`)
@@ -44,6 +53,17 @@ const ChartJS = () => {
             green={polarChartGreen}
             legendColor={legendColor}
             warning={polarChartWarning}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <ChartjsLineChart
+            white={whiteColor}
+            labelColor={labelColor}
+            success={lineChartYellow}
+            borderColor={borderColor}
+            legendColor={legendColor}
+            primary={lineChartPrimary}
+            warning={lineChartWarning}
           />
         </Grid>
       </Grid>
