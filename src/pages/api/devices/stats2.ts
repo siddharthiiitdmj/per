@@ -1,6 +1,15 @@
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 
+interface Device {
+  isVPNSpoofed: number;
+  isVirtualOS: number;
+  isEmulator: number;
+  isAppSpoofed: number;
+  isAppPatched: number;
+  isAppCloned: number;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { os, startDate, endDate } = req.query
@@ -13,8 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (startDate && endDate) {
       filters.updatedAt = {
-        gte: new Date(startDate),
-        lte: new Date(endDate)
+        gte: new Date(String(startDate)),
+        lte: new Date(String(endDate))
       }
     }
 
@@ -23,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       where: filters
     })
 
-    const result = {
+    const result: Device = {
       isVPNSpoofed: 0,
       isVirtualOS: 0,
       isEmulator: 0,
@@ -32,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       isAppCloned: 0
     }
 
-    devices.forEach(device => {
+    devices.forEach((device: Device) => {
       if (device.isVPNSpoofed) {
         result.isVPNSpoofed++
       }

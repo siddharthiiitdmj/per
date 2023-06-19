@@ -28,9 +28,6 @@ import { Toaster } from 'react-hot-toast'
 // ** Component Imports
 import UserLayout from 'src/layouts/UserLayout'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
-// import AclGuard from 'src/layouts/components/auth/UserAclGuard'
-// import AuthGuard from 'src/layouts/components/auth/UserAuthGuard'
-// import GuestGuard from 'src/layouts/components/auth/UserGuestGuard'
 import { SessionProvider } from 'next-auth/react'
 
 import AclGuard from 'src/@core/components/auth/AclGuard'

@@ -1,30 +1,29 @@
 // ** React Imports
-import { ReactElement, useState, useEffect, SyntheticEvent } from 'react'
+import { ReactElement, SyntheticEvent, useEffect, useState } from 'react'
 
 // ** Next Import
 import { useRouter } from 'next/router'
 
 // ** MUI Imports
-import Tab from '@mui/material/Tab'
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
-import Typography from '@mui/material/Typography'
-import { styled, Theme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import MuiTabList, { TabListProps } from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import Grid from '@mui/material/Grid'
+import { styled, Theme } from '@mui/material/styles'
+import Tab from '@mui/material/Tab'
+import Typography from '@mui/material/Typography'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Types
-import { PricingPlanType } from 'src/@core/components/plan-details/types'
 
 // ** Demo Tabs Imports
-import TabSecurity from 'src/views/pages/account-settings/TabSecurity'
 import TabAccount from 'src/views/pages/account-settings/TabAccount'
+import TabSecurity from 'src/views/pages/account-settings/TabSecurity'
 
 // import TabBilling from 'src/views/pages/account-settings/TabBilling'
 // import TabConnections from 'src/views/pages/account-settings/TabConnections'
@@ -50,7 +49,7 @@ const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   }
 }))
 
-const AccountSettings = ({ tab, apiPricingPlanData }: { tab: string; apiPricingPlanData: PricingPlanType[] }) => {
+const AccountSettings = ({ tab }: { tab: string}) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(false)

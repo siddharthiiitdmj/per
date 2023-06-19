@@ -1,34 +1,21 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent, useEffect } from 'react'
 import axios from 'axios'
+import { ChangeEvent, ElementType, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
+import Button, { ButtonProps } from '@mui/material/Button'
 import Card from '@mui/material/Card'
-import Select from '@mui/material/Select'
-import Dialog from '@mui/material/Dialog'
-import { styled } from '@mui/material/styles'
-import Checkbox from '@mui/material/Checkbox'
-import MenuItem from '@mui/material/MenuItem'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
+import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import InputLabel from '@mui/material/InputLabel'
-import CardHeader from '@mui/material/CardHeader'
-import FormControl from '@mui/material/FormControl'
-import CardContent from '@mui/material/CardContent'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
-import Button, { ButtonProps } from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import { styled } from '@mui/material/styles'
 
 // ** Third Party Imports
-import { useForm, Controller } from 'react-hook-form'
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
 import { getSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 
@@ -82,29 +69,25 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 
 const TabAccount = () => {
   // ** State
-  const [open, setOpen] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
-  const [userInput, setUserInput] = useState<string>('yes')
   const [formData, setFormData] = useState<Data>(initialData)
   const [imgSrc, setImgSrc] = useState<string>('')
-  const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
 
   const storedUserData = localStorage.getItem('userData') as string
   const userData = JSON.parse(storedUserData)
   const email = userData?.email
 
   // ** Hooks
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues: { checkbox: false } })
+  // const {
+  //   control,
+  //   handleSubmit,
+  //   formState: { errors }
+  // } = useForm({ defaultValues: { checkbox: false } })
 
-  const handleClose = () => setOpen(false)
 
-  const handleSecondDialogClose = () => setSecondDialogOpen(false)
+  // const handleSecondDialogClose = () => setSecondDialogOpen(false)
 
-  const onSubmit = () => setOpen(true)
+  // const onSubmit = () => setOpen(true)
 
   const onFormSubmit = async () => {
     await getSession().then(session => {
@@ -125,11 +108,11 @@ const TabAccount = () => {
     })
   }
 
-  const handleConfirmation = (value: string) => {
-    handleClose()
-    setUserInput(value)
-    setSecondDialogOpen(true)
-  }
+  // const handleConfirmation = (value: string) => {
+  //   handleClose()
+  //   setUserInput(value)
+  //   setSecondDialogOpen(true)
+  // }
 
   useEffect(() => {
     const getUserProfile = async () => {

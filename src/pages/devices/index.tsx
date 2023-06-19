@@ -1,19 +1,18 @@
 // ** React Imports
-import { useState, ChangeEvent } from 'react'
 import axios from 'axios'
+import { ChangeEvent, useState } from 'react'
 
 // ** MUI Imports
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
-import { NextPageContext } from 'next/types'
-import SelectWithDialog from 'src/views/forms/form-elements/select/SelectWithDialog'
+import TableRow from '@mui/material/TableRow'
 import { useTheme } from '@mui/material/styles'
+import SelectWithDialog from 'src/views/forms/form-elements/select/SelectWithDialog'
 
 // Third party imports
 import { ReactDatePickerProps } from 'react-datepicker'
@@ -162,7 +161,7 @@ const TableStickyHeader = ({ rows }: Props) => {
   )
 }
 
-export const getServerSideProps = async (context: NextPageContext) => {
+export const getServerSideProps = async () => {
   try {
     const res = await axios.get('http://localhost:3000/api/devices/all')
     const fetchedData = res.data as Data[]
