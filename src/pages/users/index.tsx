@@ -89,7 +89,7 @@ const TableStickyHeader = ({ rows }: Props) => {
           type='users'
         />
       </div>
-      <TableContainer component={Paper} sx={{ maxHeight: 580 }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
         <Table stickyHeader aria-label='sticky table'>
           <TableHead>
             <TableRow>
