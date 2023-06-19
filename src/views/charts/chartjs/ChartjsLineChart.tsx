@@ -103,7 +103,7 @@ const ChartjsLineChart = (props: LineProps) => {
   }
 
   const data: ChartData<'line'> = {
-    labels: myData ? Object.keys(myData[timePeriod].isVPNSpoofed) : [],
+    labels: myData ? Object.keys(myData[timePeriod]['isVPNSpoofed']) : [],
     datasets: Object.entries(myData?.[timePeriod] || {}).map(([property, values], index) => ({
       fill: false,
       tension: 0.5,
@@ -117,7 +117,7 @@ const ChartjsLineChart = (props: LineProps) => {
       pointHoverBorderColor: white,
       pointBorderColor: 'transparent',
       pointHoverBackgroundColor: index === 0 ? primary : warning,
-      data: Object.values(values)
+      data: Object.values(values as { [s: string]: number | null }) as (number | null)[]
     }))
   }
 

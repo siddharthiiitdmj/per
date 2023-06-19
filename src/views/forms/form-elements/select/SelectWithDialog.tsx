@@ -1,5 +1,5 @@
 // ** React Imports
-import axios from 'axios'
+import api from 'src/helper/api'
 import { forwardRef, useState } from 'react'
 
 // ** MUI Imports
@@ -90,7 +90,7 @@ const SelectWithDialog = ({
     // console.log(edate, typeof edate)
     let rows
     if (type === 'devices') {
-      const res = await axios.get(`http://localhost:3000/api/devices/all?startDate=${sdate}&endDate=${edate}&os=${OS}`)
+      const res = await api.get(`/devices/all?startDate=${sdate}&endDate=${edate}&os=${OS}`)
 
       const fetchedData = res.data
 
@@ -107,7 +107,7 @@ const SelectWithDialog = ({
         )
       )
     } else if (type === 'users') {
-      const res = await axios.get(`http://localhost:3000/api/users/all?startDate=${sdate}&endDate=${edate}`)
+      const res = await api.get(`/users/all?startDate=${sdate}&endDate=${edate}`)
       const fetchedData = res.data
 
       rows = fetchedData.map((item: any) => {

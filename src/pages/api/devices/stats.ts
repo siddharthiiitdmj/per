@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const deviceInfos = await prisma.deviceInfo.findMany({
       where: filters,
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'asc'
       },
       select: {
         createdAt: true,

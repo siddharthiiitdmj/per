@@ -1,5 +1,5 @@
 // ** React Imports
-import axios from 'axios'
+import api from 'src/helper/api'
 import { ChangeEvent, useState } from 'react'
 
 // ** MUI Imports
@@ -108,7 +108,7 @@ const TableStickyHeader = ({ rows }: Props) => {
           type='devices'
         />
       </div>
-      <TableContainer component={Paper} sx={{ maxHeight: 580 }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
         <Table stickyHeader aria-label='sticky table'>
           <TableHead>
             <TableRow>
@@ -163,7 +163,7 @@ const TableStickyHeader = ({ rows }: Props) => {
 
 export const getServerSideProps = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/devices/all')
+    const res = await api.get('/devices/all')
     const fetchedData = res.data as Data[]
 
     const rows = fetchedData.map(item =>
