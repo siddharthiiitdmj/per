@@ -40,7 +40,6 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import * as yup from 'yup'
 
 const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -292,7 +291,6 @@ const Register = () => {
           </form>
         </CardContent>
       </Card>
-      <FooterIllustrationsV1 />
     </Box>
   )
 }

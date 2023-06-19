@@ -1,5 +1,6 @@
 // ** React Imports
 import { ReactNode } from 'react'
+import {useRouter} from 'next/router'
 
 // ** MUI Imports
 import CssBaseline from '@mui/material/CssBaseline'
@@ -29,6 +30,14 @@ interface Props {
 const ThemeComponent = (props: Props) => {
   // ** Props
   const { settings, children } = props
+  const router = useRouter();
+  const pathname = router.pathname
+  
+  // Check if the current URL is '/login'
+  const isLoginPage = (pathname === '/login' || pathname === '/register');
+
+  // Set the background image style based on the condition
+  const backgroundImage = isLoginPage ? 'url(/images/background.jpg)' : 'none';
 
   // ** Pass merged ThemeOptions (of core and user) to createTheme function
   let theme = createTheme(themeOptions(settings, 'light'))
@@ -42,7 +51,17 @@ const ThemeComponent = (props: Props) => {
     <ThemeProvider theme={theme}>
       <Direction direction={settings.direction}>
         <CssBaseline />
-        <GlobalStyles styles={() => GlobalStyling(theme) as any} />
+        <GlobalStyles
+          styles={() => ({
+            ...GlobalStyling(theme),
+            body: {
+              backgroundImage: isLoginPage ? backgroundImage : 'none',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            },
+          })}
+        />
         {children}
       </Direction>
     </ThemeProvider>
