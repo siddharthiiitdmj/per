@@ -188,7 +188,9 @@ const Register = () => {
             </Typography>
           </Box>
           <Box sx={{ mb: 6 }}>
-            <TypographyStyled variant='h5' sx={{ fontWeight: 600, mb: 1.5 }}>Adventure starts here 🚀</TypographyStyled>
+            <TypographyStyled variant='h5' sx={{ fontWeight: 600, mb: 1.5 }}>
+              Adventure starts here 🚀
+            </TypographyStyled>
             <Typography variant='body2'>Make your app management easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>

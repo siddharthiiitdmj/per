@@ -36,6 +36,7 @@
     "src",
     "declaration.d.ts",
     "src/types/next-auth.d.ts",
+    "helper",
   ],
   "exclude": [
     "node_modules"
