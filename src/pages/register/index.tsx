@@ -41,6 +41,7 @@ import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
+import { useAuth } from 'src/hooks/useAuth'
 
 const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontWeight: 600,
@@ -81,7 +82,8 @@ const Register = () => {
 
   // ** Hooks
   const router = useRouter()
-  
+  const { login } = useAuth()
+
   const {
     control,
     setError,
@@ -287,7 +289,7 @@ const Register = () => {
             </Box>
             <Divider sx={{ my: theme => `${theme.spacing(5)} !important` }}>or</Divider>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={e => e.preventDefault()}>
+              <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={login}>
                 <Icon icon='mdi:google' />
               </IconButton>
             </Box>
