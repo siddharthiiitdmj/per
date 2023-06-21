@@ -44,7 +44,8 @@ const BlankLayoutAppBar = () => {
         }}
       >
         <LinkStyled href='/'>
-          <svg
+          <img src='/images/logo.svg' alt='aletheia' width={30} height={25}></img>
+          {/* <svg
             width={30}
             height={25}
             version='1.1'
@@ -102,7 +103,7 @@ const BlankLayoutAppBar = () => {
                 </g>
               </g>
             </g>
-          </svg>
+          </svg> */}
           <Typography
             variant='h6'
             sx={{

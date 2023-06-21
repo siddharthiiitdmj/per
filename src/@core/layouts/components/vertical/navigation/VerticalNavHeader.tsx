@@ -2,10 +2,10 @@
 import Link from 'next/link'
 
 // ** MUI Imports
-import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
-import { styled, useTheme } from '@mui/material/styles'
+import IconButton from '@mui/material/IconButton'
 import Typography, { TypographyProps } from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
 
 // ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
@@ -68,8 +68,6 @@ const VerticalNavHeader = (props: Props) => {
     menuUnlockedIcon: userMenuUnlockedIcon
   } = props
 
-  // ** Hooks & Vars
-  const theme = useTheme()
   const { navCollapsed } = settings
 
   const menuCollapsedStyles = navCollapsed && !navHover ? { opacity: 0 } : { opacity: 1 }
@@ -96,7 +94,8 @@ const VerticalNavHeader = (props: Props) => {
         userNavMenuBranding(props)
       ) : (
         <LinkStyled href='/'>
-          <svg
+          <img src='/images/logo.svg' alt='aletheia' width={30} height={25}></img>
+          {/* <svg
             width={30}
             height={25}
             version='1.1'
@@ -154,8 +153,11 @@ const VerticalNavHeader = (props: Props) => {
                 </g>
               </g>
             </g>
-          </svg>
-          <HeaderTitle variant='h6' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 3 }) }}>
+          </svg> */}
+          <HeaderTitle
+            variant='h6'
+            sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 3, mt: 1 }) }}
+          >
             {themeConfig.templateName}
           </HeaderTitle>
         </LinkStyled>

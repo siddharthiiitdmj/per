@@ -18,7 +18,7 @@ import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import TextField from '@mui/material/TextField'
 import Typography, { TypographyProps } from '@mui/material/Typography'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -81,8 +81,7 @@ const Register = () => {
 
   // ** Hooks
   const router = useRouter()
-  const theme = useTheme()
-
+  
   const {
     control,
     setError,
@@ -115,7 +114,8 @@ const Register = () => {
       <Card sx={{ zIndex: 1 }}>
         <CardContent sx={{ p: theme => `${theme.spacing(12, 9, 7)} !important` }}>
           <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg
+            <img src='/images/logo.svg' alt='aletheia' width={35} height={29}></img>
+            {/* <svg
               width={35}
               height={29}
               version='1.1'
@@ -173,11 +173,12 @@ const Register = () => {
                   </g>
                 </g>
               </g>
-            </svg>
+            </svg> */}
             <Typography
               variant='h6'
               sx={{
-                ml: 3,
+                ml: 2,
+                mt: 1,
                 lineHeight: 1,
                 fontWeight: 600,
                 textTransform: 'uppercase',
