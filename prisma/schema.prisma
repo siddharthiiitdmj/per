@@ -21,6 +21,7 @@ model User {
   accounts    Account[]
   DeviceInfo  DeviceInfo[]
   UserProfile UserProfile[]
+  Events      Events[]
 }
 
 model Account {
@@ -68,20 +69,53 @@ model DeviceInfo {
   user              User?    @relation(fields: [userID], references: [id], onDelete: Cascade)
 }
 
+model Device {
+  id                String   @id @default(uuid()) @db.Uuid
+  OS                String
+  Kernel            String
+  devicemodel       String
+  devicename        String
+  nodename          String
+  OS_version        String
+  Screen_resolution String
+  Events            Events[]
+}
+
+model Events {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @db.Uuid
+  deviceId         String   @db.Uuid
+  user             User     @relation(fields: [userId], references: [id])
+  device           Device   @relation(fields: [deviceId], references: [id])
+  IPaddress        String
+  isVPNSpoofed     Boolean
+  isVirtualOS      Boolean
+  isEmulator       Boolean
+  isAppSpoofed     Boolean
+  isAppPatched     Boolean
+  isAppCloned      Boolean
+  Latitude         Float
+  Longitude        Float
+  Cellular_network String
+  Wifi_network     String
+  createdAt        DateTime
+  updatedAt        DateTime
+}
+
 model UserProfile {
-  id     String @id @default(uuid()) @db.Uuid
-  userId String @db.Uuid @unique
-  email String @unique
-  firstName String 
-  lastName String
+  id           String @id @default(uuid()) @db.Uuid
+  userId       String @unique @db.Uuid
+  email        String @unique
+  firstName    String
+  lastName     String
   organisation String
-  phoneNumber String
-  address String
-  state String
-  zipcode String
-  country String
-  language String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phoneNumber  String
+  address      String
+  state        String
+  zipcode      String
+  country      String
+  language     String
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {
