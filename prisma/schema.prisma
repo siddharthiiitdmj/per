@@ -75,7 +75,6 @@ model Device {
   Kernel            String
   devicemodel       String
   devicename        String
-  nodename          String
   OS_version        String
   Screen_resolution String
   Events            Events[]
@@ -85,8 +84,8 @@ model Events {
   id               String   @id @default(uuid()) @db.Uuid
   userId           String   @db.Uuid
   deviceId         String   @db.Uuid
-  user             User     @relation(fields: [userId], references: [id])
-  device           Device   @relation(fields: [deviceId], references: [id])
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device           Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   IPaddress        String
   isVPNSpoofed     Boolean
   isVirtualOS      Boolean
