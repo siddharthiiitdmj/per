@@ -34,7 +34,7 @@ const ThemeComponent = (props: Props) => {
   const pathname = router.pathname
   
   // Check if the current URL is '/login'
-  const isLoginPage = (pathname === '/login' || pathname === '/register');
+  const isLoginPage = (pathname === '/login' || pathname === '/register' || pathname === '/forgot-password');
 
   // Set the background image style based on the condition
   const backgroundImage = isLoginPage ? 'url(/images/background.jpg)' : 'none';
