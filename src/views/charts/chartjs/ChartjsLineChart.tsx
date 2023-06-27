@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from 'src/helper/api'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -38,7 +38,7 @@ const ChartjsLineChart = (props: LineProps) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/devices/stats?os=${OS}`)
+        const res = await api.get(`/devices/stats?os=${OS}`)
         if (res.status === 200) {
           const newData = res.data
           setMyData(newData)

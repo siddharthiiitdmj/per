@@ -49,7 +49,7 @@ const AuthProvider = ({ children }: Props) => {
               email: 'admin@materio.com'
             })
             window.localStorage.setItem('userData', JSON.stringify(Session?.user))
-            if (router.pathname.includes('login')) {
+            if (router.pathname.includes('login') || router.pathname.includes('register')) {
               router.replace('/overview')
             }
             setLoading(false)

@@ -18,7 +18,7 @@ import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import TextField from '@mui/material/TextField'
 import Typography, { TypographyProps } from '@mui/material/Typography'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -42,7 +42,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import MuiCard, { CardProps } from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
@@ -88,7 +87,6 @@ const LoginPage = () => {
 
   // ** Hooks
   const router = useRouter()
-  const theme = useTheme()
   const { login } = useAuth()
 
   const {
@@ -127,7 +125,8 @@ const LoginPage = () => {
       <Card sx={{ zIndex: 1 }}>
         <CardContent sx={{ p: theme => `${theme.spacing(12, 9, 7)} !important` }}>
           <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg
+            <img src='/images/logo.svg' alt='aletheia' width={35} height={29}></img>
+            {/* <svg
               width={35}
               height={29}
               version='1.1'
@@ -185,11 +184,12 @@ const LoginPage = () => {
                   </g>
                 </g>
               </g>
-            </svg>
+            </svg> */}
             <Typography
               variant='h6'
               sx={{
                 ml: 3,
+                mt: 1,
                 lineHeight: 1,
                 fontWeight: 600,
                 textTransform: 'uppercase',
@@ -297,7 +297,6 @@ const LoginPage = () => {
           </form>
         </CardContent>
       </Card>
-      <FooterIllustrationsV1 />
     </Box>
   )
 }

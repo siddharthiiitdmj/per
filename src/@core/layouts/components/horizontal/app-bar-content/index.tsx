@@ -4,7 +4,7 @@ import Link from 'next/link'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 // ** Type Import
 import { LayoutProps } from 'src/@core/layouts/types'
@@ -31,16 +31,14 @@ const AppBarContent = (props: Props) => {
   // ** Props
   const { appBarContent: userAppBarContent, appBarBranding: userAppBarBranding } = props
 
-  // ** Hooks
-  const theme = useTheme()
-
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       {userAppBarBranding ? (
         userAppBarBranding(props)
       ) : (
         <LinkStyled href='/'>
-          <svg
+          <img src='/images/logo.svg' alt='aletheia' width={30} height={25}></img>
+          {/* <svg
             width={30}
             height={25}
             version='1.1'
@@ -98,7 +96,7 @@ const AppBarContent = (props: Props) => {
                 </g>
               </g>
             </g>
-          </svg>
+          </svg> */}
           <Typography
             variant='h6'
             sx={{

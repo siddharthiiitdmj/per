@@ -18,7 +18,7 @@ import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import TextField from '@mui/material/TextField'
 import Typography, { TypographyProps } from '@mui/material/Typography'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -40,8 +40,8 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import * as yup from 'yup'
+import { useAuth } from 'src/hooks/useAuth'
 
 const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontWeight: 600,
@@ -82,7 +82,7 @@ const Register = () => {
 
   // ** Hooks
   const router = useRouter()
-  const theme = useTheme()
+  const { login } = useAuth()
 
   const {
     control,
@@ -116,7 +116,8 @@ const Register = () => {
       <Card sx={{ zIndex: 1 }}>
         <CardContent sx={{ p: theme => `${theme.spacing(12, 9, 7)} !important` }}>
           <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg
+            <img src='/images/logo.svg' alt='aletheia' width={35} height={29}></img>
+            {/* <svg
               width={35}
               height={29}
               version='1.1'
@@ -174,11 +175,12 @@ const Register = () => {
                   </g>
                 </g>
               </g>
-            </svg>
+            </svg> */}
             <Typography
               variant='h6'
               sx={{
-                ml: 3,
+                ml: 2,
+                mt: 1,
                 lineHeight: 1,
                 fontWeight: 600,
                 textTransform: 'uppercase',
@@ -189,7 +191,9 @@ const Register = () => {
             </Typography>
           </Box>
           <Box sx={{ mb: 6 }}>
-            <TypographyStyled variant='h5' sx={{ fontWeight: 600, mb: 1.5 }}>Adventure starts here 🚀</TypographyStyled>
+            <TypographyStyled variant='h5' sx={{ fontWeight: 600, mb: 1.5 }}>
+              Adventure starts here 🚀
+            </TypographyStyled>
             <Typography variant='body2'>Make your app management easy and fun!</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
@@ -285,14 +289,13 @@ const Register = () => {
             </Box>
             <Divider sx={{ my: theme => `${theme.spacing(5)} !important` }}>or</Divider>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={e => e.preventDefault()}>
+              <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={login}>
                 <Icon icon='mdi:google' />
               </IconButton>
             </Box>
           </form>
         </CardContent>
       </Card>
-      <FooterIllustrationsV1 />
     </Box>
   )
 }
