@@ -23,15 +23,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Calculate the number of rows to skip based on the current page and rows per page
-    const currentPage = parseInt(page) || 1
-    const skipRows = (currentPage - 1) * (parseInt(rowsPerPage) || 10)
+    const currentPage = parseInt(page as string, 10) || 1;
+    const skipRows = (currentPage - 1) * (parseInt(rowsPerPage as string, 10) || 10);
+
 
     // Fetch devices from the database with the applied filters and pagination
     const [devices, totalCount] = await Promise.all([
       prisma.deviceInfo.findMany({
         where: filters,
         skip: skipRows,
-        take: parseInt(rowsPerPage) || 10
+        take: parseInt(rowsPerPage as string) || 10
       }),
       prisma.deviceInfo.count({
         where: filters
