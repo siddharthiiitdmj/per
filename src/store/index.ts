@@ -2,10 +2,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import device from './apps/device'
+import events from './apps/events'
 
 export const store = configureStore({
   reducer: {
-    device
+    device,
+    events
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
