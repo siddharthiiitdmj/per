@@ -130,11 +130,11 @@ const columns: GridColDef[] = [
 const UserList = () => {
   // ** State
   const [OS, setOS] = useState<string>('')
-  const [Kernel, setKernel] = useState<string>('')
-  const [Screen_resolution, setScreen_resolution] = useState<string>('')
-  const [devicemodel, setDevicemodel] = useState<string>('')
-  const [OS_version, setOS_version] = useState<string>('')
-  const [id, setid] = useState<string>('')
+  const [Kernel] = useState<string>('')
+  const [Screen_resolution] = useState<string>('')
+  const [devicemodel] = useState<string>('')
+  const [OS_version] = useState<string>('')
+  const [id] = useState<string>('')
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   // ** Hooks
@@ -143,13 +143,7 @@ const UserList = () => {
 
   useEffect(() => {
     dispatch(
-      fetchData({
-        OS,
-        Kernel,
-        Screen_resolution,
-        devicemodel,
-        OS_version,
-      })
+      fetchData()
     )
   }, [dispatch, OS, Kernel, Screen_resolution, devicemodel, OS_version, id])
 

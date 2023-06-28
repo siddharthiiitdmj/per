@@ -29,10 +29,6 @@ import { EventsType } from 'src/types/apps/eventTypes'
 
 // ** Custom Table Components Imports
 
-interface DeviceOSType {
-  [key: string]: { icon: string; color: string }
-}
-
 interface CellType {
   row: EventsType
 }
@@ -171,24 +167,7 @@ const UserList = () => {
 
   useEffect(() => {
     dispatch(
-      fetchData({
-        userId,
-        deviceId,
-        nodename,
-        IPaddress,
-        isVPNSpoofed,
-        isVirtualOS,
-        isEmulator,
-        isAppSpoofed,
-        isAppPatched,
-        isAppCloned,
-        Latitude,
-        Longitude,
-        Cellular_network,
-        Wifi_network,
-        createdAt,
-        updatedAt
-      })
+      fetchData()
     )
   }, [
     dispatch,
