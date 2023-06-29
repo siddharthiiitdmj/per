@@ -1,15 +1,24 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // ** Next Imports
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import Divider from '@mui/material/Divider'
+import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,6 +37,15 @@ import { AppDispatch, RootState } from 'src/store'
 import { EventsType } from 'src/types/apps/eventTypes'
 
 // ** Custom Table Components Imports
+interface DeviceOSType {
+  [key: string]: { icon: string; color: string }
+}
+
+// ** Vars
+const deviceOSObj: DeviceOSType = {
+  Android: { icon: 'mdi:android', color: 'success.main' },
+  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' },
+}
 
 interface CellType {
   row: EventsType
@@ -60,6 +78,22 @@ const columns: GridColDef[] = [
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{deviceId}</Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    field: 'OS',
+    minWidth: 150,
+    headerName: 'OS',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.OS].color } }}>
+          <Icon icon={deviceOSObj[row.OS].icon} fontSize={20} />
+          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row.OS}
+          </Typography>
         </Box>
       )
     }
@@ -143,22 +177,25 @@ const columns: GridColDef[] = [
 
 const UserList = () => {
   // ** State
-  const [IPaddress] = useState<string>('')
-  const [nodename] = useState<string>('')
-  const [deviceId] = useState<string>('')
-  const [userId] = useState<string>('')
-  const [isVPNSpoofed] = useState<boolean>()
-  const [isVirtualOS] = useState<boolean>()
-  const [isEmulator] = useState<boolean>()
-  const [isAppSpoofed] = useState<boolean>()
-  const [isAppPatched] = useState<boolean>()
-  const [isAppCloned] = useState<boolean>()
-  const [Latitude] = useState<string>('')
-  const [Longitude] = useState<string>('')
-  const [Cellular_network] = useState<string>('')
-  const [Wifi_network] = useState<string>('')
-  const [createdAt] = useState<string>('')
-  const [updatedAt] = useState<string>('')
+  const [OS, setOS] = useState<string>('')
+
+  // const [IPaddress] = useState<string>('')
+  // const [nodename] = useState<string>('')
+  // const [deviceId] = useState<string>('')
+  // const [userId] = useState<string>('')
+  // const [isVPNSpoofed] = useState<boolean>()
+  // const [isVirtualOS] = useState<boolean>()
+  // const [isEmulator] = useState<boolean>()
+  // const [isAppSpoofed] = useState<boolean>()
+  // const [isAppPatched] = useState<boolean>()
+  // const [isAppCloned] = useState<boolean>()
+  // const [Latitude] = useState<string>('')
+  // const [Longitude] = useState<string>('')
+  // const [Cellular_network] = useState<string>('')
+  // const [Wifi_network] = useState<string>('')
+  // const [createdAt] = useState<string>('')
+  // const [updatedAt] = useState<string>('')
+
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   // ** Hooks
@@ -167,37 +204,22 @@ const UserList = () => {
 
   useEffect(() => {
     dispatch(
-      fetchData()
+      fetchData({OS})
     )
   }, [
     dispatch,
-    userId,
-    deviceId,
-    nodename,
-    IPaddress,
-    isVPNSpoofed,
-    isVirtualOS,
-    isEmulator,
-    isAppSpoofed,
-    isAppPatched,
-    isAppCloned,
-    Latitude,
-    Longitude,
-    Cellular_network,
-    Wifi_network,
-    createdAt,
-    updatedAt
+    OS
   ])
 
-//   const handleOSChange = useCallback((e: SelectChangeEvent) => {
-//     setOS(e.target.value)
-//   }, [])
+  const handleOSChange = useCallback((e: SelectChangeEvent) => {
+    setOS(e.target.value)
+  }, [])
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          {/* <CardHeader title='Search Filters' />
+          <CardHeader title='Events' />
           <CardContent>
             <Grid container spacing={6}>
               <Grid item sm={4} xs={12}>
@@ -220,7 +242,7 @@ const UserList = () => {
               </Grid>
             </Grid>
           </CardContent>
-          <Divider /> */}
+          <Divider />
           <DataGrid
             autoHeight
             rows={store.allData}

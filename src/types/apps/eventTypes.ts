@@ -15,4 +15,6 @@ export type EventsType = {
   Wifi_network: string
   createdAt: string
   updatedAt: string
+  OS: string
+  device: object
 }
