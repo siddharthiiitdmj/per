@@ -8,8 +8,10 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import Typography from '@mui/material/Typography'
 
 // ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,6 +30,15 @@ import { AppDispatch, RootState } from 'src/store'
 import { EventsType } from 'src/types/apps/eventTypes'
 
 // ** Custom Table Components Imports
+interface DeviceOSType {
+  [key: string]: { icon: string; color: string }
+}
+
+// ** Vars
+const deviceOSObj: DeviceOSType = {
+  Android: { icon: 'mdi:android', color: 'success.main' },
+  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' },
+}
 
 interface CellType {
   row: EventsType
@@ -60,6 +71,22 @@ const columns: GridColDef[] = [
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{deviceId}</Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    field: 'OS',
+    minWidth: 150,
+    headerName: 'OS',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.OS].color } }}>
+          <Icon icon={deviceOSObj[row.OS].icon} fontSize={20} />
+          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row.OS}
+          </Typography>
         </Box>
       )
     }
