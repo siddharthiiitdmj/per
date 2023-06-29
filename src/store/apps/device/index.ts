@@ -4,17 +4,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // ** Axios Imports
 import axios from 'axios'
 
-// interface DataParams {
-//   OS: string
-//   Kernel: string
-//   devicemodel: string
-//   OS_version: string
-//   Screen_resolution: string
-// }
+interface DataParams {
+  OS: string
+}
 
 // ** Fetch Users
-export const fetchData = createAsyncThunk('appDevices/fetchData', async () => {
-  const response = await axios.get('/api/devices/data')
+export const fetchData = createAsyncThunk('appDevices/fetchData', async (params: DataParams) => {
+  const {OS} = params
+  const response = await axios.get(`/api/devices/data?os=${OS}`)
 
   return response.data
 })

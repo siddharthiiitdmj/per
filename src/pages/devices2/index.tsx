@@ -143,7 +143,9 @@ const UserList = () => {
 
   useEffect(() => {
     dispatch(
-      fetchData()
+      fetchData({
+        OS
+      })
     )
   }, [dispatch, OS, Kernel, Screen_resolution, devicemodel, OS_version, id])
 
