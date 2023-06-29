@@ -5,7 +5,19 @@ import { DeviceType } from "src/types/apps/deviceTypes";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const {os} = req.query
+    const filters: any = {}
+
+    if (os && os !== '') {
+      filters.OS = os
+    }
+
     const events = await prisma.events.findMany({
+      where: {
+        device: {
+          OS: os || undefined
+        }
+      },
       include: {
         device: { select: { OS: true } }
       }

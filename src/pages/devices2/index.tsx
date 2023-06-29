@@ -130,11 +130,13 @@ const columns: GridColDef[] = [
 const UserList = () => {
   // ** State
   const [OS, setOS] = useState<string>('')
-  const [Kernel] = useState<string>('')
-  const [Screen_resolution] = useState<string>('')
-  const [devicemodel] = useState<string>('')
-  const [OS_version] = useState<string>('')
-  const [id] = useState<string>('')
+
+  // const [Kernel] = useState<string>('')
+  // const [Screen_resolution] = useState<string>('')
+  // const [devicemodel] = useState<string>('')
+  // const [OS_version] = useState<string>('')
+  // const [id] = useState<string>('')
+  
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   // ** Hooks
@@ -147,7 +149,7 @@ const UserList = () => {
         OS
       })
     )
-  }, [dispatch, OS, Kernel, Screen_resolution, devicemodel, OS_version, id])
+  }, [dispatch, OS])
 
   const handleOSChange = useCallback((e: SelectChangeEvent) => {
     setOS(e.target.value)
@@ -157,7 +159,7 @@ const UserList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Search Filters' />
+          <CardHeader title='Devices' />
           <CardContent>
             <Grid container spacing={6}>
               <Grid item sm={4} xs={12}>
