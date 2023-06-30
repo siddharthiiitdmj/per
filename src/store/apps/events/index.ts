@@ -1,5 +1,5 @@
 // ** Redux Imports
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import axios from 'axios'

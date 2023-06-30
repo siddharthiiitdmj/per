@@ -1,8 +1,8 @@
-import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
-import { EventsType } from 'src/types/apps/eventTypes'
-import { DeviceType } from 'src/types/apps/deviceTypes'
 import { getDateRange } from 'src/@core/utils/get-daterange'
+import prisma from 'src/libs/prismadb'
+import { DeviceType } from 'src/types/apps/deviceTypes'
+import { EventsType } from 'src/types/apps/eventTypes'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
