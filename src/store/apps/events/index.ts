@@ -1,17 +1,20 @@
 // ** Redux Imports
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import axios from 'axios'
 
 interface DataParams {
   OS: string
+  q: string
+  dates?: Date[]
 }
 
 // ** Fetch Users
 export const fetchData = createAsyncThunk('appEvents/fetchData', async (params: DataParams) => {
-  const {OS} = params
-  const response = await axios.get(`/api/events/data?os=${OS}`)
+  const response = await axios.get('/api/events/data',{
+    params
+  })
 
   return response.data
 })

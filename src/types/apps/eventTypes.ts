@@ -1,4 +1,5 @@
 export type EventsType = {
+  id: string
   userId: string
   deviceId: string
   nodename: string
