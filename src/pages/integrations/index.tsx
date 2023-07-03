@@ -25,14 +25,14 @@ interface ConnectedAccountsType {
 // }
 
 const connectedAccountsArr: ConnectedAccountsType[] = [
+  // {
+  //   checked: true,
+  //   title: 'Google',
+  //   logo: '/images/logos/google.png',
+  //   subtitle: 'Calendar and Contacts'
+  // },
   {
     checked: true,
-    title: 'Google',
-    logo: '/images/logos/google.png',
-    subtitle: 'Calendar and Contacts'
-  },
-  {
-    checked: false,
     title: 'Slack',
     logo: '/images/logos/slack.png',
     subtitle: 'Communications'
@@ -42,7 +42,7 @@ const connectedAccountsArr: ConnectedAccountsType[] = [
     title: 'Jira',
     logo: '/images/logos/jira.png',
     subtitle: 'Project Management'
-  },
+  }
 ]
 
 // const socialAccountsArr: SocialAccountsType[] = [

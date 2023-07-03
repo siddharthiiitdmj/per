@@ -131,7 +131,7 @@ const ChartjsLineChart = (props: LineProps) => {
 
   return (
     <Card>
-      <CardHeader title='New Technologies Data' subheader='Commercial networks & enterprises' />
+      <CardHeader title='Malicious Device Info' subheader='Can sort by OS and Time Period' />
       <FormControl sx={{ width: 100, mx: 8 }}>
         <InputLabel
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}

@@ -119,7 +119,7 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
 
   return (
     <Card>
-      <CardHeader title='Average Skills' />
+      <CardHeader title='Malicious Devices' />
       <Grid container spacing={2} sx={{ px: 4 }}>
         <Grid item xs={12} md={6}>
           <FormControl sx={{ width: 100 }}>
