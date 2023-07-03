@@ -56,6 +56,21 @@ const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 230,
+    field: 'id',
+    headerName: 'id',
+    renderCell: ({ row }: CellType) => {
+      const { id } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{id}</Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
     field: 'devicemodel',
     headerName: 'Model',
     renderCell: ({ row }: CellType) => {

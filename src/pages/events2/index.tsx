@@ -55,7 +55,7 @@ interface DeviceOSType {
 // ** Vars
 const deviceOSObj: DeviceOSType = {
   Android: { icon: 'mdi:android', color: 'success.main' },
-  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' },
+  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' }
 }
 
 interface CellType {
@@ -97,7 +97,9 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'deviceId',
     headerName: 'Device ID',
-    renderCell: ({ row }: CellType) => <LinkStyled href={`/devices2/${row.deviceId}`}>{`${row.deviceId}`}</LinkStyled>
+    renderCell: ({ row }: CellType) => (
+      <LinkStyled href={`/info/device/${row.deviceId}`}>{`${row.deviceId}`}</LinkStyled>
+    )
   },
   {
     flex: 0.15,
@@ -155,7 +157,154 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{JSON.stringify(isVPNSpoofed)}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isVPNSpoofed)}
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'isVirtualOS',
+    headerName: 'isVirtualOS',
+    renderCell: ({ row }: CellType) => {
+      const { isVirtualOS } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isVirtualOS)}
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'isEmulator',
+    headerName: 'isEmulator',
+    renderCell: ({ row }: CellType) => {
+      const { isEmulator } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isEmulator)}
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'isAppSpoofed',
+    headerName: 'isAppSpoofed',
+    renderCell: ({ row }: CellType) => {
+      const { isAppSpoofed } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isAppSpoofed)}
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'isAppPatched',
+    headerName: 'isAppPatched',
+    renderCell: ({ row }: CellType) => {
+      const { isAppPatched } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isAppPatched)}
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'isAppCloned',
+    headerName: 'isAppCloned',
+    renderCell: ({ row }: CellType) => {
+      const { isAppCloned } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isAppCloned)}
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'Latitude',
+    headerName: 'Latitude',
+    renderCell: ({ row }: CellType) => {
+      const { Latitude } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Latitude}</Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'Longitude',
+    headerName: 'Longitude',
+    renderCell: ({ row }: CellType) => {
+      const { Longitude } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Longitude}</Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'Cellular_network',
+    headerName: 'Cellular_network',
+    renderCell: ({ row }: CellType) => {
+      const { Cellular_network } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Cellular_network}</Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'Wifi_network',
+    headerName: 'Wifi_network',
+    renderCell: ({ row }: CellType) => {
+      const { Wifi_network } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Wifi_network}</Box>
         </Box>
       )
     }
@@ -189,7 +338,7 @@ const columns: GridColDef[] = [
         </Box>
       )
     }
-  },
+  }
 ]
 
 /* eslint-disable */
@@ -245,12 +394,7 @@ const EventsList = () => {
         dates
       })
     )
-  }, [
-    dispatch,
-    OS,
-    value,
-    dates
-  ])
+  }, [dispatch, OS, value, dates])
 
   const handleOSChange = useCallback((e: SelectChangeEvent) => {
     setOS(e.target.value)
@@ -278,22 +422,22 @@ const EventsList = () => {
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                  <InputLabel id='OS-select'>Select OS</InputLabel>
-                  <Select
-                    fullWidth
-                    value={OS}
-                    id='select-OS'
-                    label='Select OS'
-                    labelId='OS-select'
-                    onChange={handleOSChange}
-                    inputProps={{ placeholder: 'Select OS' }}
-                  >
-                    <MenuItem value=''>Select OS</MenuItem>
-                    <MenuItem value='Android'>Android</MenuItem>
-                    <MenuItem value='iOS'>iOS</MenuItem>
-                  </Select>
-                </FormControl>
+                  <FormControl fullWidth>
+                    <InputLabel id='OS-select'>Select OS</InputLabel>
+                    <Select
+                      fullWidth
+                      value={OS}
+                      id='select-OS'
+                      label='Select OS'
+                      labelId='OS-select'
+                      onChange={handleOSChange}
+                      inputProps={{ placeholder: 'Select OS' }}
+                    >
+                      <MenuItem value=''>Select OS</MenuItem>
+                      <MenuItem value='Android'>Android</MenuItem>
+                      <MenuItem value='iOS'>iOS</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <DatePicker
