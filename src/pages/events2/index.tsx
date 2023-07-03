@@ -55,7 +55,7 @@ interface DeviceOSType {
 // ** Vars
 const deviceOSObj: DeviceOSType = {
   Android: { icon: 'mdi:android', color: 'success.main' },
-  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' },
+  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' }
 }
 
 interface CellType {
@@ -97,7 +97,9 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'deviceId',
     headerName: 'Device ID',
-    renderCell: ({ row }: CellType) => <LinkStyled href={`/devices2/${row.deviceId}`}>{`${row.deviceId}`}</LinkStyled>
+    renderCell: ({ row }: CellType) => (
+      <LinkStyled href={`/info/device/${row.deviceId}`}>{`${row.deviceId}`}</LinkStyled>
+    )
   },
   {
     flex: 0.15,
@@ -155,7 +157,9 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{JSON.stringify(isVPNSpoofed)}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isVPNSpoofed)}
+          </Box>
         </Box>
       )
     }
@@ -170,7 +174,9 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{JSON.stringify(isVirtualOS)}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isVirtualOS)}
+          </Box>
         </Box>
       )
     }
@@ -185,7 +191,9 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{JSON.stringify(isEmulator)}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isEmulator)}
+          </Box>
         </Box>
       )
     }
@@ -200,7 +208,9 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{JSON.stringify(isAppSpoofed)}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isAppSpoofed)}
+          </Box>
         </Box>
       )
     }
@@ -215,7 +225,9 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{JSON.stringify(isAppPatched)}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isAppPatched)}
+          </Box>
         </Box>
       )
     }
@@ -230,7 +242,9 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{JSON.stringify(isAppCloned)}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {JSON.stringify(isAppCloned)}
+          </Box>
         </Box>
       )
     }
@@ -324,7 +338,7 @@ const columns: GridColDef[] = [
         </Box>
       )
     }
-  },
+  }
 ]
 
 /* eslint-disable */
@@ -380,12 +394,7 @@ const EventsList = () => {
         dates
       })
     )
-  }, [
-    dispatch,
-    OS,
-    value,
-    dates
-  ])
+  }, [dispatch, OS, value, dates])
 
   const handleOSChange = useCallback((e: SelectChangeEvent) => {
     setOS(e.target.value)
@@ -413,22 +422,22 @@ const EventsList = () => {
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                  <InputLabel id='OS-select'>Select OS</InputLabel>
-                  <Select
-                    fullWidth
-                    value={OS}
-                    id='select-OS'
-                    label='Select OS'
-                    labelId='OS-select'
-                    onChange={handleOSChange}
-                    inputProps={{ placeholder: 'Select OS' }}
-                  >
-                    <MenuItem value=''>Select OS</MenuItem>
-                    <MenuItem value='Android'>Android</MenuItem>
-                    <MenuItem value='iOS'>iOS</MenuItem>
-                  </Select>
-                </FormControl>
+                  <FormControl fullWidth>
+                    <InputLabel id='OS-select'>Select OS</InputLabel>
+                    <Select
+                      fullWidth
+                      value={OS}
+                      id='select-OS'
+                      label='Select OS'
+                      labelId='OS-select'
+                      onChange={handleOSChange}
+                      inputProps={{ placeholder: 'Select OS' }}
+                    >
+                      <MenuItem value=''>Select OS</MenuItem>
+                      <MenuItem value='Android'>Android</MenuItem>
+                      <MenuItem value='iOS'>iOS</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <DatePicker
