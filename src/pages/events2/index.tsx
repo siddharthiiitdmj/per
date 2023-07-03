@@ -213,7 +213,7 @@ const EventsList = () => {
   const [value, setValue] = useState<string>('')
   const [endDateRange, setEndDateRange] = useState<DateType>(null)
   const [startDateRange, setStartDateRange] = useState<DateType>(null)
-  
+
   // const [IPaddress] = useState<string>('')
   // const [nodename] = useState<string>('')
   // const [deviceId] = useState<string>('')
@@ -310,7 +310,7 @@ const EventsList = () => {
                       <CustomInput
                         dates={dates}
                         setDates={setDates}
-                        label='Invoice Date'
+                        label='Event Date'
                         end={endDateRange as number | Date}
                         start={startDateRange as number | Date}
                       />
