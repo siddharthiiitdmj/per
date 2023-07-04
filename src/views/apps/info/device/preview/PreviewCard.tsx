@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography'
 // ** Types
 import AboutOverivew from './AboutOverivew'
 import ActivityTimeline from './ActivityTimeline'
-import DeviceEvents from './DeviceEvents'
-import DeviceUsersList from './UsersList'
 
 interface Props {
   data: any
