@@ -28,7 +28,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** Utils Import
 
 // ** Actions Imports
-import { fetchData } from 'src/store/apps/device'
+import { fetchDeviceData } from 'src/store/apps/device'
 
 // ** Third Party Components
 
@@ -160,7 +160,7 @@ const UserList = () => {
 
   useEffect(() => {
     dispatch(
-      fetchData({
+      fetchDeviceData({
         OS
       })
     )
