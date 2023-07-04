@@ -15,10 +15,24 @@ import ChartjsPolarAreaChart from 'src/views/charts/chartjs/ChartjsPolarAreaChar
 
 // ** Third Party Styles Import
 import 'chart.js/auto'
+import { useEffect, useState } from 'react'
 import ChartjsLineChart from 'src/views/charts/chartjs/ChartjsLineChart'
 
+// ** Types Imports
+import { AppDispatch } from 'src/store'
+
+// ** Store Imports
+import { useDispatch } from 'react-redux'
+
+// ** Actions Imports
+import { fetchData } from 'src/store/apps/events'
+import { fetchDeviceData } from 'src/store/apps/device'
+
+
 const ChartJS = () => {
-  // ** Hook
+  const [OS] = useState<string>('')
+  const [dates] = useState<Date[]>([])
+  const [value] = useState<string>('')
   const theme = useTheme()
 
   // Vars
@@ -35,11 +49,23 @@ const ChartJS = () => {
   const borderColor = theme.palette.divider
   const labelColor = theme.palette.text.disabled
   const whiteColor = '#fff'
+  const dispatch = useDispatch<AppDispatch>()
 
-  // const pieData = async () => {
-  //   const res = axios.get(`http://localhost:3000/api/devices/stats2?os=${OS}`)
-  // }
-  // pieData()
+  useEffect(() => {
+    const fetchDataAndDeviceData = async () => {
+      dispatch(fetchData({
+        OS,
+        q: value,
+        dates
+      }))
+      dispatch(fetchDeviceData({
+        OS,
+        q: value,
+      }))
+    }
+  
+    fetchDataAndDeviceData()
+  }, [dispatch, OS, value, dates])
 
   return (
     <DatePickerWrapper>

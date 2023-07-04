@@ -3,11 +3,14 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import device from './apps/device'
 import events from './apps/events'
+import deviceSpecificEvents from './apps/deviceSpecificEvents'
+
 
 export const store = configureStore({
   reducer: {
     device,
-    events
+    events,
+    deviceSpecificEvents,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
