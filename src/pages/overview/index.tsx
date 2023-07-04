@@ -59,7 +59,8 @@ const ChartJS = () => {
         dates
       }))
       dispatch(fetchDeviceData({
-        OS
+        OS,
+        q: value,
       }))
     }
   

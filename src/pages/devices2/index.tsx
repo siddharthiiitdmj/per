@@ -1,20 +1,21 @@
 // ** React Imports
 import { useCallback, useEffect, useState } from 'react'
 
-// ** Next Imports
+// ** Next Import
+import Link from 'next/link'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
-import Divider from '@mui/material/Divider'
 import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Icon Imports
@@ -27,17 +28,20 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // ** Utils Import
 
-// ** Actions Imports
-import { fetchDeviceData } from 'src/store/apps/device'
-
-// ** Third Party Components
+// ** Third Party Imports
 
 // ** Types Imports
 import { AppDispatch, RootState } from 'src/store'
+
+// ** Custom Components Imports
+import TableHeader from 'src/views/apps/devices/list/TableHeader'
+
+// ** Styled Components
+import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import { fetchDeviceData } from 'src/store/apps/device'
 import { DeviceType } from 'src/types/apps/deviceTypes'
 
 // ** Custom Table Components Imports
-
 interface DeviceOSType {
   [key: string]: { icon: string; color: string }
 }
@@ -45,12 +49,18 @@ interface DeviceOSType {
 // ** Vars
 const deviceOSObj: DeviceOSType = {
   Android: { icon: 'mdi:android', color: 'success.main' },
-  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' },
+  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' }
 }
 
 interface CellType {
   row: DeviceType
 }
+
+// ** Styled component for the link in the dataTable
+const LinkStyled = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
 
 const columns: GridColDef[] = [
   {
@@ -61,16 +71,12 @@ const columns: GridColDef[] = [
     renderCell: ({ row }: CellType) => {
       const { id } = row
 
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{id}</Box>
-        </Box>
-      )
+      return <LinkStyled href={`/info/device/${id}`}>{`${id}`}</LinkStyled>
     }
   },
   {
     flex: 0.2,
-    minWidth: 230,
+    minWidth: 100,
     field: 'devicemodel',
     headerName: 'Model',
     renderCell: ({ row }: CellType) => {
@@ -78,9 +84,7 @@ const columns: GridColDef[] = [
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            {devicemodel}
-          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{devicemodel}</Box>
         </Box>
       )
     }
@@ -103,7 +107,7 @@ const columns: GridColDef[] = [
   },
   {
     flex: 0.2,
-    minWidth: 250,
+    minWidth: 100,
     field: 'OS_version',
     headerName: 'OS Version',
     renderCell: ({ row }: CellType) => {
@@ -142,16 +146,10 @@ const columns: GridColDef[] = [
   }
 ]
 
-const UserList = () => {
+const EventsList = () => {
   // ** State
   const [OS, setOS] = useState<string>('')
-
-  // const [Kernel] = useState<string>('')
-  // const [Screen_resolution] = useState<string>('')
-  // const [devicemodel] = useState<string>('')
-  // const [OS_version] = useState<string>('')
-  // const [id] = useState<string>('')
-  
+  const [value, setValue] = useState<string>('')
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   // ** Hooks
@@ -161,57 +159,68 @@ const UserList = () => {
   useEffect(() => {
     dispatch(
       fetchDeviceData({
-        OS
+        OS,
+        q: value
       })
     )
-  }, [dispatch, OS])
+  }, [dispatch, OS, value])
 
   const handleOSChange = useCallback((e: SelectChangeEvent) => {
     setOS(e.target.value)
   }, [])
 
+  const handleFilter = (val: string) => {
+    setValue(val)
+  }
+
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Devices' />
-          <CardContent>
-            <Grid container spacing={6}>
-              <Grid item sm={4} xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id='OS-select'>Select OS</InputLabel>
-                  <Select
-                    fullWidth
-                    value={OS}
-                    id='select-OS'
-                    label='Select OS'
-                    labelId='OS-select'
-                    onChange={handleOSChange}
-                    inputProps={{ placeholder: 'Select OS' }}
-                  >
-                    <MenuItem value=''>Select OS</MenuItem>
-                    <MenuItem value='Android'>Android</MenuItem>
-                    <MenuItem value='iOS'>iOS</MenuItem>
-                  </Select>
-                </FormControl>
+    <DatePickerWrapper>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader title='Devices' />
+            <CardContent>
+              <Grid container spacing={6}>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id='OS-select'>Select OS</InputLabel>
+                    <Select
+                      fullWidth
+                      value={OS}
+                      id='select-OS'
+                      label='Select OS'
+                      labelId='OS-select'
+                      onChange={handleOSChange}
+                      inputProps={{ placeholder: 'Select OS' }}
+                    >
+                      <MenuItem value=''>Select OS</MenuItem>
+                      <MenuItem value='Android'>Android</MenuItem>
+                      <MenuItem value='iOS'>iOS</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
-            </Grid>
-          </CardContent>
-          <Divider />
-          <DataGrid
-            autoHeight
-            rows={store.allData}
-            columns={columns}
-            checkboxSelection
-            disableRowSelectionOnClick
-            pageSizeOptions={[10, 25, 50]}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-          />
-        </Card>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <TableHeader value={value} handleFilter={handleFilter} />
+            <DataGrid
+              autoHeight
+              pagination
+              rows={store.allData}
+              columns={columns}
+              disableRowSelectionOnClick
+              pageSizeOptions={[10, 25, 50]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+            />
+          </Card>
+        </Grid>
       </Grid>
-    </Grid>
+    </DatePickerWrapper>
   )
 }
 
-export default UserList
+export default EventsList
