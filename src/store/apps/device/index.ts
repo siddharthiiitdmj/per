@@ -6,12 +6,14 @@ import axios from 'axios'
 
 interface DataParams {
   OS: string
+  q: string
 }
 
 // ** Fetch Users
 export const fetchDeviceData = createAsyncThunk('appDevices/fetchDeviceData', async (params: DataParams) => {
-  const {OS} = params
-  const response = await axios.get(`/api/devices/data?os=${OS}`)
+  const response = await axios.get(`/api/devices/data`,{
+    params
+  })
 
   return response.data
 })
