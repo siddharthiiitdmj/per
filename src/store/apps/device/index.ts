@@ -6,12 +6,14 @@ import axios from 'axios'
 
 interface DataParams {
   OS: string
+  q: string
 }
 
 // ** Fetch Users
-export const fetchData = createAsyncThunk('appDevices/fetchData', async (params: DataParams) => {
-  const {OS} = params
-  const response = await axios.get(`/api/devices/data?os=${OS}`)
+export const fetchDeviceData = createAsyncThunk('appDevices/fetchDeviceData', async (params: DataParams) => {
+  const response = await axios.get(`/api/devices/data`,{
+    params
+  })
 
   return response.data
 })
@@ -24,7 +26,7 @@ export const appDevicesSlice = createSlice({
   },
   reducers: {},
   extraReducers: builder => {
-    builder.addCase(fetchData.fulfilled, (state, action) => {
+    builder.addCase(fetchDeviceData.fulfilled, (state, action) => {
       state.total = action.payload.total
       state.allData = action.payload.allData
     })
