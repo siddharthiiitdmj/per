@@ -17,5 +17,8 @@ export type EventsType = {
   createdAt: string
   updatedAt: string
   OS: string
+  username: string
+  email: string
   device: object
+  user: object
 }
