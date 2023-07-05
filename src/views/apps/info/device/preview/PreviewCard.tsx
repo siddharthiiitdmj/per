@@ -43,6 +43,7 @@ const PreviewCard = ({ data }: Props) => {
             <Grid item xs={12} sx={{ mb: 7 }}>
               <DeviceEvents data={data.data[0].id} />
             </Grid>
+            <DeviceUsersList data={data.data[0].id} />
           </Grid>
         </Grid>
       </>
