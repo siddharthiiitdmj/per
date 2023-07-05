@@ -36,6 +36,7 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
 
   // States
   const [chartData, setChartData] = useState({})
+  const [rawData, setRawData] = useState<any>({})
   const [OS, setOS] = useState<string>('All')
   const [activeDate, setActiveDate] = useState<number>(7)
 
@@ -65,15 +66,21 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
     // console.log('Date:', startDate, ' - ', formattedStartDate)
 
     const fetchChartData = async () => {
-      const res = await api.get(`/devices/stats2?os=${OS}&chart=pieChart`)
+      const res = await api.get(`/devices/stats4?os=${OS}&chart=pieChart`)
 
       // console.log(res.data)
-      setChartData(res.data[activeDate])
+      setRawData(res.data)
+
+      // setChartData(rawData[activeDate])
     }
     fetchChartData()
 
     // setChartData(res)
-  }, [OS, activeDate])
+  }, [OS])
+
+  useEffect(() => {
+    setChartData(rawData[activeDate])
+  }, [rawData, activeDate])
 
   const options: ChartOptions<'polarArea'> = {
     responsive: true,
@@ -106,12 +113,12 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   }
 
   const data: ChartData<'polarArea'> = {
-    labels: Object.entries(chartData).map(([key, value]) => `${key}: ${value}`),
+    labels: chartData ? Object.entries(chartData).map(([key, value]) => `${key}: ${value}`) : [],
     datasets: [
       {
         borderWidth: 0.5,
         label: 'No. of Devices',
-        data: Object.values(chartData),
+        data: chartData ? Object.values(chartData) : [],
         backgroundColor: [primary, yellow, warning, info, grey, green]
       }
     ]
@@ -145,9 +152,9 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <ToggleButtonGroup exclusive value={activeDate} onChange={handleActiveDate} sx={{ height: 35 }}>
-            <ToggleButton value={'1'}>1 Day</ToggleButton>
-            <ToggleButton value={'7'}>7 Days</ToggleButton>
-            <ToggleButton value={'30'}>30 Days</ToggleButton>
+            <ToggleButton value={1}>1 Day</ToggleButton>
+            <ToggleButton value={7}>7 Days</ToggleButton>
+            <ToggleButton value={30}>30 Days</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
       </Grid>

@@ -74,7 +74,7 @@ const ChartJS = () => {
     <DatePickerWrapper>
       <Grid container spacing={6} className='match-height'>
         <Grid item xs={12} md={6}>
-          {/* <ChartjsPolarAreaChart
+          <ChartjsPolarAreaChart
             yellow={yellowColor}
             info={polarChartInfo}
             grey={polarChartGrey}
@@ -82,7 +82,7 @@ const ChartJS = () => {
             green={polarChartGreen}
             legendColor={legendColor}
             warning={polarChartWarning}
-          /> */}
+          />
         </Grid>
         <Grid item xs={12}>
           <ChartjsLineChart
