@@ -36,6 +36,7 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
 
   // States
   const [chartData, setChartData] = useState({})
+  const [rawData, setRawData] = useState<any>({})
   const [OS, setOS] = useState<string>('All')
   const [activeDate, setActiveDate] = useState<number>(7)
 
@@ -52,28 +53,34 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   }
 
   useEffect(() => {
-    const currentDate = new Date()
-    const endDate = currentDate.toISOString() // Convert to ISO string format
+    // const currentDate = new Date()
+    // const endDate = currentDate.toISOString() // Convert to ISO string format
 
-    const startDate = new Date(currentDate) // Create a new date object
+    // const startDate = new Date(currentDate) // Create a new date object
 
-    startDate.setDate(startDate.getDate() - activeDate) // Subtract activeDate days from endDate
+    // startDate.setDate(startDate.getDate() - activeDate) // Subtract activeDate days from endDate
 
-    const formattedStartDate = startDate.toISOString()
+    // const formattedStartDate = startDate.toISOString()
 
     // console.log('OS:', OS)
     // console.log('Date:', startDate, ' - ', formattedStartDate)
 
     const fetchChartData = async () => {
-      const res = await api.get(`/devices/stats2?os=${OS}&startDate=${formattedStartDate}&endDate=${endDate}`)
+      const res = await api.get(`/devices/stats4?os=${OS}&chart=pieChart`)
 
       // console.log(res.data)
-      setChartData(res.data)
+      setRawData(res.data)
+
+      // setChartData(rawData[activeDate])
     }
     fetchChartData()
 
     // setChartData(res)
-  }, [OS, activeDate])
+  }, [OS])
+
+  useEffect(() => {
+    setChartData(rawData[activeDate])
+  }, [rawData, activeDate])
 
   const options: ChartOptions<'polarArea'> = {
     responsive: true,
@@ -106,12 +113,12 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   }
 
   const data: ChartData<'polarArea'> = {
-    labels: Object.entries(chartData).map(([key, value]) => `${key}: ${value}`),
+    labels: chartData ? Object.entries(chartData).map(([key, value]) => `${key}: ${value}`) : [],
     datasets: [
       {
         borderWidth: 0.5,
         label: 'No. of Devices',
-        data: Object.values(chartData),
+        data: chartData ? Object.values(chartData) : [],
         backgroundColor: [primary, yellow, warning, info, grey, green]
       }
     ]

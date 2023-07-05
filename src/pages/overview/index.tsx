@@ -28,7 +28,6 @@ import { useDispatch } from 'react-redux'
 import { fetchData } from 'src/store/apps/events'
 import { fetchDeviceData } from 'src/store/apps/device'
 
-
 const ChartJS = () => {
   const [OS] = useState<string>('')
   const [dates] = useState<Date[]>([])
@@ -53,17 +52,21 @@ const ChartJS = () => {
 
   useEffect(() => {
     const fetchDataAndDeviceData = async () => {
-      dispatch(fetchData({
-        OS,
-        q: value,
-        dates
-      }))
-      dispatch(fetchDeviceData({
-        OS,
-        q: value,
-      }))
+      dispatch(
+        fetchData({
+          OS,
+          q: value,
+          dates
+        })
+      )
+      dispatch(
+        fetchDeviceData({
+          OS,
+          q: value
+        })
+      )
     }
-  
+
     fetchDataAndDeviceData()
   }, [dispatch, OS, value, dates])
 
