@@ -52,23 +52,23 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   }
 
   useEffect(() => {
-    const currentDate = new Date()
-    const endDate = currentDate.toISOString() // Convert to ISO string format
+    // const currentDate = new Date()
+    // const endDate = currentDate.toISOString() // Convert to ISO string format
 
-    const startDate = new Date(currentDate) // Create a new date object
+    // const startDate = new Date(currentDate) // Create a new date object
 
-    startDate.setDate(startDate.getDate() - activeDate) // Subtract activeDate days from endDate
+    // startDate.setDate(startDate.getDate() - activeDate) // Subtract activeDate days from endDate
 
-    const formattedStartDate = startDate.toISOString()
+    // const formattedStartDate = startDate.toISOString()
 
     // console.log('OS:', OS)
     // console.log('Date:', startDate, ' - ', formattedStartDate)
 
     const fetchChartData = async () => {
-      const res = await api.get(`/devices/stats2?os=${OS}&startDate=${formattedStartDate}&endDate=${endDate}`)
+      const res = await api.get(`/devices/stats2?os=${OS}&chart=pieChart`)
 
       // console.log(res.data)
-      setChartData(res.data)
+      setChartData(res.data[activeDate])
     }
     fetchChartData()
 
@@ -145,9 +145,9 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <ToggleButtonGroup exclusive value={activeDate} onChange={handleActiveDate} sx={{ height: 35 }}>
-            <ToggleButton value={1}>1 Day</ToggleButton>
-            <ToggleButton value={7}>7 Days</ToggleButton>
-            <ToggleButton value={30}>30 Days</ToggleButton>
+            <ToggleButton value={'1'}>1 Day</ToggleButton>
+            <ToggleButton value={'7'}>7 Days</ToggleButton>
+            <ToggleButton value={'30'}>30 Days</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
       </Grid>

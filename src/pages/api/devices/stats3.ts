@@ -25,6 +25,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       os = 'All'
     }
 
+    if (os !== 'All' && os !== 'iOS' && os !== 'Android') {
+      return res.status(400).json({
+        message: 'Invalid os value'
+      })
+    }
+
     //delete old record
     await prisma.Stats.deleteMany({
       where: {

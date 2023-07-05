@@ -38,7 +38,7 @@ const ChartjsLineChart = (props: LineProps) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await api.get(`/devices/stats?os=${OS}`)
+        const res = await api.get(`/devices/stats4?os=${OS}&chart=lineChart`)
         if (res.status === 200) {
           const newData = res.data
           setMyData(newData)
