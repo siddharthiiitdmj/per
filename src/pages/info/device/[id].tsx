@@ -43,7 +43,7 @@ const DeviceInfoPreview = () => {
     return (
       <>
         <Grid container spacing={6}>
-          <Grid item xl={9} md={12} xs={12}>
+          <Grid item xl={12} md={12} xs={12}>
             <PreviewCard data={data} />
           </Grid>
         </Grid>
