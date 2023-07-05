@@ -85,7 +85,7 @@ model Events {
   deviceId         String   @db.Uuid
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   device           Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-  nodename         String 
+  nodename         String
   IPaddress        String
   isVPNSpoofed     Boolean
   isVirtualOS      Boolean
@@ -115,6 +115,12 @@ model UserProfile {
   country      String
   language     String
   user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Stats {
+  id        Int  @id @default(autoincrement())
+  pieChart  Json
+  lineChart Json
 }
 
 enum UserRole {
