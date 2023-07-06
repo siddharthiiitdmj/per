@@ -15,15 +15,10 @@ import { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 
 import { AppDispatch, RootState } from 'src/store'
+
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchLineStatsData } from 'src/store/apps/lineStats'
-
-interface LineData {
-  monthly: object
-  weekly: object
-  daily: object
-}
 
 interface LineProps {
   white: string
