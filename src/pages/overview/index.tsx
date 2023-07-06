@@ -25,8 +25,8 @@ import { AppDispatch } from 'src/store'
 import { useDispatch } from 'react-redux'
 
 // ** Actions Imports
-import { fetchData } from 'src/store/apps/events'
 import { fetchDeviceData } from 'src/store/apps/device'
+import { fetchData } from 'src/store/apps/events'
 
 const ChartJS = () => {
   const [OS] = useState<string>('')
