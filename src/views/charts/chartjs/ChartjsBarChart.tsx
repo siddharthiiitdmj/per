@@ -1,44 +1,64 @@
 // ** React Imports
-import { forwardRef, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
-import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Third Party Imports
-import format from 'date-fns/format'
 import { Bar } from 'react-chartjs-2'
-import DatePicker from 'react-datepicker'
 import { ChartData, ChartOptions } from 'chart.js'
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/store'
+import { useSelector, useDispatch } from 'react-redux'
+import { AppDispatch, RootState } from 'src/store'
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import { fetchPieStatsData } from 'src/store/apps/pieStats'
 
 // ** Types
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
+import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import { useEffect, useState } from 'react'
 
 interface BarProp {
-  yellow: string
   labelColor: string
   borderColor: string
 }
 
 const ChartjsBarChart = (props: BarProp) => {
   // ** Props
-  const { yellow, labelColor, borderColor } = props
+  const { labelColor, borderColor } = props
 
   // ** States
-  const [endDate, setEndDate] = useState<DateType>(null)
-  const [startDate, setStartDate] = useState<DateType>(null)
+  const [OS, setOS] = useState<string>('All')
+  const [activeDate, setActiveDate] = useState<number>(30)
 
   // ** Hooks
+  const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.pieStats)
   console.log('store data: ', store.pieChartData)
+
+  const handleOsChange = (event: SelectChangeEvent) => {
+    setOS(event.target.value as string)
+  }
+
+  const handleActiveDate = (event: React.MouseEvent<HTMLElement>, newActive: string | null) => {
+    if (newActive !== null) {
+      setActiveDate(parseInt(newActive))
+      console.log(newActive)
+    }
+  }
+
+  useEffect(() => {
+    dispatch(
+      fetchPieStatsData({
+        OS
+      })
+    )
+  }, [dispatch, OS])
 
   const options: ChartOptions<'bar'> = {
     responsive: true,
@@ -53,12 +73,12 @@ const ChartjsBarChart = (props: BarProp) => {
       },
       y: {
         min: 0,
-        max: 400,
+        max: 150,
         grid: {
           color: borderColor
         },
         ticks: {
-          stepSize: 100,
+          stepSize: 25,
           color: labelColor
         }
       }
@@ -68,90 +88,73 @@ const ChartjsBarChart = (props: BarProp) => {
     }
   }
 
+  const colors = [
+    '#FF6384', // Red
+    '#36A2EB', // Blue
+    '#FFCE56', // Yellow
+    '#4BC0C0', // Teal
+    '#9966FF', // Purple
+    '#FF9F40' // Orange
+  ]
+
+  const labels = Object.keys(store.pieChartData[activeDate] ? store.pieChartData[activeDate] : {})
+  const dataValues = Object.values(store.pieChartData[activeDate] ? store.pieChartData[activeDate] : {})
+
   const data: ChartData<'bar'> = {
-    labels: [
-      '7/12',
-      '8/12',
-      '9/12',
-      '10/12',
-      '11/12',
-      '12/12',
-      '13/12',
-      '14/12',
-      '15/12',
-      '16/12',
-      '17/12',
-      '18/12',
-      '19/12'
-    ],
+    labels: labels.map(label => label.substring(2)), // Extracting label names without 'is' prefix
     datasets: [
       {
         maxBarThickness: 15,
-        backgroundColor: yellow,
+        backgroundColor: colors.slice(0, dataValues.length),
         borderColor: 'transparent',
         borderRadius: { topRight: 15, topLeft: 15 },
-        data: [275, 90, 190, 205, 125, 85, 55, 87, 127, 150, 230, 280, 190]
+        data: dataValues as []
       }
     ]
-  }
-
-  const CustomInput = forwardRef(({ ...props }: any, ref) => {
-    const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
-    const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
-
-    const value = `${startDate}${endDate !== null ? endDate : ''}`
-
-    return (
-      <TextField
-        {...props}
-        size='small'
-        value={value}
-        inputRef={ref}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <Icon icon='mdi:calendar-outline' />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position='end'>
-              <Icon icon='mdi:chevron-down' />
-            </InputAdornment>
-          )
-        }}
-      />
-    )
-  })
-
-  const handleOnChange = (dates: any) => {
-    const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
   }
 
   return (
     <Card>
       <CardHeader
-        title='Latest Statistics'
+        title='Malicious Devices'
         sx={{
           flexDirection: ['column', 'row'],
           alignItems: ['flex-start', 'center'],
           '& .MuiCardHeader-action': { mb: 0 },
           '& .MuiCardHeader-content': { mb: [2, 0] }
         }}
-        action={
-          <DatePicker
-            selectsRange
-            id='chartjs-bar'
-            endDate={endDate}
-            selected={startDate}
-            startDate={startDate}
-            onChange={handleOnChange}
-            placeholderText='Click to select a date'
-            customInput={<CustomInput start={startDate} end={endDate} />}
-          />
-        }
       />
+      <Grid container spacing={2} sx={{ px: 4 }}>
+        <Grid item xs={12} md={6}>
+          <FormControl sx={{ width: 100 }}>
+            <InputLabel
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              id='controlled-select-label'
+            >
+              OS
+            </InputLabel>
+            <Select
+              sx={{ height: 45 }}
+              value={OS}
+              label='Controlled'
+              id='controlled-select'
+              onChange={handleOsChange}
+              labelId='controlled-select-label'
+            >
+              <MenuItem value={'All'}>All</MenuItem>
+              <MenuItem value={'Android'}>Android</MenuItem>
+              <MenuItem value={'iOS'}>iOS</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ToggleButtonGroup exclusive value={activeDate} onChange={handleActiveDate} sx={{ height: 35 }}>
+            <ToggleButton value={1}>1 Day</ToggleButton>
+            <ToggleButton value={7}>7 Days</ToggleButton>
+            <ToggleButton value={30}>30 Days</ToggleButton>
+          </ToggleButtonGroup>
+        </Grid>
+      </Grid>
       <CardContent>
         <Bar data={data} height={400} options={options} />
       </CardContent>
