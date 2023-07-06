@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux'
 // ** Actions Imports
 import { fetchDeviceData } from 'src/store/apps/device'
 import { fetchData } from 'src/store/apps/events'
+import ChartjsBarChart from 'src/views/charts/chartjs/ChartjsBarChart'
 
 const ChartJS = () => {
   const [OS] = useState<string>('')
@@ -83,6 +84,9 @@ const ChartJS = () => {
             legendColor={legendColor}
             warning={polarChartWarning}
           />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ChartjsBarChart labelColor={labelColor} borderColor={borderColor} />
         </Grid>
         <Grid item xs={12}>
           <ChartjsLineChart
