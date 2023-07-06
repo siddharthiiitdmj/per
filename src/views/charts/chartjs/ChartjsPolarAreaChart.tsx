@@ -1,22 +1,24 @@
 // ** MUI Imports
 import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
+import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import Grid from '@mui/material/Grid'
 
 // ** Third Party Imports
-import { PolarArea } from 'react-chartjs-2'
 import { ChartData, ChartOptions } from 'chart.js'
 import { useEffect, useState } from 'react'
+import { PolarArea } from 'react-chartjs-2'
 
-import api from 'src/helper/api'
-
+import { AppDispatch, RootState } from 'src/store'
+// ** Store Imports
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchPieStatsData } from 'src/store/apps/pieStats'
 // ** Custom Components Imports
 // import OptionsMenu from 'src/@core/components/option-menu'
 
@@ -35,10 +37,12 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   const { info, grey, green, yellow, primary, warning, legendColor } = props
 
   // States
-  const [chartData, setChartData] = useState({})
-  const [rawData, setRawData] = useState<any>({})
   const [OS, setOS] = useState<string>('All')
-  const [activeDate, setActiveDate] = useState<number>(7)
+  const [activeDate, setActiveDate] = useState<number>(30)
+
+  // ** Hooks
+  const dispatch = useDispatch<AppDispatch>()
+  const store = useSelector((state: RootState) => state.pieStats)
 
   // Handlers
   const handleOsChange = (event: SelectChangeEvent) => {
@@ -53,34 +57,12 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   }
 
   useEffect(() => {
-    // const currentDate = new Date()
-    // const endDate = currentDate.toISOString() // Convert to ISO string format
-
-    // const startDate = new Date(currentDate) // Create a new date object
-
-    // startDate.setDate(startDate.getDate() - activeDate) // Subtract activeDate days from endDate
-
-    // const formattedStartDate = startDate.toISOString()
-
-    // console.log('OS:', OS)
-    // console.log('Date:', startDate, ' - ', formattedStartDate)
-
-    const fetchChartData = async () => {
-      const res = await api.get(`/devices/stats4?os=${OS}&chart=pieChart`)
-
-      // console.log(res.data)
-      setRawData(res.data)
-
-      // setChartData(rawData[activeDate])
-    }
-    fetchChartData()
-
-    // setChartData(res)
-  }, [OS])
-
-  useEffect(() => {
-    setChartData(rawData[activeDate])
-  }, [rawData, activeDate])
+    dispatch(
+      fetchPieStatsData({
+        OS
+      })
+    )
+  }, [dispatch, OS])
 
   const options: ChartOptions<'polarArea'> = {
     responsive: true,
@@ -113,12 +95,14 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   }
 
   const data: ChartData<'polarArea'> = {
-    labels: chartData ? Object.entries(chartData).map(([key, value]) => `${key}: ${value}`) : [],
+    labels: store.pieChartData[activeDate]
+      ? Object.entries(store.pieChartData[activeDate]).map(([key, value]) => `${key}: ${value}`)
+      : [],
     datasets: [
       {
         borderWidth: 0.5,
         label: 'No. of Devices',
-        data: chartData ? Object.values(chartData) : [],
+        data: store.pieChartData[activeDate] ? Object.values(store.pieChartData[activeDate]) : [],
         backgroundColor: [primary, yellow, warning, info, grey, green]
       }
     ]
