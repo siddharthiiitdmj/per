@@ -1,20 +1,24 @@
-import api from 'src/helper/api'
-
 // ** MUI Imports
 import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
+import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 // import Grid from '@mui/material/Grid'
 
 // ** Third Party Imports
-import { Line } from 'react-chartjs-2'
 import { ChartData, ChartOptions } from 'chart.js'
 import { useEffect, useState } from 'react'
+import { Line } from 'react-chartjs-2'
+
+import { AppDispatch, RootState } from 'src/store'
+
+// ** Store Imports
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchLineStatsData } from 'src/store/apps/lineStats'
 
 interface LineProps {
   white: string
@@ -29,42 +33,22 @@ interface LineProps {
 const ChartjsLineChart = (props: LineProps) => {
   // ** Props
   const { white, primary, warning, labelColor, borderColor, legendColor } = props
-  const [myData, setMyData] = useState(null)
   const colors = ['#fff', '#ff8131', '#28dac6', '#299aff', '#836af9', '#ffe802']
 
-  const [timePeriod, setTimePeriod] = useState('monthly')
+  const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
 
+  // ** Hooks
+  const dispatch = useDispatch<AppDispatch>()
+  const store = useSelector((state: RootState) => state.lineStats)
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await api.get(`/devices/stats4?os=${OS}&chart=lineChart`)
-        if (res.status === 200) {
-          const newData = res.data
-          setMyData(newData)
-
-          // console.log(myData)
-        } else {
-          console.error('Failed to fetch data:', res.status)
-        }
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
-    }
-
-    fetchData()
-  }, [OS])
-
-  // const stepSize = 0
-  // let maxValue = 160
-  useEffect(() => {
-    console.log(myData)
-    console.log(OS)
-    console.log(timePeriod)
-
-    // maxValue = timePeriod ? Math.max(...Object.values(myData?.[timePeriod]?.isVPNSpoofed || [])) : 160
-    // console.log(maxValue)
-  }, [myData, OS, timePeriod])
+    dispatch(
+      fetchLineStatsData({
+        OS
+      })
+    )
+  }, [dispatch, OS])
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -103,22 +87,26 @@ const ChartjsLineChart = (props: LineProps) => {
   }
 
   const data: ChartData<'line'> = {
-    labels: myData ? Object.keys(myData[timePeriod]['isVPNSpoofed']) : [],
-    datasets: Object.entries(myData?.[timePeriod] || {}).map(([property, values], index) => ({
-      fill: false,
-      tension: 0.5,
-      pointRadius: 1,
-      label: property,
-      pointHoverRadius: 5,
-      pointStyle: 'circle',
-      borderColor: colors[index],
-      backgroundColor: colors[index],
-      pointHoverBorderWidth: 5,
-      pointHoverBorderColor: white,
-      pointBorderColor: 'transparent',
-      pointHoverBackgroundColor: index === 0 ? primary : warning,
-      data: Object.values(values as { [s: string]: number | null }) as (number | null)[]
-    }))
+    labels: (store?.lineChartData as { [key: string]: any })[timePeriod]
+      ? Object.keys((store?.lineChartData as { [key: string]: any })[timePeriod]?.['isVPNSpoofed'])
+      : [],
+    datasets: Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
+      ([property, values], index) => ({
+        fill: false,
+        tension: 0.5,
+        pointRadius: 1,
+        label: property,
+        pointHoverRadius: 5,
+        pointStyle: 'circle',
+        borderColor: colors[index],
+        backgroundColor: colors[index],
+        pointHoverBorderWidth: 5,
+        pointHoverBorderColor: white,
+        pointBorderColor: 'transparent',
+        pointHoverBackgroundColor: index === 0 ? primary : warning,
+        data: Object.values(values as { [s: string]: number | null }) as (number | null)[]
+      })
+    )
   }
 
   const handleOsChange = (event: SelectChangeEvent) => {
