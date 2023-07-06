@@ -37,7 +37,6 @@ const ChartJS = () => {
 
   // Vars
   const yellowColor = '#ffe802'
-  const barChartYellow = '#ffcf5c'
   const primaryColor = '#836af9'
   const polarChartGrey = '#4f5d70'
   const polarChartInfo = '#299aff'
@@ -87,7 +86,7 @@ const ChartJS = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <ChartjsBarChart yellow={barChartYellow} labelColor={labelColor} borderColor={borderColor} />
+          <ChartjsBarChart labelColor={labelColor} borderColor={borderColor} />
         </Grid>
         <Grid item xs={12}>
           <ChartjsLineChart
