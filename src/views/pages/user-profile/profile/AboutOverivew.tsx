@@ -79,7 +79,7 @@ const renderTeams = (arr: ProfileTeamsType[]) => {
   }
 }
 
-const AboutOverivew = (props: Props) => {
+const AboutOverview = (props: Props) => {
   const { teams, about, contacts, overview } = props
 
   return (
@@ -124,4 +124,4 @@ const AboutOverivew = (props: Props) => {
   )
 }
 
-export default AboutOverivew
+export default AboutOverview
