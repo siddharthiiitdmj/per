@@ -54,8 +54,8 @@ const DeviceInfoPreview = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Alert severity='error'>
-            Invoice with the id: {id} does not exist. Please check the list of invoices:{' '}
-            <Link href='/apps/invoice/list'>Invoice List</Link>
+            Device with the id: {id} does not exist. Please check the list of Devices:{' '}
+            <Link href='/devices2'>Device List</Link>
           </Alert>
         </Grid>
       </Grid>
