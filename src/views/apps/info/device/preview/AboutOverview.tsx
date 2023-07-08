@@ -57,7 +57,7 @@ interface Props {
   data: any
 }
 
-const AboutOverivew = ({ data }: Props) => {
+const AboutOverview = ({ data }: Props) => {
   const arr = convertData(data)
 
   return (
@@ -78,4 +78,4 @@ const AboutOverivew = ({ data }: Props) => {
   )
 }
 
-export default AboutOverivew
+export default AboutOverview
