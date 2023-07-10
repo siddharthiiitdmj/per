@@ -8,10 +8,8 @@ import Typography from '@mui/material/Typography'
 // ** Configs
 
 // ** Types
-import AboutOverview from './AboutOverview'
 import ActivityTimeline from './ActivityTimeline'
-import DeviceEvents from './UserEvents'
-import DeviceUsersList from './DevicesList'
+
 
 interface Props {
   data: any
@@ -34,17 +32,9 @@ const PreviewCard = ({ data }: Props) => {
         </Card>
         <Grid container spacing={6}>
           <Grid item lg={6} md={6} xs={12}>
-            <Grid sx={{ mb: 7 }}>
-              <AboutOverview data={data.data[0]} />
-            </Grid>
             <ActivityTimeline />
           </Grid>
-          <Grid item lg={6} md={6} xs={12}>
-            <Grid item xs={12} sx={{ mb: 7 }}>
-              <DeviceEvents data={data.data[0].id} />
-            </Grid>
-            <DeviceUsersList data={data.data[0].id} />
-          </Grid>
+
         </Grid>
       </>
     )
