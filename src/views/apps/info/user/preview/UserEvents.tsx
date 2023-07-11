@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux'
 // ** Utils Import
 
 // ** Actions Imports
-import { fetchData } from 'src/store/apps/deviceSpecificEvents'
+import { fetchUserSpecificEventsData } from 'src/store/apps/userSpecificEvents'
 
 // ** Third Party Imports
 import format from 'date-fns/format'
@@ -64,11 +64,13 @@ const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 230,
-    field: 'userId',
-    headerName: 'User ID',
-    renderCell: ({ row }: CellType) => (
-      <LinkStyled href={`/info/user/${row.userId}`}>{`${row.userId}`}</LinkStyled>
-    )
+    field: 'deviceId',
+    headerName: 'Device ID',
+    renderCell: ({ row }: CellType) => {
+      const { deviceId } = row
+
+      return <LinkStyled href={`/info/device/${deviceId}`}>{`${deviceId}`}</LinkStyled>
+    }
   },
   {
     flex: 0.15,
@@ -325,7 +327,7 @@ interface Props {
   data: any
 }
 
-const DeviceEvents = ({ data }: Props) => {
+const UserEvents = ({ data }: Props) => {
   // ** State
   const [id] = useState<string>(data)
   const [OS] = useState<string>('')
@@ -337,11 +339,11 @@ const DeviceEvents = ({ data }: Props) => {
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.deviceSpecificEvents)
+  const store = useSelector((state: RootState) => state.userSpecificEvents)
 
   useEffect(() => {
     dispatch(
-      fetchData({
+      fetchUserSpecificEventsData({
         id,
         OS,
         q: value,
@@ -413,4 +415,4 @@ const DeviceEvents = ({ data }: Props) => {
   )
 }
 
-export default DeviceEvents
+export default UserEvents
