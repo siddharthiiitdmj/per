@@ -18,26 +18,32 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // ** Utils Import
 
-// ** Actions Imports
-import { fetchData } from 'src/store/apps/uniqueUsers'
-
 // ** Third Party Imports
 
 // ** Types Imports
 import { AppDispatch, RootState } from 'src/store'
-import { EventsType } from 'src/types/apps/eventTypes'
-
-// ** Custom Components Imports
+import { styled } from '@mui/material/styles'
+import Link from 'next/link'
+import Icon from 'src/@core/components/icon'
 
 // ** Styled Components
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
-import { styled } from '@mui/material/styles'
-import Link from 'next/link'
+import { fetchUniqueDevicesData } from 'src/store/apps/uniqueDevices'
+import { DeviceType } from 'src/types/apps/deviceTypes'
 
 // ** Custom Table Components Imports
+interface DeviceOSType {
+  [key: string]: { icon: string; color: string }
+}
+
+// ** Vars
+const deviceOSObj: DeviceOSType = {
+  Android: { icon: 'mdi:android', color: 'success.main' },
+  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' }
+}
 
 interface CellType {
-  row: EventsType
+  row: DeviceType
 }
 
 // ** Styled component for the link in the dataTable
@@ -51,38 +57,78 @@ const columns: GridColDef[] = [
     flex: 0.2,
     minWidth: 230,
     field: 'id',
-    headerName: 'User ID',
+    headerName: 'id',
     renderCell: ({ row }: CellType) => (
-      <LinkStyled href={`/info/user/${row.id}`}>{`${row.id}`}</LinkStyled>
+      <LinkStyled href={`/info/device/${row.id}`}>{`${row.id}`}</LinkStyled>
     )
   },
   {
     flex: 0.2,
-    minWidth: 230,
-    field: 'username',
-    headerName: 'username',
+    minWidth: 200,
+    field: 'devicemodel',
+    headerName: 'Model',
     renderCell: ({ row }: CellType) => {
-      const { username } = row
+      const { devicemodel } = row
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{username}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{devicemodel}</Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    field: 'OS',
+    minWidth: 150,
+    headerName: 'OS',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.OS].color } }}>
+          <Icon icon={deviceOSObj[row.OS].icon} fontSize={20} />
+          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row.OS}
+          </Typography>
         </Box>
       )
     }
   },
   {
     flex: 0.2,
-    minWidth: 230,
-    field: 'email',
-    headerName: 'email',
+    minWidth: 100,
+    field: 'OS_version',
+    headerName: 'OS Version',
     renderCell: ({ row }: CellType) => {
-      const { email } = row
-
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{email}</Box>
-        </Box>
+        <Typography noWrap variant='body2'>
+          {row.OS_version}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Kernel',
+    field: 'Kernel',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap sx={{ textTransform: 'capitalize' }}>
+          {row.Kernel}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Screen Resolution',
+    field: 'Screen_resolution',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap sx={{ textTransform: 'capitalize' }}>
+          {row.Screen_resolution}
+        </Typography>
       )
     }
   }
@@ -102,11 +148,11 @@ const DeviceEvents = ({ data }: Props) => {
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.uniqueUsers)
+  const store = useSelector((state: RootState) => state.uniqueDevices)
 
   useEffect(() => {
     dispatch(
-      fetchData({
+      fetchUniqueDevicesData({
         id,
         OS,
         q: value,
@@ -124,7 +170,7 @@ const DeviceEvents = ({ data }: Props) => {
               <CardContent>
                 <Grid container spacing={6} sx={{ display: 'flex' }}>
                   <Grid item xs={12} sm={6}>
-                    <Typography variant='h6'>Linked Users</Typography>
+                    <Typography variant='h6'>Linked Devices</Typography>
                   </Grid>
                 </Grid>
               </CardContent>
