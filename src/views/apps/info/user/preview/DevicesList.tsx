@@ -24,7 +24,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/store'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
-// ** Custom Components Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Styled Components
