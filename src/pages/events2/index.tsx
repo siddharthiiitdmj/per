@@ -82,15 +82,9 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'userId',
     headerName: 'User ID',
-    renderCell: ({ row }: CellType) => {
-      const { userId } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{userId}</Box>
-        </Box>
-      )
-    }
+    renderCell: ({ row }: CellType) => (
+      <LinkStyled href={`/info/user/${row.userId}`}>{`${row.userId}`}</LinkStyled>
+    )
   },
   {
     flex: 0.2,

@@ -1,9 +1,6 @@
 // ** React Imports
 import { useEffect, useState } from 'react'
 
-// ** Next Import
-import Link from 'next/link'
-
 // ** MUI Imports
 import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Grid'
@@ -16,7 +13,7 @@ import { DeviceType } from 'src/types/apps/deviceTypes'
 
 // ** Demo Components Imports
 import { useRouter } from 'next/router'
-import PreviewCard from 'src/views/apps/info/device/preview/PreviewCard'
+import PreviewCard from 'src/views/apps/info/user/preview/PreviewCard'
 
 const DeviceInfoPreview = () => {
   const router = useRouter()
@@ -28,7 +25,7 @@ const DeviceInfoPreview = () => {
 
   useEffect(() => {
     axios
-      .get('/api/devices/single', { params: { id } })
+      .get('/api/users/single', { params: { id } })
       .then(res => {
         setData(res.data)
         setError(false)
@@ -54,8 +51,7 @@ const DeviceInfoPreview = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Alert severity='error'>
-            Device with the id: {id} does not exist. Please check the list of Devices:{' '}
-            <Link href='/devices2'>Device List</Link>
+            User with the id: {id} does not exist.
           </Alert>
         </Grid>
       </Grid>

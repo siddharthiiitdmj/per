@@ -49,15 +49,22 @@ const renderList = (arr: arrType[]) => {
   }
 }
 
-function convertData(data: { [key: string]: string }): { property: string; value: string }[] {
-  return Object.entries(data).map(([property, value]) => ({ property, value }))
+function convertData(data: { [key: string]: string | null }): { property: string; value: string }[] {
+  const allowedProperties = ['id', 'name', 'email', 'role', 'createdAt', 'updatedAt'];
+
+  return Object.entries(data)
+    .filter(([property]) => allowedProperties.includes(property))
+    .map(([property, value]) => ({
+      property,
+      value: value === null ? '' : value,
+    }));
 }
 
 interface Props {
   data: any
 }
 
-const AboutOverivew = ({ data }: Props) => {
+const AboutOverview = ({ data }: Props) => {
   const arr = convertData(data)
 
   return (
@@ -78,4 +85,4 @@ const AboutOverivew = ({ data }: Props) => {
   )
 }
 
-export default AboutOverivew
+export default AboutOverview
