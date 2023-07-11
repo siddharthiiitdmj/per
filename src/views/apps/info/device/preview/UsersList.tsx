@@ -31,6 +31,8 @@ import { EventsType } from 'src/types/apps/eventTypes'
 
 // ** Styled Components
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import { styled } from '@mui/material/styles'
+import Link from 'next/link'
 
 // ** Custom Table Components Imports
 
@@ -38,11 +40,11 @@ interface CellType {
   row: EventsType
 }
 
-// // ** Styled component for the link in the dataTable
-// const LinkStyled = styled(Link)(({ theme }) => ({
-//   textDecoration: 'none',
-//   color: theme.palette.primary.main
-// }))
+// ** Styled component for the link in the dataTable
+const LinkStyled = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
 
 const columns: GridColDef[] = [
   {
@@ -50,15 +52,9 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'id',
     headerName: 'User ID',
-    renderCell: ({ row }: CellType) => {
-      const { id } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{id}</Box>
-        </Box>
-      )
-    }
+    renderCell: ({ row }: CellType) => (
+      <LinkStyled href={`/info/user/${row.id}`}>{`${row.id}`}</LinkStyled>
+    )
   },
   {
     flex: 0.2,

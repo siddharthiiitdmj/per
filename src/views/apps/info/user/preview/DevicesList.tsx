@@ -58,11 +58,9 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'id',
     headerName: 'id',
-    renderCell: ({ row }: CellType) => {
-      const { id } = row
-
-      return <LinkStyled href={`/info/device/${id}`}>{`${id}`}</LinkStyled>
-    }
+    renderCell: ({ row }: CellType) => (
+      <LinkStyled href={`/info/device/${row.id}`}>{`${row.id}`}</LinkStyled>
+    )
   },
   {
     flex: 0.2,

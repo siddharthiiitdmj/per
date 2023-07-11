@@ -34,6 +34,8 @@ import { EventsType } from 'src/types/apps/eventTypes'
 import { DateType } from 'src/types/forms/reactDatepickerTypes'
 
 // ** Custom Components Imports
+import { styled } from '@mui/material/styles'
+import Link from 'next/link'
 
 // ** Styled Components
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
@@ -52,11 +54,11 @@ interface CustomInputProps {
   setDates?: (value: Date[]) => void
 }
 
-// // ** Styled component for the link in the dataTable
-// const LinkStyled = styled(Link)(({ theme }) => ({
-//   textDecoration: 'none',
-//   color: theme.palette.primary.main
-// }))
+// ** Styled component for the link in the dataTable
+const LinkStyled = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
 
 const columns: GridColDef[] = [
   {
@@ -64,15 +66,9 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'userId',
     headerName: 'User ID',
-    renderCell: ({ row }: CellType) => {
-      const { userId } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{userId}</Box>
-        </Box>
-      )
-    }
+    renderCell: ({ row }: CellType) => (
+      <LinkStyled href={`/info/user/${row.userId}`}>{`${row.userId}`}</LinkStyled>
+    )
   },
   {
     flex: 0.15,
