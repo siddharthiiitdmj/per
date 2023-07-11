@@ -8,6 +8,7 @@ import uniqueUsers from './apps/uniqueUsers'
 import pieStats from './apps/pieStats'
 import lineStats from './apps/lineStats'
 import userSpecificEvents from './apps/userSpecificEvents'
+import uniqueDevices from './apps/uniqueDevices'
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     pieStats,
     lineStats,
     userSpecificEvents,
+    uniqueDevices
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
