@@ -12,6 +12,7 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 // ** Demo Components Imports
 
 import ChartjsPolarAreaChart from 'src/views/charts/chartjs/ChartjsPolarAreaChart'
+import ApexDonutChart from 'src/views/charts/apex-charts/ApexDonutChart'
 
 // ** Third Party Styles Import
 import 'chart.js/auto'
@@ -87,6 +88,9 @@ const ChartJS = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <ChartjsBarChart labelColor={labelColor} borderColor={borderColor} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ApexDonutChart />
         </Grid>
         <Grid item xs={12}>
           <ChartjsLineChart
