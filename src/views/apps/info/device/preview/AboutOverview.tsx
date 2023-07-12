@@ -38,7 +38,11 @@ const renderList = (arr: arrType[]) => {
                 color: 'text.secondary'
               }}
             >
-              {item.value.charAt(0).toUpperCase() + item.value.slice(1)}
+              {typeof item.value === 'string' ? (
+                item.value.charAt(0).toUpperCase() + item.value.slice(1)
+              ) : (
+                item.value
+              )}
             </Typography>
           </Box>
         </Box>
