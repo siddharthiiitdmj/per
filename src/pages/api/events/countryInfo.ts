@@ -61,24 +61,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       manipulatedData['others'] = otherCountriesSum
     }
 
-    res.status(200).json(manipulatedData)
+    await prisma.Stats.deleteMany({
+      where: {
+        os: null
+      }
+    })
+
+    await prisma.Stats.create({
+      data: {
+        countryInfo: manipulatedData
+      }
+    })
+
+    res.status(200).json({ message: 'CountryInfo data stored in db successfully', data: manipulatedData })
   } catch (error) {
     console.error('Error retrieving events:', error)
     res.status(500).json({ error: 'An error occurred while retrieving events.' })
   }
 }
-
-// {
-//   "US": 743,
-//   "undefined": 270,
-//   "CN": 179,
-//   "JP": 112,
-//   "KR": 69,
-//   "DE": 68,
-//   "GB": 52,
-//   "BR": 47,
-//   "FR": 40,
-//   "CA": 31,
-//   "AU": 31,
-//   "others": 471
-// }
