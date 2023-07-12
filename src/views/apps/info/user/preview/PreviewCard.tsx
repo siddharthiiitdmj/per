@@ -26,7 +26,7 @@ const PreviewCard = ({ data }: Props) => {
             <Grid container>
               <Grid item sm={6} xs={12}>
                 <Box sx={{ display: 'flex' }}>
-                  <Typography variant='h6'>{`# ${data.data[0].id}`}</Typography>
+                  <Typography variant='h6'>{`# ${data.data[0].altUserId}`}</Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -41,9 +41,9 @@ const PreviewCard = ({ data }: Props) => {
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
             <Grid item xs={12} sx={{ mb: 7 }}>
-              <UserEvents data={data.data[0].id} />
+              <UserEvents data={data.data[0].altUserId} />
             </Grid>
-            <DeviceEvents data={data.data[0].id} />
+            <DeviceEvents data={data.data[0].altUserId} />
           </Grid>
         </Grid>
       </>
