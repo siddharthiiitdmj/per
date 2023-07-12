@@ -1,7 +1,7 @@
 export type EventsType = {
-  id: string
-  userId: string
-  deviceId: string
+  id: number
+  userId: number
+  deviceId: number
   nodename: string
   IPaddress: string
   isVPNSpoofed: boolean
