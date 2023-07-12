@@ -4,10 +4,11 @@ import prisma from 'src/libs/prismadb'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { id } = req.query
+    const parsedId = parseInt(id as string)
 
     const user = await prisma.user.findMany({
       where: {
-        id: id
+        altUserId : parsedId
       }
     })
 

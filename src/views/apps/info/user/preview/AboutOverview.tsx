@@ -38,7 +38,11 @@ const renderList = (arr: arrType[]) => {
                 color: 'text.secondary'
               }}
             >
-              {item.value.charAt(0).toUpperCase() + item.value.slice(1)}
+              {typeof item.value === 'string' ? (
+                item.value.charAt(0).toUpperCase() + item.value.slice(1)
+              ) : (
+                item.value
+              )}
             </Typography>
           </Box>
         </Box>
@@ -50,7 +54,7 @@ const renderList = (arr: arrType[]) => {
 }
 
 function convertData(data: { [key: string]: string | null }): { property: string; value: string }[] {
-  const allowedProperties = ['id', 'name', 'email', 'role', 'createdAt', 'updatedAt'];
+  const allowedProperties = ['id','altUserId', 'name', 'email', 'role', 'createdAt', 'updatedAt'];
 
   return Object.entries(data)
     .filter(([property]) => allowedProperties.includes(property))
