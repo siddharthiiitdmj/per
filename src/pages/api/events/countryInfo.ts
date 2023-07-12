@@ -44,9 +44,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    res.status(200).json(countriesCount)
+    //Manipulate data
+    // Sort the countries by their values in descending order
+    const sortedCountries = Object.entries(countriesCount).sort((a, b) => b[1] - a[1])
+
+    const topCountries = sortedCountries.slice(0, 11)
+    const otherCountriesSum = sortedCountries.slice(11).reduce((sum, [, value]) => sum + value, 0)
+
+    const manipulatedData: any = {}
+
+    topCountries.forEach(([country, value]) => {
+      manipulatedData[country] = value
+    })
+
+    if (otherCountriesSum > 0) {
+      manipulatedData['others'] = otherCountriesSum
+    }
+
+    res.status(200).json(manipulatedData)
   } catch (error) {
     console.error('Error retrieving events:', error)
     res.status(500).json({ error: 'An error occurred while retrieving events.' })
   }
 }
+
+// {
+//   "US": 743,
+//   "undefined": 270,
+//   "CN": 179,
+//   "JP": 112,
+//   "KR": 69,
+//   "DE": 68,
+//   "GB": 52,
+//   "BR": 47,
+//   "FR": 40,
+//   "CA": 31,
+//   "AU": 31,
+//   "others": 471
+// }
