@@ -20,12 +20,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       'isAppPatched',
       'isAppCloned'
     ]
-    let { os } = req.query
-    if (!os) {
-      os = 'All'
+    const { os } = req.query
+
+    let statsOs = os
+    if (!os || os == '') {
+      statsOs = 'All'
     }
 
-    if (os !== 'All' && os !== 'iOS' && os !== 'Android') {
+    // if (!os) {
+    //   os = 'All'
+    // }
+    console.log('os: ', os)
+    console.log('statsOs: ', statsOs)
+
+    if (os && os !== 'iOS' && os !== 'Android') {
       return res.status(400).json({
         message: 'Invalid os value'
       })
@@ -34,15 +42,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //delete old record
     await prisma.Stats.deleteMany({
       where: {
-        os: os
+        os: statsOs
       }
     })
 
-    const filters: any = {}
+    // const filters: any = {}
 
-    if (os && os !== 'All') {
-      filters.OS = os
-    }
+    // if (os && os !== 'All') {
+    //   filters.OS = os
+    // }
 
     const lineChart: {
       monthly: Record<string, Record<string, number>>
@@ -57,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const deviceInfos = await prisma.Events.findMany({
       where: {
         device: {
-          filters
+          OS: os
         }
       },
       orderBy: {
@@ -125,7 +133,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const devices = await prisma.events.findMany({
       where: {
         device: {
-          filters
+          OS: os
         }
       }
     })
@@ -155,7 +163,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //Create stats record
     const statsRecord = await prisma.Stats.create({
       data: {
-        os: os || null, // Set the os field from the query parameter
+        os: statsOs, // Set the os field from the query parameter
         pieChart,
         lineChart
       }
