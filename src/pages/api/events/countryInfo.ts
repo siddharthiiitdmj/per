@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json({ message: 'CountryInfo data stored in db successfully', data: manipulatedData })
   } catch (error) {
-    console.error('Error retrieving events:', error)
-    res.status(500).json({ error: 'An error occurred while retrieving events.' })
+    console.error('Error while populating countryInfo:', error)
+    res.status(500).json({ error: 'An error occurred while populating countryInfo.' })
   }
 }

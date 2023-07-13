@@ -2,12 +2,12 @@ import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 
 interface Device {
-  isVPNSpoofed: number;
-  isVirtualOS: number;
-  isEmulator: number;
-  isAppSpoofed: number;
-  isAppPatched: number;
-  isAppCloned: number;
+  isVPNSpoofed: number
+  isVirtualOS: number
+  isEmulator: number
+  isAppSpoofed: number
+  isAppPatched: number
+  isAppCloned: number
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,12 +20,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       'isAppPatched',
       'isAppCloned'
     ]
-    let { os } = req.query
-    if (!os) {
-      os = 'All'
+    const { os } = req.query
+
+    let statsOs = os
+    if (!os || os == '') {
+      statsOs = 'All'
     }
 
-    if (os !== 'All' && os !== 'iOS' && os !== 'Android') {
+    // if (!os) {
+    //   os = 'All'
+    // }
+    console.log('os: ', os)
+    console.log('statsOs: ', statsOs)
+
+    if (os && os !== 'iOS' && os !== 'Android') {
       return res.status(400).json({
         message: 'Invalid os value'
       })
@@ -34,15 +42,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //delete old record
     await prisma.Stats.deleteMany({
       where: {
-        os: os
+        os: statsOs
       }
     })
 
-    const filters: any = {}
+    // const filters: any = {}
 
-    if (os && os !== 'All') {
-      filters.OS = os
-    }
+    // if (os && os !== 'All') {
+    //   filters.OS = os
+    // }
 
     const lineChart: {
       monthly: Record<string, Record<string, number>>
@@ -54,8 +62,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       daily: {}
     }
 
-    const deviceInfos = await prisma.deviceInfo.findMany({
-      where: filters,
+    const deviceInfos = await prisma.Events.findMany({
+      where: {
+        device: {
+          OS: os
+        }
+      },
       orderBy: {
         createdAt: 'asc'
       },
@@ -76,15 +88,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       lineChart.daily[field] = {}
 
       for (const deviceInfo of deviceInfos) {
-        const createdAt = deviceInfo.createdAt
+        if (deviceInfo.createdAt) {
+          // Check if createdAt is defined
+          const createdAt = deviceInfo.createdAt
 
-        // Monthly count
-        const month = createdAt.toISOString().slice(0, 7)
-        lineChart.monthly[field][month] = (lineChart.monthly[field][month] || 0) + (deviceInfo[field] ? 1 : 0)
+          // Monthly count
+          const month = createdAt.toISOString().slice(0, 7)
+          lineChart.monthly[field][month] = (lineChart.monthly[field][month] || 0) + (deviceInfo[field] ? 1 : 0)
 
-        // Daily count
-        const day = createdAt.toISOString().slice(0, 10)
-        lineChart.daily[field][day] = (lineChart.daily[field][day] || 0) + (deviceInfo[field] ? 1 : 0)
+          // Daily count
+          const day = createdAt.toISOString().slice(0, 10)
+          lineChart.daily[field][day] = (lineChart.daily[field][day] || 0) + (deviceInfo[field] ? 1 : 0)
+        }
       }
     }
 
@@ -115,8 +130,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     //pieChart
-    const devices = await prisma.deviceInfo.findMany({
-      where: filters
+    const devices = await prisma.events.findMany({
+      where: {
+        device: {
+          OS: os
+        }
+      }
     })
 
     const pieChart: Record<string, Device> = {
@@ -144,12 +163,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //Create stats record
     const statsRecord = await prisma.Stats.create({
       data: {
-        os: os || null, // Set the os field from the query parameter
+        os: statsOs, // Set the os field from the query parameter
         pieChart,
-        lineChart,
+        lineChart
       }
     })
-
 
     res.status(200).json(statsRecord)
   } catch (error) {
