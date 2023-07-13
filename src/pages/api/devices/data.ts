@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const filteredData = devices.filter((device: DeviceType) => {
         return (
-          device.id.toLowerCase().includes(queryLowered) ||
+          device.id.toString().toLowerCase().includes(queryLowered) ||
           device.devicemodel.toLowerCase().includes(queryLowered) ||
           device.OS.toLowerCase().includes(queryLowered) ||
           device.Kernel.toLowerCase().includes(queryLowered) ||

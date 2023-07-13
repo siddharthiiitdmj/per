@@ -1,5 +1,5 @@
 export type DeviceType = {
-  id: string
+  id: number
   OS: string
   Kernel: string
   devicemodel: string

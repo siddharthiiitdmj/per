@@ -9,6 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const filters: any = {}
 
     const { id } = req.query
+    const parsedId = parseInt(id as string)
 
     const { OS = '', q = '' } = req.query ?? ''
 
@@ -25,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         device: {
           OS: OS || undefined
         },
-        userId: id
+        userId: parsedId
       },
       include: {
         device: true
@@ -58,22 +59,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             eventDate.getDate() === rangeDate.getDate() &&
             eventDate.getMonth() === rangeDate.getMonth()
           ) {
-            filtered.push(event.id)
+            filtered.push(event.id.toString())
           }
         })
 
-        if (filtered.length && filtered.includes(event.id)) {
+        if (filtered.length && filtered.includes(event.id.toString())) {
           return (
-            event.userId.toLowerCase().includes(queryLowered) ||
-            event.deviceId.toLowerCase().includes(queryLowered) ||
+            event.userId.toString().toLowerCase().includes(queryLowered) ||
+            event.deviceId.toString().toLowerCase().includes(queryLowered) ||
             event.OS.toLowerCase().includes(queryLowered) ||
             event.nodename.toLowerCase().includes(queryLowered)
           )
         }
       } else {
         return (
-          event.userId.toLowerCase().includes(queryLowered) ||
-          event.deviceId.toLowerCase().includes(queryLowered) ||
+          event.userId.toString().toLowerCase().includes(queryLowered) ||
+          event.deviceId.toString().toLowerCase().includes(queryLowered) ||
           event.OS.toLowerCase().includes(queryLowered) ||
           event.nodename.toLowerCase().includes(queryLowered)
         )
@@ -84,7 +85,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const userEvent = filteredData.find((event: EventsType) => event.deviceId === deviceId)
 
       return {
-        id: userEvent?.id,
+        id: userEvent?.id.toString(),
         OS: userEvent?.OS,
         Kernel: userEvent?.Kernel,
         devicemodel: userEvent?.devicemodel,
