@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import Slider from '@mui/material/Slider'
 import MuiInput from '@mui/material/Input'
 import Switch from '@mui/material/Switch'
+import { Card, CardContent } from '@mui/material'
 
 const Input = styled(MuiInput)`
   width: 42px;
@@ -21,7 +22,7 @@ export default function Configurations() {
       return acc
     }, {} as { [key: string]: number | string }) // Type assertion
   )
-  
+
   const [sliderEnabled, setSliderEnabled] = useState<{ [key: string]: boolean }>(
     Fields.reduce((acc, field) => {
       acc[field] = true
@@ -61,7 +62,7 @@ export default function Configurations() {
       }
     }
   }
-  
+
   const handleSwitchChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
     const newSliderEnabled = { ...sliderEnabled, [field]: event.target.checked }
     setSliderEnabled(newSliderEnabled)
@@ -75,46 +76,57 @@ export default function Configurations() {
   }
 
   return (
-    <Box sx={{ width: 250 }}>
-      {Fields.map(field => (
-        <React.Fragment key={field}>
-          <Typography id={`${field}-slider`} gutterBottom>
-            {field}
-          </Typography>
-          <Grid container spacing={2} alignItems='center'>
-            <Grid item xs>
-              <Slider
-                value={values[field] as number}
-                onChange={handleSliderChange(field)}
-                aria-labelledby={`${field}-slider`}
-                disabled={!sliderEnabled[field]} // Disable the slider based on the switch state
-              />
-            </Grid>
-            <Grid item>
-              <Input
-                value={values[field]}
-                size='small'
-                onChange={handleInputChange(field)}
-                onBlur={handleBlur(field)}
-                inputProps={{
-                  step: 10,
-                  min: 0,
-                  max: 100,
-                  type: 'number',
-                  'aria-labelledby': `${field}-slider`
-                }}
-                disabled={!sliderEnabled[field]} // Disable the input field based on the switch state
-              />
-            </Grid>
-            <Grid item>
-              <Switch
-                checked={sliderEnabled[field]}
-                onChange={handleSwitchChange(field)}
-              />
-            </Grid>
-          </Grid>
-        </React.Fragment>
-      ))}
-    </Box>
+    <>
+      <Card>
+        <Grid item xs={12} md={12}>
+          <CardContent>
+            <Box sx={{ mb: 6 }}>
+              <Typography variant='h6'>Configurations</Typography>
+              <Typography variant='body1' sx={{ color: 'text.secondary' }}>
+                Adjust the severity of malicious indicators
+              </Typography>
+            </Box>
+            <Box sx={{ width: 250 }}>
+              {Fields.map(field => (
+                <React.Fragment key={field}>
+                  <Typography id={`${field}-slider`} gutterBottom>
+                    {field}
+                  </Typography>
+                  <Grid container spacing={2} alignItems='center'>
+                    <Grid item xs>
+                      <Slider
+                        value={values[field] as number}
+                        onChange={handleSliderChange(field)}
+                        aria-labelledby={`${field}-slider`}
+                        disabled={!sliderEnabled[field]} // Disable the slider based on the switch state
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Input
+                        value={values[field]}
+                        size='small'
+                        onChange={handleInputChange(field)}
+                        onBlur={handleBlur(field)}
+                        inputProps={{
+                          step: 10,
+                          min: 0,
+                          max: 100,
+                          type: 'number',
+                          'aria-labelledby': `${field}-slider`
+                        }}
+                        disabled={!sliderEnabled[field]} // Disable the input field based on the switch state
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Switch checked={sliderEnabled[field]} onChange={handleSwitchChange(field)} />
+                    </Grid>
+                  </Grid>
+                </React.Fragment>
+              ))}
+            </Box>
+          </CardContent>
+        </Grid>
+      </Card>
+    </>
   )
 }
