@@ -1,66 +1,69 @@
-import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Slider from '@mui/material/Slider';
-import MuiInput from '@mui/material/Input';
+import React, { useState, ChangeEvent } from 'react'
+import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import Slider from '@mui/material/Slider'
+import MuiInput from '@mui/material/Input'
 
 const Input = styled(MuiInput)`
   width: 42px;
-`;
+`
 
-const Fields = ['isAppSpoofed'];
+const Fields: string[] = ['Volume', 'Brightness', 'Contrast', 'Saturation', 'Hue']
 
 export default function Configurations() {
-  const [values, setValues] = useState(
+  const [values, setValues] = useState<{ [key: string]: number | string }>(
     Fields.reduce((acc, field) => {
-      acc[field] = 30; // Default value for each field
-      return acc;
-    }, {})
-  );
+      acc[field] = 30
 
-  const handleSliderChange = (field) => (event, newValue) => {
-    setValues((prevValues) => ({
+      return acc
+    }, {} as { [key: string]: number | string }) // Type assertion
+  )
+
+  const handleSliderChange = (field: string) => (event: Event, newValue: number | number[]) => {
+    setValues(prevValues => ({
       ...prevValues,
-      [field]: newValue,
-    }));
-  };
+      [field]: newValue as number | string
+    }))
+  }
 
-  const handleInputChange = (field) => (event) => {
-    const newValue = event.target.value === '' ? '' : Number(event.target.value);
-    setValues((prevValues) => ({
+  const handleInputChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value === '' ? '' : Number(event.target.value)
+    setValues(prevValues => ({
       ...prevValues,
-      [field]: newValue,
-    }));
-  };
+      [field]: newValue
+    }))
+  }
 
-  const handleBlur = (field) => () => {
-    const numericValue = typeof values[field] === 'number' ? values[field] : parseInt(values[field] as string, 10);
-    if (numericValue < 0) {
-      setValues((prevValues) => ({
-        ...prevValues,
-        [field]: 0,
-      }));
-    } else if (numericValue > 100) {
-      setValues((prevValues) => ({
-        ...prevValues,
-        [field]: 100,
-      }));
+  const handleBlur = (field: string) => () => {
+    const numericValue = typeof values[field] === 'number' ? values[field] : parseInt(values[field] as string, 10)
+    if (typeof numericValue === 'number' && !isNaN(numericValue)) {
+      if (numericValue < 0) {
+        setValues(prevValues => ({
+          ...prevValues,
+          [field]: 0
+        }))
+      } else if (numericValue > 100) {
+        setValues(prevValues => ({
+          ...prevValues,
+          [field]: 100
+        }))
+      }
     }
-  };
+  }
 
   return (
     <Box sx={{ width: 250 }}>
-      {Fields.map((field) => (
+      {Fields.map(field => (
         <React.Fragment key={field}>
           <Typography id={`${field}-slider`} gutterBottom>
             {field}
           </Typography>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems='center'>
             <Grid item xs>
               <Slider
-                value={values[field]}
+                value={values[field] as number}
                 onChange={handleSliderChange(field)}
                 aria-labelledby={`${field}-slider`}
               />
@@ -68,7 +71,7 @@ export default function Configurations() {
             <Grid item>
               <Input
                 value={values[field]}
-                size="small"
+                size='small'
                 onChange={handleInputChange(field)}
                 onBlur={handleBlur(field)}
                 inputProps={{
@@ -76,7 +79,7 @@ export default function Configurations() {
                   min: 0,
                   max: 100,
                   type: 'number',
-                  'aria-labelledby': `${field}-slider`,
+                  'aria-labelledby': `${field}-slider`
                 }}
               />
             </Grid>
@@ -84,5 +87,5 @@ export default function Configurations() {
         </React.Fragment>
       ))}
     </Box>
-  );
+  )
 }
