@@ -16,9 +16,9 @@ yarn prisma studio
 
 ### This week's goals:
 
-- [ ] a) Device ID to be randomized and not numbers.
+- [x] a) Device ID to be randomized and not numbers.
 - [x] b) Configuration page to have sliders for different issues. So client can choose which issue is more important.
-- [x] c) Client can choose which Risk Score he wants to have a look. This will also be in the Configuration page.
+- [ ] c) Client can choose which Risk Score he wants to have a look. This will also be in the Configuration page.
 - [ ] d) Dashboard must have a graph showing Risky devices over time.
-- [ ] e) Activity Timeline to be real data and not hardcoded.
+- [x] e) Activity Timeline to be real data and not hardcoded.
 - [ ] f) Show the latitude and longitude in one Column, on Clicking it, it should open within a Map that shows the location. The Page should be inside the application, and could embed other service like Google maps etc.
