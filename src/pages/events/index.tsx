@@ -82,9 +82,7 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'userId',
     headerName: 'User ID',
-    renderCell: ({ row }: CellType) => (
-      <LinkStyled href={`/info/user/${row.userId}`}>{`${row.userId}`}</LinkStyled>
-    )
+    renderCell: ({ row }: CellType) => <LinkStyled href={`/info/user/${row.userId}`}>{`${row.userId}`}</LinkStyled>
   },
   {
     flex: 0.2,
@@ -246,29 +244,20 @@ const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 230,
-    field: 'Latitude',
-    headerName: 'Latitude',
+    field: 'latLong',
+    headerName: 'Lat/Long',
     renderCell: ({ row }: CellType) => {
-      const { Latitude } = row
+      const { Latitude, Longitude } = row
+
+      // Rounding latitude and longitude values to 6 decimal places
+      const roundedLatitude = parseFloat(Latitude).toFixed(6)
+      const roundedLongitude = parseFloat(Longitude).toFixed(6)
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Latitude}</Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.2,
-    minWidth: 230,
-    field: 'Longitude',
-    headerName: 'Longitude',
-    renderCell: ({ row }: CellType) => {
-      const { Longitude } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Longitude}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            {`(${roundedLatitude}, ${roundedLongitude})`}
+          </Box>
         </Box>
       )
     }
