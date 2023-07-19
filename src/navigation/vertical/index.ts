@@ -10,11 +10,11 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Devices',
-      path: '/devices2',
+      path: '/devices',
       icon: 'ph:devices-duotone'
     },
     {
-      path: '/events2',
+      path: '/events',
       action: 'read',
       subject: 'acl-page',
       title: 'Events',

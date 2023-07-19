@@ -11,7 +11,7 @@ interface DataParams {
 // ** Fetch Users
 export const fetchLineStatsData = createAsyncThunk('appLineStats/fetchData', async (params: DataParams) => {
   console.log(params)
-  const response = await axios.get('/api/devices/stats',{
+  const response = await axios.get('/api/devices/stats4?chart=lineChart', {
     params
   })
 
@@ -21,12 +21,14 @@ export const fetchLineStatsData = createAsyncThunk('appLineStats/fetchData', asy
 export const appLineStatsSlice = createSlice({
   name: 'appLineStats',
   initialState: {
-    lineChartData: [],
+    lineChartData: []
   },
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchLineStatsData.fulfilled, (state, action) => {
-      state.lineChartData = action.payload.lineChartData
+      console.log(action.payload)
+
+      state.lineChartData = action.payload
     })
   }
 })
