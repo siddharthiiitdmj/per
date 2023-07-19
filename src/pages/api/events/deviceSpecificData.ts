@@ -101,7 +101,7 @@ function getTimeline(events: any) {
 
     if (previousEvent) {
       if (!previousEvent.isVPNSpoofed && event.isVPNSpoofed) {
-        messages.push('VPN Spoofing detected')
+        messages.push('VPN Spoofed')
       }
       if (!previousEvent.isVirtualOS && event.isVirtualOS) {
         messages.push('Virtual OS detected')
@@ -110,22 +110,23 @@ function getTimeline(events: any) {
         messages.push('Emulator detected')
       }
       if (!previousEvent.isAppSpoofed && event.isAppSpoofed) {
-        messages.push('App Spoofing detected')
+        messages.push('App Spoofed')
       }
       if (!previousEvent.isAppPatched && event.isAppPatched) {
-        messages.push('App Patching detected')
+        messages.push('App Patched')
       }
       if (!previousEvent.isAppCloned && event.isAppCloned) {
-        messages.push('App Cloning detected')
-      }
-      if (previousEvent.IPaddress !== event.IPaddress) {
-        messages.push('New coordinates detected')
+        messages.push('App Cloned')
       }
 
-      // Check for new user associated with the device
-      if (previousEvent.userId !== event.userId) {
-        messages.push('New User detected')
-      }
+      // if (previousEvent.IPaddress !== event.IPaddress) {
+      //   messages.push('New coordinates detected')
+      // }
+
+      // // Check for new user associated with the device
+      // if (previousEvent.userId !== event.userId) {
+      //   messages.push('New User detected')
+      // }
     }
 
     // Add the messages and date to the timeline
