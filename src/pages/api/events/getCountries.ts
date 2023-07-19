@@ -1,3 +1,5 @@
+// API to get countryInfo
+
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 

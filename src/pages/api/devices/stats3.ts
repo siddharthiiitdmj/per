@@ -1,3 +1,5 @@
+// API to populate Stats table in the DB with lineChart and pieChart data
+
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 

@@ -1,3 +1,5 @@
+// API to fetch all the data corresponding to a single device
+
 import { NextApiRequest, NextApiResponse } from 'next/types'
 import prisma from 'src/libs/prismadb'
 
