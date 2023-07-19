@@ -43,7 +43,7 @@ model Account {
 }
 
 model Device {
-  id                Int   @id @default(autoincrement())
+  id                String   @id @default(uuid()) @db.Uuid
   OS                String
   Kernel            String
   devicemodel       String
@@ -53,9 +53,9 @@ model Device {
 }
 
 model Events {
-  id               Int   @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   userId           Int
-  deviceId         Int
+  deviceId         String   @default(uuid()) @db.Uuid
   user             User     @relation(fields: [userId], references: [altUserId], onDelete: Cascade)
   device           Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   nodename         String
@@ -75,7 +75,7 @@ model Events {
 }
 
 model UserProfile {
-  id           Int   @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   userId       Int
   email        String @unique
   firstName    String

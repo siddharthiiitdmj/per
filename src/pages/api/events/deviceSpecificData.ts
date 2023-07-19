@@ -9,7 +9,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const filters: any = {}
 
     const { id } = req.query
-    const parsedId = parseInt(id as string)
 
     const { OS = '', q = '' } = req.query ?? ''
 
@@ -26,7 +25,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         device: {
           OS: OS || undefined
         },
-        deviceId: parsedId
+        deviceId: id
       },
       include: {
         device: { select: { OS: true } }
