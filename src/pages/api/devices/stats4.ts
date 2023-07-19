@@ -1,3 +1,5 @@
+// API to fetch either lineChart or pieChart data (one at a time based on the query)
+
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 
@@ -6,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let { os } = req.query
     const { chart } = req.query
     if (!os) {
-      os = 'All';
+      os = 'All'
     }
 
     const selectField = chart === 'pieChart' ? 'pieChart' : 'lineChart'

@@ -39,6 +39,10 @@ const DeviceInfoPreview = () => {
       })
   }, [id])
 
+  // useEffect(() => {
+  //   console.log('data: ', data)
+  // }, [data])
+
   if (data) {
     return (
       <>
@@ -55,7 +59,7 @@ const DeviceInfoPreview = () => {
         <Grid item xs={12}>
           <Alert severity='error'>
             Device with the id: {id} does not exist. Please check the list of Devices:{' '}
-            <Link href='/devices2'>Device List</Link>
+            <Link href='/devices'>Device List</Link>
           </Alert>
         </Grid>
       </Grid>

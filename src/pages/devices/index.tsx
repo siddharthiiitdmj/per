@@ -1,194 +1,226 @@
 // ** React Imports
-import api from 'src/helper/api'
-import { ChangeEvent, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+
+// ** Next Import
+import Link from 'next/link'
 
 // ** MUI Imports
-import Paper from '@mui/material/Paper'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
-import TableRow from '@mui/material/TableRow'
-import { useTheme } from '@mui/material/styles'
-import SelectWithDialog from 'src/views/forms/form-elements/select/SelectWithDialog'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import FormControl from '@mui/material/FormControl'
+import Grid from '@mui/material/Grid'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
-// Third party imports
-import { ReactDatePickerProps } from 'react-datepicker'
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
-interface Column {
-  id: 'UID' | 'DeviceID' | 'OS' | 'Kernel' | 'isVPNSpoofed' | 'isVirtualOS' | 'isAppSpoofed' | 'devicemodel'
-  label: string
-  minWidth?: number
-  format?: (value: number) => string
+// ** Store Imports
+import { useDispatch, useSelector } from 'react-redux'
+
+// ** Custom Components Imports
+
+// ** Utils Import
+
+// ** Third Party Imports
+
+// ** Types Imports
+import { AppDispatch, RootState } from 'src/store'
+
+// ** Custom Components Imports
+import TableHeader from 'src/views/apps/devices/list/TableHeader'
+
+// ** Styled Components
+import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import { fetchDeviceData } from 'src/store/apps/device'
+import { DeviceType } from 'src/types/apps/deviceTypes'
+
+// ** Custom Table Components Imports
+interface DeviceOSType {
+  [key: string]: { icon: string; color: string }
 }
 
-const columns: readonly Column[] = [
-  { id: 'UID', label: 'UID' },
-  { id: 'DeviceID', label: 'DeviceID' },
+// ** Vars
+const deviceOSObj: DeviceOSType = {
+  Android: { icon: 'mdi:android', color: 'success.main' },
+  iOS: { icon: 'mdi:apple-ios', color: 'warning.main' }
+}
+
+interface CellType {
+  row: DeviceType
+}
+
+// ** Styled component for the link in the dataTable
+const LinkStyled = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
+
+const columns: GridColDef[] = [
   {
-    id: 'OS',
-    label: 'OS',
-    format: (value: number) => value.toLocaleString('en-US')
+    flex: 0.2,
+    minWidth: 230,
+    field: 'id',
+    headerName: 'id',
+    renderCell: ({ row }: CellType) => {
+      const { id } = row
+
+      return <LinkStyled href={`/info/device/${id}`}>{`${id}`}</LinkStyled>
+    }
   },
   {
-    id: 'Kernel',
-    label: 'Kernel',
-    format: (value: number) => value.toLocaleString('en-US')
+    flex: 0.2,
+    minWidth: 100,
+    field: 'devicemodel',
+    headerName: 'Model',
+    renderCell: ({ row }: CellType) => {
+      const { devicemodel } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{devicemodel}</Box>
+        </Box>
+      )
+    }
   },
   {
-    id: 'isVPNSpoofed',
-    label: 'isVPNSpoofed',
-    format: (value: number) => value.toFixed(2)
+    flex: 0.15,
+    field: 'OS',
+    minWidth: 150,
+    headerName: 'OS',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.OS].color } }}>
+          <Icon icon={deviceOSObj[row.OS].icon} fontSize={20} />
+          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row.OS}
+          </Typography>
+        </Box>
+      )
+    }
   },
-  { id: 'isVirtualOS', label: 'isVirtualOS' },
-  { id: 'isAppSpoofed', label: 'isAppSpoofed' },
   {
-    id: 'devicemodel',
-    label: 'devicemodel',
-    format: (value: number) => value.toLocaleString('en-US')
+    flex: 0.2,
+    minWidth: 100,
+    field: 'OS_version',
+    headerName: 'OS Version',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap variant='body2'>
+          {row.OS_version}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Kernel',
+    field: 'Kernel',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap sx={{ textTransform: 'capitalize' }}>
+          {row.Kernel}
+        </Typography>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Screen Resolution',
+    field: 'Screen_resolution',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Typography noWrap sx={{ textTransform: 'capitalize' }}>
+          {row.Screen_resolution}
+        </Typography>
+      )
+    }
   }
 ]
 
-interface Data {
-  UID: string
-  DeviceID: string
-  OS: string
-  Kernel: number
-  isVPNSpoofed: boolean
-  isVirtualOS: boolean
-  isAppSpoofed: boolean
-  devicemodel: string
-}
+const EventsList = () => {
+  // ** State
+  const [OS, setOS] = useState<string>('')
+  const [value, setValue] = useState<string>('')
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
-function createData(
-  UID: string,
-  DeviceID: string,
-  OS: string,
-  Kernel: number,
-  isVPNSpoofed: boolean,
-  isVirtualOS: boolean,
-  isAppSpoofed: boolean,
-  devicemodel: string
-): Data {
-  return { UID, DeviceID, OS, Kernel, isVPNSpoofed, isVirtualOS, isAppSpoofed, devicemodel }
-}
+  // ** Hooks
+  const dispatch = useDispatch<AppDispatch>()
+  const store = useSelector((state: RootState) => state.device)
 
-interface Props {
-  rows: Data[]
-}
+  useEffect(() => {
+    dispatch(
+      fetchDeviceData({
+        OS,
+        q: value
+      })
+    )
+  }, [dispatch, OS, value])
 
-const TableStickyHeader = ({ rows }: Props) => {
-  // ** States
-  const [page, setPage] = useState<number>(0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(25)
-  const [rowData, setRowData] = useState(rows)
+  const handleOSChange = useCallback((e: SelectChangeEvent) => {
+    setOS(e.target.value)
+  }, [])
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
+  const handleFilter = (val: string) => {
+    setValue(val)
   }
-
-  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value)
-    setPage(0)
-  }
-
-  const theme = useTheme()
-  const { direction } = theme
-  const popperPlacement: ReactDatePickerProps['popperPlacement'] = direction === 'ltr' ? 'bottom-start' : 'bottom-end'
 
   return (
-    <>
-      <div style={{ marginBottom: '1rem' }}>
-        <SelectWithDialog
-          popperPlacement={popperPlacement}
-          setRowData={setRowData}
-          createData={createData}
-          type='devices'
-        />
-      </div>
-      <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
-        <Table stickyHeader aria-label='sticky table'>
-          <TableHead>
-            <TableRow>
-              {columns.map(column => (
-                <TableCell key={column.id} align='left' sx={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rowData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-              return (
-                <TableRow hover role='checkbox' tabIndex={-1} key={row.UID}>
-                  {columns.map(column => {
-                    const value = row[column.id]
-
-                    return (
-                      <TableCell key={column.id} align='left'>
-                        {column.format && typeof value === 'number' ? (
-                          column.format(value)
-                        ) : typeof value === 'boolean' ? (
-                          value ? (
-                            <p>True</p>
-                          ) : (
-                            <p>False</p>
-                          )
-                        ) : (
-                          value
-                        )}
-                      </TableCell>
-                    )
-                  })}
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50, 100]}
-        component='div'
-        count={rowData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </>
+    <DatePickerWrapper>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader title='Devices' />
+            <CardContent>
+              <Grid container spacing={6}>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id='OS-select'>Select OS</InputLabel>
+                    <Select
+                      fullWidth
+                      value={OS}
+                      id='select-OS'
+                      label='Select OS'
+                      labelId='OS-select'
+                      onChange={handleOSChange}
+                      inputProps={{ placeholder: 'Select OS' }}
+                    >
+                      <MenuItem value=''>Select OS</MenuItem>
+                      <MenuItem value='Android'>Android</MenuItem>
+                      <MenuItem value='iOS'>iOS</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <TableHeader value={value} handleFilter={handleFilter} />
+            <DataGrid
+              autoHeight
+              pagination
+              rows={store.allData}
+              columns={columns}
+              disableRowSelectionOnClick
+              pageSizeOptions={[10, 25, 50]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+            />
+          </Card>
+        </Grid>
+      </Grid>
+    </DatePickerWrapper>
   )
 }
 
-export const getServerSideProps = async () => {
-  try {
-    const res = await api.get('/devices/all')
-    const fetchedData = res.data as Data[]
-
-    const rows = fetchedData.map(item =>
-      createData(
-        item.UID,
-        item.DeviceID,
-        item.OS,
-        item.Kernel,
-        item.isVPNSpoofed,
-        item.isVirtualOS,
-        item.isAppSpoofed,
-        item.devicemodel
-      )
-    )
-
-    return {
-      props: { rows }
-    }
-  } catch (error) {
-    console.error('Error fetching device data:', error)
-
-    return {
-      props: { rows: [] }
-    }
-  }
-}
-
-export default TableStickyHeader
+export default EventsList
