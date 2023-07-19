@@ -112,10 +112,10 @@ const ActivityTimeline = ({ data }: Props) => {
                         {item.date}
                       </Typography>
                     </Box>
-                    {/* <Typography variant='body2' sx={{ mb: 2 }}>
-                    VPN has been spoofed for the first time
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant='body2' sx={{ mb: 2 }}>
+                      {item.subTitles[0]}
+                    </Typography>
+                    {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Avatar src='/images/avatars/1.png' sx={{ mr: 2.5, width: 24, height: 24 }} />
                     <Typography variant='body2' sx={{ fontWeight: 600 }}>
                       John Doe
