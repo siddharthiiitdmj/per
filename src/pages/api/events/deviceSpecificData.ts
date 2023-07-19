@@ -11,9 +11,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { id } = req.query
     const parsedId = parseInt(id as string)
 
-    const { OS = '', q = ''} = req.query ?? ''
-    
-    const dates = req.query['dates[]'];
+    const { OS = '', q = '' } = req.query ?? ''
+
+    const dates = req.query['dates[]']
 
     const queryLowered = (q as any).toLowerCase()
 
@@ -29,13 +29,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         deviceId: parsedId
       },
       include: {
-        device: { select: { OS: true } },
+        device: { select: { OS: true } }
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
 
     const formattedEvents = events.map((event: EventsType & { device: DeviceType }) => ({
       ...event,
-      OS: event.device?.OS,
+      OS: event.device?.OS
     }))
 
     const filteredData = formattedEvents.filter((event: EventsType) => {
@@ -76,8 +79,79 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
     })
 
-    res.status(200).json({ allData: filteredData, total: filteredData.length})
+    const activityTimeline = getTimeline(filteredData)
+
+    return res
+      .status(200)
+      .json({ allData: filteredData, activityTimeline: activityTimeline, total: filteredData.length })
   } catch (err) {
     res.status(500).send(err)
   }
+}
+
+function getTimeline(events: any) {
+  const activityTimeline = []
+
+  // Keep track of the previous event
+  let previousEvent = null
+
+  for (const event of events) {
+    // Check if any of the boolean fields changed from false to true
+    const messages = []
+
+    if (previousEvent) {
+      if (!previousEvent.isVPNSpoofed && event.isVPNSpoofed) {
+        messages.push('VPN Spoofing detected')
+      }
+      if (!previousEvent.isVirtualOS && event.isVirtualOS) {
+        messages.push('Virtual OS detected')
+      }
+      if (!previousEvent.isEmulator && event.isEmulator) {
+        messages.push('Emulator detected')
+      }
+      if (!previousEvent.isAppSpoofed && event.isAppSpoofed) {
+        messages.push('App Spoofing detected')
+      }
+      if (!previousEvent.isAppPatched && event.isAppPatched) {
+        messages.push('App Patching detected')
+      }
+      if (!previousEvent.isAppCloned && event.isAppCloned) {
+        messages.push('App Cloning detected')
+      }
+      if (previousEvent.IPaddress !== event.IPaddress) {
+        messages.push('New coordinates detected')
+      }
+
+      // Check for new user associated with the device
+      if (previousEvent.userId !== event.userId) {
+        messages.push('New User detected')
+      }
+    }
+
+    // Add the messages and date to the timeline
+    if (messages.length > 0) {
+      activityTimeline.push({
+        messages,
+        date: formatDate(event.createdAt)
+      })
+    }
+
+    // Update the previousEvent for the next iteration
+    previousEvent = event
+  }
+
+  activityTimeline.push({
+    messages: ['Device added'],
+    date: formatDate(events[events.length - 1].createdAt)
+  })
+
+  return activityTimeline
+}
+
+function formatDate(dateString: any) {
+  const date = new Date(dateString)
+  const month = date.toLocaleString('en-US', { month: 'long' })
+  const day = date.toLocaleString('en-US', { day: 'numeric' })
+
+  return `${month}, ${day}`
 }

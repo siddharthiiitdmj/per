@@ -1,3 +1,5 @@
+// API to populate countryInfo in Stats table in DB according to the events
+
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 import axios from 'axios'
