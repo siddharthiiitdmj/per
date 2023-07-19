@@ -39,6 +39,10 @@ const DeviceInfoPreview = () => {
       })
   }, [id])
 
+  // useEffect(() => {
+  //   console.log('data: ', data)
+  // }, [data])
+
   if (data) {
     return (
       <>

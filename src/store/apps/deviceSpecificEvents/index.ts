@@ -13,7 +13,7 @@ interface DataParams {
 
 // ** Fetch Users
 export const fetchData = createAsyncThunk('deviceSpecificEvents/fetchData', async (params: DataParams) => {
-  const response = await axios.get('/api/events/deviceSpecificData',{
+  const response = await axios.get('/api/events/deviceSpecificData', {
     params
   })
 
@@ -24,13 +24,15 @@ export const deviceSpecificEventsSlice = createSlice({
   name: 'deviceSpecificEvents',
   initialState: {
     total: 1,
-    allData: []
+    allData: [],
+    activityTimeline: []
   },
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
       state.total = action.payload.total
       state.allData = action.payload.allData
+      state.activityTimeline = action.payload.activityTimeline
     })
   }
 })

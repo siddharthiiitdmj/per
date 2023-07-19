@@ -96,42 +96,50 @@ function getTimeline(events: any) {
 
   for (const event of events) {
     // Check if any of the boolean fields changed from false to true
-    const messages = []
+    const titles = []
+    const subTitles = []
 
     if (previousEvent) {
       if (!previousEvent.isVPNSpoofed && event.isVPNSpoofed) {
-        messages.push('VPN Spoofed')
+        titles.push('VPN Spoofed')
+        subTitles.push('VPN Spoofing detected')
       }
       if (!previousEvent.isVirtualOS && event.isVirtualOS) {
-        messages.push('Virtual OS detected')
+        titles.push('Virtual OS detected')
+        subTitles.push('The device started using Virtual OS')
       }
       if (!previousEvent.isEmulator && event.isEmulator) {
-        messages.push('Emulator detected')
+        titles.push('Emulator detected')
+        subTitles.push('The device started using Emulator')
       }
       if (!previousEvent.isAppSpoofed && event.isAppSpoofed) {
-        messages.push('App Spoofed')
+        titles.push('App Spoofed')
+        subTitles.push('App Spoofing detected')
       }
       if (!previousEvent.isAppPatched && event.isAppPatched) {
-        messages.push('App Patched')
+        titles.push('App Patched')
+        subTitles.push('App Patching detected')
       }
       if (!previousEvent.isAppCloned && event.isAppCloned) {
-        messages.push('App Cloned')
+        titles.push('App Cloned')
+        subTitles.push('App Cloning detected on the device')
       }
 
       // if (previousEvent.IPaddress !== event.IPaddress) {
-      //   messages.push('New coordinates detected')
+      //   titles.push('New coordinates detected')
       // }
 
       // // Check for new user associated with the device
       // if (previousEvent.userId !== event.userId) {
-      //   messages.push('New User detected')
+      //   titles.push('New User detected')
       // }
     }
 
-    // Add the messages and date to the timeline
-    if (messages.length > 0) {
+    // Add the titles and date to the timeline
+    if (titles.length > 0) {
       activityTimeline.push({
-        messages,
+        titles,
+        subTitles,
         date: formatDate(event.createdAt)
       })
     }
@@ -141,7 +149,8 @@ function getTimeline(events: any) {
   }
 
   activityTimeline.push({
-    messages: ['Device added'],
+    titles: ['Device added'],
+    subTitles: ['New Device was added'],
     date: formatDate(events[events.length - 1].createdAt)
   })
 
