@@ -88,15 +88,15 @@ export default function Configurations() {
 
   const handleBlur = (field: string, id: number) => () => {
     // Find the corresponding configuration and handle out-of-bounds values
-    const numericValue = configurations.find(config => config.field === field && config.id === id)?.value
+    const numericValue = configurations.find(config => config.field === field && config.id === id)?.value;
     if (typeof numericValue === 'number' && !isNaN(numericValue)) {
       if (numericValue < 0) {
-        handleSliderChange(field, id)(null, 0)
+        handleSliderChange(field, id)({} as Event, 0);
       } else if (numericValue > 100) {
-        handleSliderChange(field, id)(null, 100)
+        handleSliderChange(field, id)({} as Event, 100);
       }
     }
-  }
+  };
 
   const handleSwitchChange = (field: string, id: number) => (event: ChangeEvent<HTMLInputElement>) => {
     // Find the corresponding configuration and update its switch status
@@ -176,7 +176,7 @@ export default function Configurations() {
         </Button>
       )}
       <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{m:5}}>
-        Add Slider
+        Add Configuration
       </Button>
       <Dialog open={open} onClose={handleCloseDialog}>
         <DialogTitle>Add New Slider</DialogTitle>
