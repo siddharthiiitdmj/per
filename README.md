@@ -16,7 +16,9 @@ yarn prisma studio
 
 ### This week's goals:
 
-- [x] a) User ID should be a number , for e.g 1412412
-- [x] b) Pie Chart based on Countries (data is pre calculated and stored in DB)
-- [x] c) User Details page just like Events Details page
-- [ ] d) The values in the Activity Timeline to be actual and not dummy
+- [x] a) Device ID to be randomized and not numbers.
+- [x] b) Configuration page to have sliders for different issues. So client can choose which issue is more important.
+- [ ] c) Client can choose which Risk Score he wants to have a look. This will also be in the Configuration page.
+- [ ] d) Dashboard must have a graph showing Risky devices over time.
+- [x] e) Activity Timeline to be real data and not hardcoded.
+- [ ] f) Show the latitude and longitude in one Column, on Clicking it, it should open within a Map that shows the location. The Page should be inside the application, and could embed other service like Google maps etc.

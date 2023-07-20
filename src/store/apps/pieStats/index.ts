@@ -11,7 +11,7 @@ interface DataParams {
 // ** Fetch Users
 export const fetchPieStatsData = createAsyncThunk('appPieStats/fetchData', async (params: DataParams) => {
   console.log(params)
-  const response = await axios.get('/api/devices/stats',{
+  const response = await axios.get('/api/devices/stats4?chart=pieChart', {
     params
   })
 
@@ -21,12 +21,12 @@ export const fetchPieStatsData = createAsyncThunk('appPieStats/fetchData', async
 export const appPieStatsSlice = createSlice({
   name: 'appPieStats',
   initialState: {
-    pieChartData: [],
+    pieChartData: []
   },
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchPieStatsData.fulfilled, (state, action) => {
-      state.pieChartData = action.payload.pieChartData
+      state.pieChartData = action.payload
     })
   }
 })
