@@ -1,83 +1,120 @@
-import React, { useState, ChangeEvent, useEffect } from 'react'
-import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
+import React, { useState, useEffect, ChangeEvent } from 'react'
+import axios from 'axios'
 import Slider from '@mui/material/Slider'
-import MuiInput from '@mui/material/Input'
 import Switch from '@mui/material/Switch'
-import { Card, CardContent } from '@mui/material'
+import Input from '@mui/material/Input'
+import { Card, CardContent, Grid, Typography, Button, Box } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import TextField from '@mui/material/TextField'
 
-const Input = styled(MuiInput)`
+// const Fields: string[] = [
+//   'isVPNSpoofed',
+//   'isVirtualOS',
+//   'isEmulator',
+//   'isAppSpoofed',
+//   'isAppPatched',
+//   'isAppCloned',
+// ];
+
+const StyledInput = styled(Input)`
   width: 42px;
 `
 
-const Fields: string[] = ['isVPNSpoofed', 'isVirtualOS', 'isEmulator', 'isAppSpoofed', 'isAppPatched', 'isAppCloned']
-
 export default function Configurations() {
-  const [values, setValues] = useState<{ [key: string]: number | string }>(
-    Fields.reduce((acc, field) => {
-      acc[field] = 30
+  const [configurations, setConfigurations] = useState<
+    { id: number; field: string; value: number; isSwitchedOn: boolean }[]
+  >([])
+  const [hasUpdates, setHasUpdates] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [newField, setNewField] = useState('')
+  const [defaultValue, setDefaultValue] = useState(30)
 
-      return acc
-    }, {} as { [key: string]: number | string }) // Type assertion
-  )
+  useEffect(() => {
+    // Fetch data from the API when the component mounts
+    axios.get('/api/configurations').then(response => {
+      setConfigurations(response.data)
+    })
+  }, [])
 
-  const [sliderEnabled, setSliderEnabled] = useState<{ [key: string]: boolean }>(
-    Fields.reduce((acc, field) => {
-      acc[field] = true
-
-      return acc
-    }, {} as { [key: string]: boolean })
-  )
-
-  const handleSliderChange = (field: string) => (event: Event, newValue: number | number[]) => {
-    setValues(prevValues => ({
-      ...prevValues,
-      [field]: newValue as number | string
-    }))
+  const handleOpenDialog = () => {
+    setOpen(true)
+  }
+  const handleCloseDialog = () => {
+    setOpen(false)
+  }
+  const handleNewFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setNewField(event.target.value)
+  }
+  const handleDefaultValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setDefaultValue(Number(event.target.value))
   }
 
-  const handleInputChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleSaveNewField = () => {
+    // Save the new field to the database with isSwitchedOn as true
+    axios.post('/api/configurations', { field: newField, value: defaultValue, isSwitchedOn: true }).then(response => {
+      console.log(response.data)
+
+      // Fetch updated configurations after saving the new field
+      axios.get('/api/configurations').then(response => {
+        setConfigurations(response.data)
+        handleCloseDialog()
+      })
+    })
+  }
+
+  const handleSliderChange = (field: string, id: number) => (event: Event, newValue: number | number[]) => {
+    // Find the corresponding configuration and update its value
+    const updatedConfigurations = configurations.map(config =>
+      config.field === field && config.id === id ? { ...config, value: newValue as number } : config
+    )
+    setConfigurations(updatedConfigurations)
+    setHasUpdates(true) // Value updated, set hasUpdates to true
+  }
+
+  const handleInputChange = (field: string, id: number) => (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value === '' ? '' : Number(event.target.value)
-    setValues(prevValues => ({
-      ...prevValues,
-      [field]: newValue
-    }))
+
+    // Find the corresponding configuration and update its value
+    const updatedConfigurations = configurations.map(config =>
+      config.field === field && config.id === id ? { ...config, value: newValue || 0 } : config
+    )
+    setConfigurations(updatedConfigurations)
+    setHasUpdates(true) // Value updated, set hasUpdates to true
   }
 
-  const handleBlur = (field: string) => () => {
-    const numericValue = typeof values[field] === 'number' ? values[field] : parseInt(values[field] as string, 10)
+  const handleBlur = (field: string, id: number) => () => {
+    // Find the corresponding configuration and handle out-of-bounds values
+    const numericValue = configurations.find(config => config.field === field && config.id === id)?.value
     if (typeof numericValue === 'number' && !isNaN(numericValue)) {
       if (numericValue < 0) {
-        setValues(prevValues => ({
-          ...prevValues,
-          [field]: 0
-        }))
+        handleSliderChange(field, id)(null, 0)
       } else if (numericValue > 100) {
-        setValues(prevValues => ({
-          ...prevValues,
-          [field]: 100
-        }))
+        handleSliderChange(field, id)(null, 100)
       }
     }
   }
 
-  const handleSwitchChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
-    const newSliderEnabled = { ...sliderEnabled, [field]: event.target.checked }
-    setSliderEnabled(newSliderEnabled)
-    if (!event.target.checked) {
-      // Disable the slider by setting its value to the previous value
-      setValues(prevValues => ({
-        ...prevValues,
-        [field]: prevValues[field]
-      }))
-    }
+  const handleSwitchChange = (field: string, id: number) => (event: ChangeEvent<HTMLInputElement>) => {
+    // Find the corresponding configuration and update its switch status
+    const updatedConfigurations = configurations.map(config =>
+      config.field === field && config.id === id ? { ...config, isSwitchedOn: event.target.checked } : config
+    )
+    setConfigurations(updatedConfigurations)
+    setHasUpdates(true) // Value updated, set hasUpdates to true
   }
 
-  useEffect(() => {
-    console.log('values:', values)
-  }, [values])
+  const handleSave = () => {
+    // Save the updated configurations to the API
+    console.log(configurations)
+    axios.put('/api/configurations', configurations).then(response => {
+      console.log(response.data)
+      setHasUpdates(false)
+    })
+  }
 
   return (
     <>
@@ -90,49 +127,79 @@ export default function Configurations() {
             </Typography>
           </Box>
           <Box>
-            <Grid container spacing={2} alignItems='center'>
-              {Fields.map(field => (
-                <Grid key={field} item xs={12} md={4}>
+            {configurations.map(config => (
+              <Grid key={config.id} container spacing={2} alignItems='center'>
+                <Grid item xs={12} md={4}>
                   <React.Fragment>
-                    <Typography id={`${field}-slider`} gutterBottom>
-                      {field}
+                    <Typography id={`${config.field}-slider`} gutterBottom>
+                      {config.field}
                     </Typography>
                     <Grid container spacing={2} alignItems='center'>
                       <Grid item xs>
                         <Slider
-                          value={values[field] as number}
-                          onChange={handleSliderChange(field)}
-                          aria-labelledby={`${field}-slider`}
-                          disabled={!sliderEnabled[field]} // Disable the slider based on the switch state
+                          value={config.value}
+                          onChange={handleSliderChange(config.field, config.id)}
+                          aria-labelledby={`${config.field}-slider`}
+                          disabled={!config.isSwitchedOn}
                         />
                       </Grid>
                       <Grid item>
-                        <Input
-                          value={values[field]}
+                        <StyledInput
+                          value={config.value}
                           size='small'
-                          onChange={handleInputChange(field)}
-                          onBlur={handleBlur(field)}
+                          onChange={handleInputChange(config.field, config.id)}
+                          onBlur={handleBlur(config.field, config.id)}
                           inputProps={{
                             step: 10,
                             min: 0,
                             max: 100,
                             type: 'number',
-                            'aria-labelledby': `${field}-slider`
+                            'aria-labelledby': `${config.field}-slider`
                           }}
-                          disabled={!sliderEnabled[field]} // Disable the input field based on the switch state
+                          disabled={!config.isSwitchedOn}
                         />
                       </Grid>
                       <Grid item>
-                        <Switch checked={sliderEnabled[field]} onChange={handleSwitchChange(field)} />
+                        <Switch checked={config.isSwitchedOn} onChange={handleSwitchChange(config.field, config.id)} />
                       </Grid>
                     </Grid>
                   </React.Fragment>
                 </Grid>
-              ))}
-            </Grid>
+              </Grid>
+            ))}
           </Box>
         </CardContent>
       </Card>
+      {hasUpdates && (
+        <Button onClick={handleSave} variant='contained' color='primary' sx={{m:5}}>
+          Save
+        </Button>
+      )}
+      <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{m:5}}>
+        Add Slider
+      </Button>
+      <Dialog open={open} onClose={handleCloseDialog}>
+        <DialogTitle>Add New Slider</DialogTitle>
+        <DialogContent>
+          <TextField label='Field Name' value={newField} onChange={handleNewFieldChange} fullWidth margin='normal' />
+          <TextField
+            label='Default Value'
+            type='number'
+            value={defaultValue}
+            onChange={handleDefaultValueChange}
+            fullWidth
+            margin='normal'
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={handleSaveNewField} color='primary'>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
