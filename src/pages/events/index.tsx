@@ -1,12 +1,12 @@
 // ** React Imports
-import { forwardRef, useCallback, useEffect, useState, Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, forwardRef, useCallback, useEffect, useState } from 'react'
+import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
 
 // ** Next Import
 import Link from 'next/link'
 
-import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
-
 // ** MUI Imports
+import { Dialog, DialogContent, DialogTitle, DialogActions, Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -48,7 +48,6 @@ import TableHeader from 'src/views/apps/events/list/TableHeader'
 
 // ** Styled Components
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 
 // ** Custom Table Components Imports
 interface DeviceOSType {
@@ -71,12 +70,6 @@ interface CustomInputProps {
   end: number | Date
   start: number | Date
   setDates?: (value: Date[]) => void
-}
-
-interface MapModalProps {
-  isOpen: boolean
-  onClose: () => void
-  coordinate: { lat: number; lng: number }
 }
 
 interface CustomGridRenderCellParams extends GridRenderCellParams {
@@ -359,7 +352,11 @@ const CustomInput = forwardRef((props: CustomInputProps, ref) => {
 })
 /* eslint-enable */
 
-// key: AIzaSyBy54ovgCwVlzvySLbge7mu846tLOFl-KU
+interface MapModalProps {
+  isOpen: boolean
+  onClose: () => void
+  coordinate: { lat: number; lng: number }
+}
 
 const MapModal: React.FC<MapModalProps> = ({ isOpen, onClose, coordinate }) => {
   return (
@@ -380,6 +377,7 @@ const MapModal: React.FC<MapModalProps> = ({ isOpen, onClose, coordinate }) => {
     </Dialog>
   )
 }
+
 const EventsList = () => {
   // ** State
   const [OS, setOS] = useState<string>('')
@@ -387,14 +385,6 @@ const EventsList = () => {
   const [value, setValue] = useState<string>('')
   const [endDateRange, setEndDateRange] = useState<DateType>(null)
   const [startDateRange, setStartDateRange] = useState<DateType>(null)
-
-  // For google Maps
-  const [mapModalOpen, setMapModalOpen] = useState(false)
-  const [clickedCoordinate, setClickedCoordinate] = useState({ lat: 0, lng: 0 })
-
-  const handleMapModalClose = () => {
-    setMapModalOpen(false)
-  }
 
   // const [IPaddress] = useState<string>('')
   // const [nodename] = useState<string>('')
@@ -444,6 +434,13 @@ const EventsList = () => {
     }
     setStartDateRange(start)
     setEndDateRange(end)
+  }
+
+  const [mapModalOpen, setMapModalOpen] = useState(false)
+  const [clickedCoordinate, setClickedCoordinate] = useState({ lat: 0, lng: 0 })
+
+  const handleMapModalClose = () => {
+    setMapModalOpen(false)
   }
 
   return (
@@ -503,7 +500,6 @@ const EventsList = () => {
           <Grid item xs={12}>
             <Card>
               <TableHeader value={value} handleFilter={handleFilter} />
-
               <DataGrid
                 autoHeight
                 pagination
