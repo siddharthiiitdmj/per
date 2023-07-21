@@ -1,5 +1,5 @@
 // ** React Imports
-import { Dispatch, SetStateAction, forwardRef, useCallback, useEffect, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useState } from 'react'
 import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
 
 // ** Next Import
@@ -19,7 +19,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -62,6 +62,8 @@ const deviceOSObj: DeviceOSType = {
 
 interface CellType {
   row: EventsType
+  setClickedCoordinate?: any
+  setMapModalOpen?: any
 }
 
 interface CustomInputProps {
@@ -70,11 +72,6 @@ interface CustomInputProps {
   end: number | Date
   start: number | Date
   setDates?: (value: Date[]) => void
-}
-
-interface CustomGridRenderCellParams extends GridRenderCellParams {
-  setMapModalOpen: Dispatch<SetStateAction<boolean>>
-  setClickedCoordinate: Dispatch<SetStateAction<{ lat: number; lng: number }>>
 }
 
 // ** Styled component for the link in the dataTable
@@ -253,8 +250,14 @@ const columns: GridColDef[] = [
     minWidth: 230,
     field: 'latLong',
     headerName: 'Lat/Long',
-    renderCell: (props: CellType & { setMapModalOpen: any; setClickedCoordinate: any }) => {
+    renderCell: (props: CellType) => {
+      // renderCell: (props: CellType & { setMapModalOpen: any; setClickedCoordinate: any }) => {
+      // const setMapModalOpen = ()=>{
+      //   console.log("asdf")
+      // }
       const { row, setMapModalOpen, setClickedCoordinate } = props
+
+      // const { row } = props
       const { Latitude, Longitude } = row
 
       // Rounding latitude and longitude values to 6 decimal places
@@ -363,8 +366,8 @@ const MapModal: React.FC<MapModalProps> = ({ isOpen, onClose, coordinate }) => {
     <Dialog open={isOpen} onClose={onClose} maxWidth='md' fullWidth>
       <DialogTitle>Location Map</DialogTitle>
       <DialogContent>
-        <LoadScript googleMapsApiKey='YOUR_GOOGLE_MAPS_API_KEY'>
-          <GoogleMap mapContainerStyle={{ height: '400px', width: '100%' }} center={coordinate} zoom={15}>
+        <LoadScript googleMapsApiKey='AIzaSyCfsah35lxjcYxzIq8ip5UW9mzYeEBdk5E'>
+          <GoogleMap mapContainerStyle={{ height: '400px', width: '100%' }} center={coordinate} zoom={10}>
             <Marker position={coordinate} />
           </GoogleMap>
         </LoadScript>
@@ -508,7 +511,7 @@ const EventsList = () => {
                   column.field === 'latLong'
                     ? {
                         ...column,
-                        renderCell: (cellProps: CustomGridRenderCellParams) =>
+                        renderCell: (cellProps: any) =>
                           column?.renderCell
                             ? column.renderCell({ ...cellProps, setMapModalOpen, setClickedCoordinate })
                             : null
