@@ -33,7 +33,7 @@ interface LineProps {
 const ChartjsLineChart = (props: LineProps) => {
   // ** Props
   const { white, primary, warning, labelColor, borderColor, legendColor } = props
-  const colors = ['#fff', '#ff8131', '#28dac6', '#299aff', '#836af9', '#ffe802']
+  const colors = ['#fff', '#ff8131', '#28dac6', '#299aff', '#836af9', '#ffe802', '#f30101eb']
 
   const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
