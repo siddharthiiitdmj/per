@@ -20,7 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       'isEmulator',
       'isAppSpoofed',
       'isAppPatched',
-      'isAppCloned'
+      'isAppCloned',
+      'riskyDevices'
     ]
     const { os } = req.query
 
@@ -63,8 +64,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       weekly: {},
       daily: {}
     }
+    const configurations = await prisma.configuration.findMany()
+    const thresholdScore = 33
 
-    const deviceInfos = await prisma.Events.findMany({
+    let deviceInfos = await prisma.Events.findMany({
       where: {
         device: {
           OS: os
@@ -84,6 +87,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
+    deviceInfos = deviceInfos.map((event: any) => ({
+      ...event,
+      riskScore: calculateRiskScore(event, configurations)
+    }))
+
     for (const field of booleanFields) {
       lineChart.monthly[field] = {}
       lineChart.weekly[field] = {}
@@ -96,11 +104,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
           // Monthly count
           const month = createdAt.toISOString().slice(0, 7)
-          lineChart.monthly[field][month] = (lineChart.monthly[field][month] || 0) + (deviceInfo[field] ? 1 : 0)
+          if (field !== 'riskyDevices') {
+            lineChart.monthly[field][month] = (lineChart.monthly[field][month] || 0) + (deviceInfo[field] ? 1 : 0)
+          } else {
+            lineChart.monthly[field][month] =
+              (lineChart.monthly[field][month] || 0) + (deviceInfo.riskScore > thresholdScore ? 1 : 0)
+          }
 
           // Daily count
           const day = createdAt.toISOString().slice(0, 10)
-          lineChart.daily[field][day] = (lineChart.daily[field][day] || 0) + (deviceInfo[field] ? 1 : 0)
+          if (field !== 'riskyDevices') {
+            lineChart.daily[field][day] = (lineChart.daily[field][day] || 0) + (deviceInfo[field] ? 1 : 0)
+          } else {
+            lineChart.daily[field][day] =
+              (lineChart.daily[field][day] || 0) + (deviceInfo.riskScore > thresholdScore ? 1 : 0)
+          }
         }
       }
     }
@@ -122,7 +140,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         for (const deviceInfo of sortedDeviceInfos) {
           if (deviceInfo.createdAt >= currentWeekStart && deviceInfo.createdAt <= currentWeekEnd) {
-            lineChart.weekly[field][weekStart] += deviceInfo[field] ? 1 : 0
+            if (field !== 'riskyDevices') {
+            } else {
+              lineChart.weekly[field][weekStart] += deviceInfo.riskScore > thresholdScore ? 1 : 0
+            }
           }
         }
       }
@@ -218,4 +239,21 @@ function incrementDeviceCount(device: Device, incrementBy: Device): void {
   device.isAppSpoofed += incrementBy.isAppSpoofed
   device.isAppPatched += incrementBy.isAppPatched
   device.isAppCloned += incrementBy.isAppCloned
+}
+
+function calculateRiskScore(event: any, configurations: any[]): number {
+  let numerator = 0
+  let denominator = 0
+
+  for (const config of configurations) {
+    if (event[config.field] && config.isSwitchedOn) {
+      numerator += config.value
+    }
+
+    if (config.isSwitchedOn) {
+      denominator += config.value
+    }
+  }
+
+  return (numerator / denominator) * 100
 }
