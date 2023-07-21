@@ -98,6 +98,13 @@ model Stats {
   countryInfo Json?
 }
 
+model Configuration {
+  id            Int      @id @default(autoincrement())
+  field         String
+  value         Int
+  isSwitchedOn  Boolean
+}
+
 enum UserRole {
   admin
   client

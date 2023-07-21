@@ -79,7 +79,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 const columns: GridColDef[] = [
   {
     flex: 0.2,
-    minWidth: 230,
+    minWidth: 100,
     field: 'userId',
     headerName: 'User ID',
     renderCell: ({ row }: CellType) => <LinkStyled href={`/info/user/${row.userId}`}>{`${row.userId}`}</LinkStyled>
