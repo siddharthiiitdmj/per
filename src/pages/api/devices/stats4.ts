@@ -5,17 +5,17 @@ import { NextApiRequest, NextApiResponse } from 'next/types'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    let { os } = req.query
+    let { OS } = req.query
     const { chart } = req.query
-    if (!os) {
-      os = 'All'
+    if (!OS) {
+      OS = 'All'
     }
 
     const selectField = chart === 'pieChart' ? 'pieChart' : 'lineChart'
 
     const stats = await prisma.stats.findFirst({
       where: {
-        os: os // Set the os field from the query parameter
+        os: OS // Set the os field from the query parameter
       },
       select: {
         [selectField]: true
