@@ -48,20 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     //Manipulate data
     // Sort the countries by their values in descending order
-    const sortedCountries = Object.entries(countriesCount).sort((a, b) => b[1] - a[1])
-
-    const topCountries = sortedCountries.slice(0, 11)
-    const otherCountriesSum = sortedCountries.slice(11).reduce((sum, [, value]) => sum + value, 0)
-
-    const manipulatedData: any = {}
-
-    topCountries.forEach(([country, value]) => {
-      manipulatedData[country] = value
-    })
-
-    if (otherCountriesSum > 0) {
-      manipulatedData['others'] = otherCountriesSum
-    }
+    // const manipulatedData = manipulateCountryData(countriesCount)
 
     await prisma.Stats.deleteMany({
       where: {
@@ -71,13 +58,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await prisma.Stats.create({
       data: {
-        countryInfo: manipulatedData
+        countryInfo: countriesCount
       }
     })
 
-    res.status(200).json({ message: 'CountryInfo data stored in db successfully', data: manipulatedData })
+    res.status(200).json({ message: 'CountryInfo data stored in db successfully', data: countriesCount })
   } catch (error) {
     console.error('Error while populating countryInfo:', error)
     res.status(500).json({ error: 'An error occurred while populating countryInfo.' })
   }
 }
+
+// function manipulateCountryData(countriesCount: { [key: string]: number }) {
+//   const sortedCountries = Object.entries(countriesCount).sort((a, b) => b[1] - a[1])
+
+//   const topCountries = sortedCountries.slice(0, 11)
+//   const otherCountriesSum = sortedCountries.slice(11).reduce((sum, [, value]) => sum + value, 0)
+
+//   const manipulatedData: any = {}
+
+//   topCountries.forEach(([country, value]) => {
+//     manipulatedData[country] = value
+//   })
+
+//   if (otherCountriesSum > 0) {
+//     manipulatedData['others'] = otherCountriesSum
+//   }
+// }
