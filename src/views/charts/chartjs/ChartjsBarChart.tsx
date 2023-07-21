@@ -35,6 +35,11 @@ const ChartjsBarChart = (props: BarProp) => {
   // ** States
   const [OS, setOS] = useState<string>('All')
   const [activeDate, setActiveDate] = useState<number>(30)
+  const [yAxis, setYAxis] = useState({
+    min: 0,
+    max: 160,
+    stepSize: 40
+  })
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
@@ -60,6 +65,25 @@ const ChartjsBarChart = (props: BarProp) => {
     )
   }, [dispatch, OS])
 
+  const findYAxis = () => {
+    const yAxisData: any = Object.values(store.pieChartData[activeDate] ? store.pieChartData[activeDate] : {})
+
+    const min = Math.min(...yAxisData)
+    const max = Math.max(...yAxisData)
+
+    return { min, max }
+  }
+
+  useEffect(() => {
+    const { min, max } = findYAxis()
+    const stepSize = Math.floor((max - min) / 4)
+    setYAxis({
+      min: Math.max(0, min - 2),
+      max: max + 2,
+      stepSize
+    })
+  }, [store, activeDate])
+
   const options: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -72,13 +96,13 @@ const ChartjsBarChart = (props: BarProp) => {
         ticks: { color: labelColor }
       },
       y: {
-        min: 0,
-        max: 150,
+        min: yAxis.min,
+        max: yAxis.max,
         grid: {
           color: borderColor
         },
         ticks: {
-          stepSize: 25,
+          stepSize: yAxis.stepSize,
           color: labelColor
         }
       }
