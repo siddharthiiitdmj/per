@@ -88,23 +88,28 @@ export default function Configurations() {
 
   const handleBlur = (field: string, id: number) => () => {
     // Find the corresponding configuration and handle out-of-bounds values
-    const numericValue = configurations.find(config => config.field === field && config.id === id)?.value;
+    const numericValue = configurations.find(config => config.field === field && config.id === id)?.value
     if (typeof numericValue === 'number' && !isNaN(numericValue)) {
       if (numericValue < 0) {
-        handleSliderChange(field, id)({} as Event, 0);
+        handleSliderChange(field, id)({} as Event, 0)
       } else if (numericValue > 100) {
-        handleSliderChange(field, id)({} as Event, 100);
+        handleSliderChange(field, id)({} as Event, 100)
       }
     }
-  };
+  }
 
   const handleSwitchChange = (field: string, id: number) => (event: ChangeEvent<HTMLInputElement>) => {
-    // Find the corresponding configuration and update its switch status
     const updatedConfigurations = configurations.map(config =>
-      config.field === field && config.id === id ? { ...config, isSwitchedOn: event.target.checked } : config
+      config.field === field && config.id === id
+        ? {
+            ...config,
+            isSwitchedOn: event.target.checked,
+            value: event.target.checked ? config.value : 0 // If switch is off, set value to 0
+          }
+        : config
     )
     setConfigurations(updatedConfigurations)
-    setHasUpdates(true) // Value updated, set hasUpdates to true
+    setHasUpdates(true)
   }
 
   const handleSave = () => {
@@ -171,11 +176,11 @@ export default function Configurations() {
         </CardContent>
       </Card>
       {hasUpdates && (
-        <Button onClick={handleSave} variant='contained' color='primary' sx={{m:5}}>
+        <Button onClick={handleSave} variant='contained' color='primary' sx={{ m: 5 }}>
           Save
         </Button>
       )}
-      <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{m:5}}>
+      <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{ m: 5 }}>
         Add Configuration
       </Button>
       <Dialog open={open} onClose={handleCloseDialog}>
