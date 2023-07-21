@@ -63,8 +63,8 @@ const ChartjsLineChart = (props: LineProps) => {
     )
 
     // Find the minimum and maximum values among the numbers in the data array
-    let min: number | null = null
-    let max: number | null = null
+    let min = Infinity
+    let max = -Infinity
 
     yAxisData.forEach(({ data }) => {
       const validNumbers = data.filter(value => value !== null) as number[]

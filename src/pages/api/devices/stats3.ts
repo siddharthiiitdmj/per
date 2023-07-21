@@ -141,6 +141,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         for (const deviceInfo of sortedDeviceInfos) {
           if (deviceInfo.createdAt >= currentWeekStart && deviceInfo.createdAt <= currentWeekEnd) {
             if (field !== 'riskyDevices') {
+              lineChart.weekly[field][weekStart] += deviceInfo[field] ? 1 : 0
             } else {
               lineChart.weekly[field][weekStart] += deviceInfo.riskScore > thresholdScore ? 1 : 0
             }
