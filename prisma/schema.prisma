@@ -99,10 +99,15 @@ model Stats {
 }
 
 model Configuration {
-  id            Int      @id @default(autoincrement())
-  field         String
-  value         Int
-  isSwitchedOn  Boolean
+  id           Int     @id @default(autoincrement())
+  field        String
+  value        Int
+  isSwitchedOn Boolean
+}
+
+model Risk {
+  id        Int @id @default(autoincrement())
+  threshold Int
 }
 
 enum UserRole {
