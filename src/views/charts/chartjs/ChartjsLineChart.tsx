@@ -33,10 +33,15 @@ interface LineProps {
 const ChartjsLineChart = (props: LineProps) => {
   // ** Props
   const { white, primary, warning, labelColor, borderColor, legendColor } = props
-  const colors = ['#fff', '#ff8131', '#28dac6', '#299aff', '#836af9', '#ffe802']
+  const colors = ['#fff', '#ff8131', '#28dac6', '#299aff', '#836af9', '#ffe802', '#f30101eb']
 
   const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
+  const [yAxis, setYAxis] = useState({
+    min: 0,
+    max: 160,
+    stepSize: 40
+  })
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
@@ -50,6 +55,47 @@ const ChartjsLineChart = (props: LineProps) => {
     )
   }, [dispatch, OS])
 
+  const findYAxis = () => {
+    const yAxisData = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
+      ([, values]) => ({
+        data: Object.values(values as { [s: string]: number | null }) as (number | null)[]
+      })
+    )
+
+    // Find the minimum and maximum values among the numbers in the data array
+    let min = Infinity
+    let max = -Infinity
+
+    yAxisData.forEach(({ data }) => {
+      const validNumbers = data.filter(value => value !== null) as number[]
+
+      if (validNumbers.length > 0) {
+        const currentMin = Math.min(...validNumbers)
+        const currentMax = Math.max(...validNumbers)
+
+        if (min === null || currentMin < min) {
+          min = currentMin
+        }
+
+        if (max === null || currentMax > max) {
+          max = currentMax
+        }
+      }
+    })
+
+    return { min, max }
+  }
+
+  useEffect(() => {
+    const { min, max } = findYAxis()
+    const stepSize = Math.floor((max - min) / 4)
+    setYAxis({
+      min: Math.max(0, min - 2),
+      max: max + 2,
+      stepSize
+    })
+  }, [store, timePeriod])
+
   const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -61,10 +107,10 @@ const ChartjsLineChart = (props: LineProps) => {
         }
       },
       y: {
-        min: 0,
-        max: 160,
+        min: yAxis.min,
+        max: yAxis.max,
         ticks: {
-          stepSize: 40,
+          stepSize: yAxis.stepSize,
           color: labelColor
         },
         grid: {
@@ -93,7 +139,7 @@ const ChartjsLineChart = (props: LineProps) => {
     datasets: Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
       ([property, values], index) => ({
         fill: false,
-        tension: 0.5,
+        tension: property === 'riskyDevices' ? 0.9 : 0.5,
         pointRadius: 1,
         label: property,
         pointHoverRadius: 5,
