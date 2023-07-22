@@ -160,13 +160,14 @@ export default function Configurations() {
         console.log(response.data)
         setHasUpdates(false)
       })
+      .finally(async () => {
+        await api.get('/devices/stats3')
+        await api.get('/devices/stats3?os=iOS')
+        await api.get('/devices/stats3?os=Android')
+      })
       .catch(error => {
         console.error('Error updating configurations:', error)
       })
-
-    api.get('/devices/stats3')
-    api.get('/devices/stats3?os=iOS')
-    api.get('/devices/stats3?os=Android')
   }
 
   return (
