@@ -65,7 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       daily: {}
     }
     const configurations = await prisma.configuration.findMany()
-    console.log('configurations: ', configurations)
+
+    // console.log('configurations: ', configurations)
 
     let thresholdScore = 0
 
@@ -256,12 +257,14 @@ function calculateRiskScore(event: any, configurations: any[]): number {
   let denominator = 0
 
   for (const config of configurations) {
-    if (event[config.field] && config.isSwitchedOn) {
-      numerator += config.value
-    }
+    if (config.field !== 'Threshold') {
+      if (event[config.field] && config.isSwitchedOn) {
+        numerator += config.value
+      }
 
-    if (config.isSwitchedOn) {
-      denominator += config.value
+      if (config.isSwitchedOn) {
+        denominator += config.value
+      }
     }
   }
 
