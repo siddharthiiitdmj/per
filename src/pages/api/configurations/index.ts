@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     for (const config of configurations) {
       await prisma.configuration.update({
         where: { id: config.id },
-        data: { value: config.value, isSwitchedOn: config.isSwitchedOn },
+        data: { value: config.value, isSwitchedOn: config.isSwitchedOn }
       })
     }
     res.status(200).json({ message: 'Configurations updated successfully.' })
@@ -22,8 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         field,
         value,
-        isSwitchedOn,
-      },
+        isSwitchedOn
+      }
     })
     res.status(201).json(newConfiguration)
   } else {

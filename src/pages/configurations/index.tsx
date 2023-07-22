@@ -3,13 +3,14 @@ import axios from 'axios'
 import Slider from '@mui/material/Slider'
 import Switch from '@mui/material/Switch'
 import Input from '@mui/material/Input'
-import { Card, CardContent, Grid, Typography, Button, Box } from '@mui/material'
+import { Card, CardContent, Grid, Typography, Button, Box, IconButton } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 // const Fields: string[] = [
 //   'isVPNSpoofed',
@@ -32,6 +33,13 @@ export default function Configurations() {
   const [open, setOpen] = useState(false)
   const [newField, setNewField] = useState('')
   const [defaultValue, setDefaultValue] = useState(30)
+  const [fieldToDelete, setFieldToDelete] = useState<{
+    id: number
+    field: string
+    value: number
+    isSwitchedOn: boolean
+  } | null>(null)
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
   useEffect(() => {
     // Fetch data from the API when the component mounts
@@ -51,6 +59,41 @@ export default function Configurations() {
   }
   const handleDefaultValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDefaultValue(Number(event.target.value))
+  }
+
+  const handleDeleteConfirm = (config: { id: number; field: string; value: number; isSwitchedOn: boolean }) => {
+    // Set the field to be deleted
+    setFieldToDelete(config)
+
+    // Open the confirmation dialog
+    setOpenDeleteDialog(true)
+  }
+
+  // Function to handle field deletion
+  const handleFieldDeletion = () => {
+    if (fieldToDelete) {
+      // Send a request to delete the field using the new API endpoint
+      axios
+        .delete(`/api/configurations/${fieldToDelete.id}`)
+        .then(response => {
+          console.log(response.data)
+
+          // Fetch updated configurations after deleting the field
+          axios.get('/api/configurations').then(response => {
+            setConfigurations(response.data)
+            handleCloseDeleteDialog()
+          })
+        })
+        .catch(error => {
+          console.error('Error deleting field:', error)
+        })
+    }
+  }
+
+  // Function to close the delete confirmation dialog
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false)
+    setFieldToDelete(null)
   }
 
   const handleSaveNewField = () => {
@@ -99,90 +142,154 @@ export default function Configurations() {
   }
 
   const handleSwitchChange = (field: string, id: number) => (event: ChangeEvent<HTMLInputElement>) => {
+    // Find the corresponding configuration and update its switch status
     const updatedConfigurations = configurations.map(config =>
-      config.field === field && config.id === id
-        ? {
-            ...config,
-            isSwitchedOn: event.target.checked,
-            value: event.target.checked ? config.value : 0 // If switch is off, set value to 0
-          }
-        : config
+      config.field === field && config.id === id ? { ...config, isSwitchedOn: event.target.checked } : config
     )
     setConfigurations(updatedConfigurations)
-    setHasUpdates(true)
+    setHasUpdates(true) // Value updated, set hasUpdates to true
   }
 
   const handleSave = () => {
-    // Save the updated configurations to the API
-    console.log(configurations)
-    axios.put('/api/configurations', configurations).then(response => {
-      console.log(response.data)
-      setHasUpdates(false)
-    })
+    // Save the updated configurations and threshold to the API
+    axios
+      .put('/api/configurations', configurations)
+      .then(response => {
+        console.log(response.data)
+        setHasUpdates(false)
+      })
+      .catch(error => {
+        console.error('Error updating configurations:', error)
+      })
   }
 
   return (
     <>
-      <Card>
-        <CardContent>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant='h6'>Configurations</Typography>
-            <Typography variant='body1' sx={{ color: 'text.secondary' }}>
-              Adjust the severity of malicious indicators
-            </Typography>
-          </Box>
-          <Box>
-            {configurations.map(config => (
-              <Grid key={config.id} container spacing={2} alignItems='center'>
-                <Grid item xs={12} md={4}>
-                  <React.Fragment>
-                    <Typography id={`${config.field}-slider`} gutterBottom>
-                      {config.field}
-                    </Typography>
-                    <Grid container spacing={2} alignItems='center'>
-                      <Grid item xs>
-                        <Slider
-                          value={config.value}
-                          onChange={handleSliderChange(config.field, config.id)}
-                          aria-labelledby={`${config.field}-slider`}
-                          disabled={!config.isSwitchedOn}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <StyledInput
-                          value={config.value}
-                          size='small'
-                          onChange={handleInputChange(config.field, config.id)}
-                          onBlur={handleBlur(config.field, config.id)}
-                          inputProps={{
-                            step: 10,
-                            min: 0,
-                            max: 100,
-                            type: 'number',
-                            'aria-labelledby': `${config.field}-slider`
-                          }}
-                          disabled={!config.isSwitchedOn}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Switch checked={config.isSwitchedOn} onChange={handleSwitchChange(config.field, config.id)} />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Box sx={{ mb: 6 }}>
+                <Typography variant='h6'>Configurations</Typography>
+                <Typography variant='body1' sx={{ color: 'text.secondary' }}>
+                  Adjust the severity of malicious indicators
+                </Typography>
+              </Box>
+              <Box>
+                {configurations
+                  .filter(config => config.field !== 'Threshold')
+                  .map(config => (
+                    <Grid key={config.id} container spacing={2} alignItems='center'>
+                      <Grid item xs={12} md={12}>
+                        <React.Fragment>
+                          <Typography id={`${config.field}-slider`} gutterBottom>
+                            {config.field}
+                          </Typography>
+                          <Grid container spacing={2} alignItems='center'>
+                            <Grid item xs>
+                              <Slider
+                                value={config.value}
+                                onChange={handleSliderChange(config.field, config.id)}
+                                aria-labelledby={`${config.field}-slider`}
+                                disabled={!config.isSwitchedOn}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <StyledInput
+                                value={config.value}
+                                size='small'
+                                onChange={handleInputChange(config.field, config.id)}
+                                onBlur={handleBlur(config.field, config.id)}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: 'number',
+                                  'aria-labelledby': `${config.field}-slider`
+                                }}
+                                disabled={!config.isSwitchedOn}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Switch
+                                checked={config.isSwitchedOn}
+                                onChange={handleSwitchChange(config.field, config.id)}
+                              />
+                            </Grid>
+                            <IconButton color='error' aria-label='delete' onClick={() => handleDeleteConfirm(config)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Grid>
+                        </React.Fragment>
                       </Grid>
                     </Grid>
-                  </React.Fragment>
-                </Grid>
-              </Grid>
-            ))}
-          </Box>
-        </CardContent>
-      </Card>
-      {hasUpdates && (
-        <Button onClick={handleSave} variant='contained' color='primary' sx={{ m: 5 }}>
-          Save
+                  ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Box sx={{ mb: 6 }}>
+                <Typography variant='h6'>Risk Analysis</Typography>
+                <Typography variant='body1' sx={{ color: 'text.secondary' }}>
+                  Adjust the Risk threshold Value for graph
+                </Typography>
+              </Box>
+              <Box>
+                {configurations
+                  .filter(config => config.field === 'Threshold')
+                  .map(config => (
+                    <Grid key={config.id} container spacing={2} alignItems='center'>
+                      <Grid item xs={12} md={12}>
+                        <Typography id={`${config.field}-slider`} gutterBottom>
+                          {config.field}
+                        </Typography>
+                        <Grid container spacing={2} alignItems='center'>
+                          <Grid item xs>
+                            <Slider
+                              value={config.value}
+                              onChange={handleSliderChange(config.field, config.id)}
+                              aria-labelledby={`${config.field}-slider`}
+                              disabled={!config.isSwitchedOn}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <StyledInput
+                              value={config.value}
+                              size='small'
+                              onChange={handleInputChange(config.field, config.id)}
+                              onBlur={handleBlur(config.field, config.id)}
+                              inputProps={{
+                                step: 10,
+                                min: 0,
+                                max: 100,
+                                type: 'number',
+                                'aria-labelledby': `${config.field}-slider`
+                              }}
+                              disabled={!config.isSwitchedOn}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 4 }}>
+        {hasUpdates && (
+          <Button onClick={handleSave} variant='contained' color='primary' sx={{ m: 5 }}>
+            Save
+          </Button>
+        )}
+        <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{ m: 5 }}>
+          Add Configuration
         </Button>
-      )}
-      <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{ m: 5 }}>
-        Add Configuration
-      </Button>
+      </Box>
       <Dialog open={open} onClose={handleCloseDialog}>
         <DialogTitle>Add New Slider</DialogTitle>
         <DialogContent>
@@ -202,6 +309,25 @@ export default function Configurations() {
           </Button>
           <Button onClick={handleSaveNewField} color='primary'>
             Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Delete Configuration Field</DialogTitle>
+        <DialogContent>
+          <Typography variant='body1'>Are you sure you want to delete this configuration field?</Typography>
+          {fieldToDelete && (
+            <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
+              Field: {fieldToDelete.field}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={handleFieldDeletion} color='error'>
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
