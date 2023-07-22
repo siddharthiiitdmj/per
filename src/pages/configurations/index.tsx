@@ -12,6 +12,8 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
 
+import api from '../../helper/api'
+
 // const Fields: string[] = [
 //   'isVPNSpoofed',
 //   'isVirtualOS',
@@ -157,6 +159,11 @@ export default function Configurations() {
       .then(response => {
         console.log(response.data)
         setHasUpdates(false)
+      })
+      .finally(async () => {
+        await api.get('/devices/stats3')
+        await api.get('/devices/stats3?os=iOS')
+        await api.get('/devices/stats3?os=Android')
       })
       .catch(error => {
         console.error('Error updating configurations:', error)

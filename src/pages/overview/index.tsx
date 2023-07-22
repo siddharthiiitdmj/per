@@ -19,6 +19,8 @@ import 'chart.js/auto'
 import { useEffect, useState } from 'react'
 import ChartjsLineChart from 'src/views/charts/chartjs/ChartjsLineChart'
 
+// import { useSettings } from 'src/@core/hooks/useSettings'
+
 // ** Types Imports
 import { AppDispatch } from 'src/store'
 
@@ -30,11 +32,15 @@ import { fetchDeviceData } from 'src/store/apps/device'
 import { fetchData } from 'src/store/apps/events'
 import ChartjsBarChart from 'src/views/charts/chartjs/ChartjsBarChart'
 
+// import RechartsLineChart from 'src/views/charts/recharts/RechartsLineChart'
+
 const ChartJS = () => {
   const [OS] = useState<string>('')
   const [dates] = useState<Date[]>([])
   const [value] = useState<string>('')
   const theme = useTheme()
+
+  // const { settings } = useSettings()
 
   // Vars
   const yellowColor = '#ffe802'
@@ -103,6 +109,9 @@ const ChartJS = () => {
             warning={lineChartWarning}
           />
         </Grid>
+        {/* <Grid item xs={12}>
+          <RechartsLineChart direction={settings.direction} />
+        </Grid> */}
       </Grid>
     </DatePickerWrapper>
   )

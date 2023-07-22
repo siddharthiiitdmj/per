@@ -19,6 +19,9 @@ import { AppDispatch, RootState } from 'src/store'
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchLineStatsData } from 'src/store/apps/lineStats'
+import api from 'src/helper/api'
+import ChipsIcon from 'src/views/components/chips/ChipsIcon'
+import { Grid } from '@mui/material'
 
 interface LineProps {
   white: string
@@ -37,6 +40,8 @@ const ChartjsLineChart = (props: LineProps) => {
 
   const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
+  const [riskValue, setRiskValue] = useState(0)
+
   const [yAxis, setYAxis] = useState({
     min: 0,
     max: 160,
@@ -53,7 +58,24 @@ const ChartjsLineChart = (props: LineProps) => {
         OS
       })
     )
+
+    fetchConfig()
   }, [dispatch, OS])
+
+  const fetchConfig = async () => {
+    const res = await api.get('/configurations/')
+    const configData = res.data
+    let value = 0
+    configData.map((item: any) => {
+      if (item.field == 'Threshold') {
+        value = item.value
+      }
+    })
+
+    // console.log('Risk value: ', value)
+
+    setRiskValue(value)
+  }
 
   const findYAxis = () => {
     const yAxisData = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
@@ -166,46 +188,53 @@ const ChartjsLineChart = (props: LineProps) => {
   return (
     <Card>
       <CardHeader title='Malicious Device Info' subheader='Can sort by OS and Time Period' />
-      <FormControl sx={{ width: 100, mx: 8 }}>
-        <InputLabel
-          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          id='controlled-select-label'
-        >
-          OS
-        </InputLabel>
-        <Select
-          sx={{ height: 45 }}
-          value={OS}
-          label='Controlled'
-          id='controlled-select'
-          onChange={handleOsChange}
-          labelId='controlled-select-label'
-        >
-          <MenuItem value={'All'}>All</MenuItem>
-          <MenuItem value={'Android'}>Android</MenuItem>
-          <MenuItem value={'iOS'}>iOS</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl sx={{ width: 110 }}>
-        <InputLabel
-          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          id='controlled-select-label'
-        >
-          Time Period
-        </InputLabel>
-        <Select
-          sx={{ height: 45 }}
-          value={timePeriod}
-          label='Controlled'
-          id='controlled-select'
-          onChange={handleTimeChange}
-          labelId='controlled-select-label'
-        >
-          <MenuItem value={'daily'}>Daily</MenuItem>
-          <MenuItem value={'weekly'}>Weekly</MenuItem>
-          <MenuItem value={'monthly'}>Monthly</MenuItem>
-        </Select>
-      </FormControl>
+      <Grid container justifyContent='space-between' alignItems='center'>
+        <Grid item>
+          <FormControl sx={{ width: 100, mx: 8 }}>
+            <InputLabel
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              id='controlled-select-label'
+            >
+              OS
+            </InputLabel>
+            <Select
+              sx={{ height: 45 }}
+              value={OS}
+              label='Controlled'
+              id='controlled-select'
+              onChange={handleOsChange}
+              labelId='controlled-select-label'
+            >
+              <MenuItem value={'All'}>All</MenuItem>
+              <MenuItem value={'Android'}>Android</MenuItem>
+              <MenuItem value={'iOS'}>iOS</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl sx={{ width: 110 }}>
+            <InputLabel
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              id='controlled-select-label'
+            >
+              Time Period
+            </InputLabel>
+            <Select
+              sx={{ height: 45 }}
+              value={timePeriod}
+              label='Controlled'
+              id='controlled-select'
+              onChange={handleTimeChange}
+              labelId='controlled-select-label'
+            >
+              <MenuItem value={'daily'}>Daily</MenuItem>
+              <MenuItem value={'weekly'}>Weekly</MenuItem>
+              <MenuItem value={'monthly'}>Monthly</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <ChipsIcon riskValue={riskValue} />
+        </Grid>
+      </Grid>
       <CardContent>
         <Line data={data} height={400} options={options} />
       </CardContent>
