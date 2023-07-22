@@ -41,18 +41,10 @@ export default function Configurations() {
   } | null>(null)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
-  // New state to manage the threshold value
-  const [threshold, setThreshold] = useState<number>(50)
-
   useEffect(() => {
     // Fetch data from the API when the component mounts
     axios.get('/api/configurations').then(response => {
       setConfigurations(response.data)
-    })
-
-    // Fetch the threshold value from the API when the component mounts
-    axios.get('/api/risk').then(response => {
-      setThreshold(response.data.threshold)
     })
   }, [])
 
@@ -169,23 +161,6 @@ export default function Configurations() {
       .catch(error => {
         console.error('Error updating configurations:', error)
       })
-
-    // Save the updated threshold value to the database
-    axios
-      .put('/api/risk', { threshold })
-      .then(response => {
-        console.log(response.data)
-        setHasUpdates(false)
-      })
-      .catch(error => {
-        console.error('Error updating threshold:', error)
-      })
-  }
-
-  const handleThresholdSliderChange = (event: Event, newValue: number | number[]) => {
-    // Update the threshold state when the slider value changes
-    setThreshold(newValue as number)
-    setHasUpdates(true) // Value updated, set hasUpdates to true
   }
 
   return (
@@ -201,50 +176,51 @@ export default function Configurations() {
                 </Typography>
               </Box>
               <Box>
-                {configurations.map(config => (
+                {configurations.filter(config => config.field !== 'Threshold').map(config => (
                   <Grid key={config.id} container spacing={2} alignItems='center'>
-                    <Grid item xs={12} md={12}>
-                      <React.Fragment>
-                        <Typography id={`${config.field}-slider`} gutterBottom>
-                          {config.field}
-                        </Typography>
-                        <Grid container spacing={2} alignItems='center'>
-                          <Grid item xs>
-                            <Slider
-                              value={config.value}
-                              onChange={handleSliderChange(config.field, config.id)}
-                              aria-labelledby={`${config.field}-slider`}
-                              disabled={!config.isSwitchedOn}
-                            />
+                      <Grid item xs={12} md={12}>
+                        <React.Fragment>
+                          <Typography id={`${config.field}-slider`} gutterBottom>
+                            {config.field}
+                          </Typography>
+                          <Grid container spacing={2} alignItems='center'>
+                            <Grid item xs>
+                              <Slider
+                                value={config.value}
+                                onChange={handleSliderChange(config.field, config.id)}
+                                aria-labelledby={`${config.field}-slider`}
+                                disabled={!config.isSwitchedOn}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <StyledInput
+                                value={config.value}
+                                size='small'
+                                onChange={handleInputChange(config.field, config.id)}
+                                onBlur={handleBlur(config.field, config.id)}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: 'number',
+                                  'aria-labelledby': `${config.field}-slider`
+                                }}
+                                disabled={!config.isSwitchedOn}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Switch
+                                checked={config.isSwitchedOn}
+                                onChange={handleSwitchChange(config.field, config.id)}
+                              />
+                            </Grid>
+                            <IconButton color='error' aria-label='delete' onClick={() => handleDeleteConfirm(config)}>
+                              <DeleteIcon />
+                            </IconButton>
                           </Grid>
-                          <Grid item>
-                            <StyledInput
-                              value={config.value}
-                              size='small'
-                              onChange={handleInputChange(config.field, config.id)}
-                              onBlur={handleBlur(config.field, config.id)}
-                              inputProps={{
-                                step: 10,
-                                min: 0,
-                                max: 100,
-                                type: 'number',
-                                'aria-labelledby': `${config.field}-slider`
-                              }}
-                              disabled={!config.isSwitchedOn}
-                            />
-                          </Grid>
-                          <Grid item>
-                            <Switch
-                              checked={config.isSwitchedOn}
-                              onChange={handleSwitchChange(config.field, config.id)}
-                            />
-                          </Grid>
-                          <IconButton color='error' aria-label='delete' onClick={() => handleDeleteConfirm(config)}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </Grid>
-                      </React.Fragment>
-                    </Grid>
+                        </React.Fragment>
+                      </Grid>
+
                   </Grid>
                 ))}
               </Box>
@@ -254,43 +230,52 @@ export default function Configurations() {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant='h6'>Threshold Configuration</Typography>
+              <Box sx={{ mb: 6 }}>
+                <Typography variant='h6'>Threshold</Typography>
                 <Typography variant='body1' sx={{ color: 'text.secondary' }}>
-                  Adjust the threshold value
+                  Adjust the threshold Value
                 </Typography>
               </Box>
-              <Grid container spacing={2} alignItems='center'>
-                <Grid item xs={12} md={12}>
-                  <React.Fragment>
-                    <Typography id='threshold-slider' gutterBottom>
-                      Threshold
-                    </Typography>
-                    <Grid container spacing={2} alignItems='center'>
-                      <Grid item xs>
-                        <Slider
-                          value={threshold}
-                          onChange={handleThresholdSliderChange}
-                          aria-labelledby='threshold-slider'
-                        />
+              <Box>
+                {configurations.filter(config => config.field === 'Threshold').map(config => (
+                  <Grid key={config.id} container spacing={2} alignItems='center'>
+                      <Grid item xs={12} md={12}>
+
+                          <Typography id={`${config.field}-slider`} gutterBottom>
+                            {config.field}
+                          </Typography>
+                          <Grid container spacing={2} alignItems='center'>
+                            <Grid item xs>
+                              <Slider
+                                value={config.value}
+                                onChange={handleSliderChange(config.field, config.id)}
+                                aria-labelledby={`${config.field}-slider`}
+                                disabled={!config.isSwitchedOn}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <StyledInput
+                                value={config.value}
+                                size='small'
+                                onChange={handleInputChange(config.field, config.id)}
+                                onBlur={handleBlur(config.field, config.id)}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: 'number',
+                                  'aria-labelledby': `${config.field}-slider`
+                                }}
+                                disabled={!config.isSwitchedOn}
+                              />
+                            </Grid>
+                          </Grid>
+
                       </Grid>
-                      <Grid item>
-                        <StyledInput
-                          value={threshold}
-                          size='small'
-                          inputProps={{
-                            step: 10,
-                            min: 0,
-                            max: 100,
-                            type: 'number',
-                            'aria-labelledby': 'threshold-slider'
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </React.Fragment>
-                </Grid>
-              </Grid>
+
+                  </Grid>
+                ))}
+              </Box>
             </CardContent>
           </Card>
         </Grid>
