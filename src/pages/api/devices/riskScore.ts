@@ -128,7 +128,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       riskScore: calculateRiskScore(event, configurations)
     }))
 
-    const thresholdScore = 33
+    const thresholdScore = configurations.field['Threshold']
+    console.log(thresholdScore)
+
     const eventsGroupedByMonth = groupEventsByMonths(eventsWithRiskScore, thresholdScore)
     const eventsGroupedByWeek = groupEventsByWeeks(eventsWithRiskScore, thresholdScore)
     const eventsGroupedByDay = groupEventsByDays(eventsWithRiskScore, thresholdScore)

@@ -65,7 +65,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       daily: {}
     }
     const configurations = await prisma.configuration.findMany()
-    const thresholdScore = 33
+    console.log('configurations: ', configurations)
+
+    let thresholdScore = 0
+
+    configurations.forEach((item: any) => {
+      if (item.field == 'Threshold') {
+        thresholdScore = item.value
+      }
+    })
+    console.log('Threshold value: ', thresholdScore)
 
     let deviceInfos = await prisma.Events.findMany({
       where: {
