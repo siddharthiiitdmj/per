@@ -3,13 +3,14 @@ import axios from 'axios'
 import Slider from '@mui/material/Slider'
 import Switch from '@mui/material/Switch'
 import Input from '@mui/material/Input'
-import { Card, CardContent, Grid, Typography, Button, Box } from '@mui/material'
+import { Card, CardContent, Grid, Typography, Button, Box, IconButton } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 // const Fields: string[] = [
 //   'isVPNSpoofed',
@@ -32,6 +33,13 @@ export default function Configurations() {
   const [open, setOpen] = useState(false)
   const [newField, setNewField] = useState('')
   const [defaultValue, setDefaultValue] = useState(30)
+  const [fieldToDelete, setFieldToDelete] = useState<{
+    id: number
+    field: string
+    value: number
+    isSwitchedOn: boolean
+  } | null>(null)
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
   useEffect(() => {
     // Fetch data from the API when the component mounts
@@ -51,6 +59,41 @@ export default function Configurations() {
   }
   const handleDefaultValueChange = (event: ChangeEvent<HTMLInputElement>) => {
     setDefaultValue(Number(event.target.value))
+  }
+
+  const handleDeleteConfirm = (config: { id: number; field: string; value: number; isSwitchedOn: boolean }) => {
+    // Set the field to be deleted
+    setFieldToDelete(config)
+
+    // Open the confirmation dialog
+    setOpenDeleteDialog(true)
+  }
+
+  // Function to handle field deletion
+  const handleFieldDeletion = () => {
+    if (fieldToDelete) {
+      // Send a request to delete the field using the new API endpoint
+      axios
+        .delete(`/api/configurations/${fieldToDelete.id}`)
+        .then(response => {
+          console.log(response.data)
+
+          // Fetch updated configurations after deleting the field
+          axios.get('/api/configurations').then(response => {
+            setConfigurations(response.data)
+            handleCloseDeleteDialog()
+          })
+        })
+        .catch(error => {
+          console.error('Error deleting field:', error)
+        })
+    }
+  }
+
+  // Function to close the delete confirmation dialog
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false)
+    setFieldToDelete(null)
   }
 
   const handleSaveNewField = () => {
@@ -88,15 +131,15 @@ export default function Configurations() {
 
   const handleBlur = (field: string, id: number) => () => {
     // Find the corresponding configuration and handle out-of-bounds values
-    const numericValue = configurations.find(config => config.field === field && config.id === id)?.value;
+    const numericValue = configurations.find(config => config.field === field && config.id === id)?.value
     if (typeof numericValue === 'number' && !isNaN(numericValue)) {
       if (numericValue < 0) {
-        handleSliderChange(field, id)({} as Event, 0);
+        handleSliderChange(field, id)({} as Event, 0)
       } else if (numericValue > 100) {
-        handleSliderChange(field, id)({} as Event, 100);
+        handleSliderChange(field, id)({} as Event, 100)
       }
     }
-  };
+  }
 
   const handleSwitchChange = (field: string, id: number) => (event: ChangeEvent<HTMLInputElement>) => {
     // Find the corresponding configuration and update its switch status
@@ -162,6 +205,9 @@ export default function Configurations() {
                       <Grid item>
                         <Switch checked={config.isSwitchedOn} onChange={handleSwitchChange(config.field, config.id)} />
                       </Grid>
+                      <IconButton color='error' aria-label='delete' onClick={() => handleDeleteConfirm(config)}>
+                        <DeleteIcon />
+                      </IconButton>
                     </Grid>
                   </React.Fragment>
                 </Grid>
@@ -171,11 +217,11 @@ export default function Configurations() {
         </CardContent>
       </Card>
       {hasUpdates && (
-        <Button onClick={handleSave} variant='contained' color='primary' sx={{m:5}}>
+        <Button onClick={handleSave} variant='contained' color='primary' sx={{ m: 5 }}>
           Save
         </Button>
       )}
-      <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{m:5}}>
+      <Button onClick={handleOpenDialog} variant='contained' color='primary' sx={{ m: 5 }}>
         Add Configuration
       </Button>
       <Dialog open={open} onClose={handleCloseDialog}>
@@ -197,6 +243,25 @@ export default function Configurations() {
           </Button>
           <Button onClick={handleSaveNewField} color='primary'>
             Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Delete Configuration Field</DialogTitle>
+        <DialogContent>
+          <Typography variant='body1'>Are you sure you want to delete this configuration field?</Typography>
+          {fieldToDelete && (
+            <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
+              Field: {fieldToDelete.field}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={handleFieldDeletion} color='error'>
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
