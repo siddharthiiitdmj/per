@@ -12,6 +12,8 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
 
+import api from '../../helper/api'
+
 // const Fields: string[] = [
 //   'isVPNSpoofed',
 //   'isVirtualOS',
@@ -158,6 +160,11 @@ export default function Configurations() {
         console.log(response.data)
         setHasUpdates(false)
       })
+      .finally(async () => {
+        await api.get('/devices/stats3')
+        await api.get('/devices/stats3?os=iOS')
+        await api.get('/devices/stats3?os=Android')
+      })
       .catch(error => {
         console.error('Error updating configurations:', error)
       })
@@ -176,8 +183,10 @@ export default function Configurations() {
                 </Typography>
               </Box>
               <Box>
-                {configurations.filter(config => config.field !== 'Threshold').map(config => (
-                  <Grid key={config.id} container spacing={2} alignItems='center'>
+                {configurations
+                  .filter(config => config.field !== 'Threshold')
+                  .map(config => (
+                    <Grid key={config.id} container spacing={2} alignItems='center'>
                       <Grid item xs={12} md={12}>
                         <React.Fragment>
                           <Typography id={`${config.field}-slider`} gutterBottom>
@@ -220,9 +229,8 @@ export default function Configurations() {
                           </Grid>
                         </React.Fragment>
                       </Grid>
-
-                  </Grid>
-                ))}
+                    </Grid>
+                  ))}
               </Box>
             </CardContent>
           </Card>
@@ -231,50 +239,49 @@ export default function Configurations() {
           <Card>
             <CardContent>
               <Box sx={{ mb: 6 }}>
-                <Typography variant='h6'>Threshold</Typography>
+                <Typography variant='h6'>Risk Analysis</Typography>
                 <Typography variant='body1' sx={{ color: 'text.secondary' }}>
-                  Adjust the threshold Value
+                  Adjust the Risk threshold Value for graph
                 </Typography>
               </Box>
               <Box>
-                {configurations.filter(config => config.field === 'Threshold').map(config => (
-                  <Grid key={config.id} container spacing={2} alignItems='center'>
+                {configurations
+                  .filter(config => config.field === 'Threshold')
+                  .map(config => (
+                    <Grid key={config.id} container spacing={2} alignItems='center'>
                       <Grid item xs={12} md={12}>
-
-                          <Typography id={`${config.field}-slider`} gutterBottom>
-                            {config.field}
-                          </Typography>
-                          <Grid container spacing={2} alignItems='center'>
-                            <Grid item xs>
-                              <Slider
-                                value={config.value}
-                                onChange={handleSliderChange(config.field, config.id)}
-                                aria-labelledby={`${config.field}-slider`}
-                                disabled={!config.isSwitchedOn}
-                              />
-                            </Grid>
-                            <Grid item>
-                              <StyledInput
-                                value={config.value}
-                                size='small'
-                                onChange={handleInputChange(config.field, config.id)}
-                                onBlur={handleBlur(config.field, config.id)}
-                                inputProps={{
-                                  step: 10,
-                                  min: 0,
-                                  max: 100,
-                                  type: 'number',
-                                  'aria-labelledby': `${config.field}-slider`
-                                }}
-                                disabled={!config.isSwitchedOn}
-                              />
-                            </Grid>
+                        <Typography id={`${config.field}-slider`} gutterBottom>
+                          {config.field}
+                        </Typography>
+                        <Grid container spacing={2} alignItems='center'>
+                          <Grid item xs>
+                            <Slider
+                              value={config.value}
+                              onChange={handleSliderChange(config.field, config.id)}
+                              aria-labelledby={`${config.field}-slider`}
+                              disabled={!config.isSwitchedOn}
+                            />
                           </Grid>
-
+                          <Grid item>
+                            <StyledInput
+                              value={config.value}
+                              size='small'
+                              onChange={handleInputChange(config.field, config.id)}
+                              onBlur={handleBlur(config.field, config.id)}
+                              inputProps={{
+                                step: 10,
+                                min: 0,
+                                max: 100,
+                                type: 'number',
+                                'aria-labelledby': `${config.field}-slider`
+                              }}
+                              disabled={!config.isSwitchedOn}
+                            />
+                          </Grid>
+                        </Grid>
                       </Grid>
-
-                  </Grid>
-                ))}
+                    </Grid>
+                  ))}
               </Box>
             </CardContent>
           </Card>
