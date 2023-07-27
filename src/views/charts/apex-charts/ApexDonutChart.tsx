@@ -11,6 +11,7 @@ import { ApexOptions } from 'apexcharts'
 // ** Component Import
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import { useEffect, useState } from 'react'
+import FallbackSpinner from 'src/layouts/components/spinner'
 
 // const donutColors = {
 //   series1: '#fdd835',
@@ -24,8 +25,10 @@ const ApexDonutChart = () => {
   // ** Hook
   const theme = useTheme()
   const [data, setData] = useState({})
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
+    setLoading(true)
     const fetchData = async () => {
       const res = await api.get('/events/getCountries')
       const newData = res.data
@@ -33,6 +36,7 @@ const ApexDonutChart = () => {
     }
 
     fetchData()
+    setLoading(false)
   }, [])
 
   // useEffect(() => {
@@ -145,9 +149,14 @@ const ApexDonutChart = () => {
         subheader='Country-wise Device Logins'
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
       />
-      <CardContent>
+      {loading ? (
+        <FallbackSpinner />
+      ) : (
+        <CardContent>
         <ReactApexcharts type='donut' height={400} options={options} series={values ? values : []} />
       </CardContent>
+      )}
+      
     </Card>
   )
 }

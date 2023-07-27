@@ -22,6 +22,7 @@ import { fetchLineStatsData } from 'src/store/apps/lineStats'
 import api from 'src/helper/api'
 import ChipsIcon from 'src/views/components/chips/ChipsIcon'
 import { Grid } from '@mui/material'
+import FallbackSpinner from 'src/layouts/components/spinner'
 
 interface LineProps {
   white: string
@@ -41,6 +42,7 @@ const ChartjsLineChart = (props: LineProps) => {
   const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
   const [riskValue, setRiskValue] = useState(0)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [yAxis, setYAxis] = useState({
     min: 0,
@@ -53,6 +55,7 @@ const ChartjsLineChart = (props: LineProps) => {
   const store = useSelector((state: RootState) => state.lineStats)
 
   useEffect(() => {
+    setLoading(true)
     dispatch(
       fetchLineStatsData({
         OS
@@ -60,6 +63,7 @@ const ChartjsLineChart = (props: LineProps) => {
     )
 
     fetchConfig()
+    setLoading(false)
   }, [dispatch, OS])
 
   const fetchConfig = async () => {
@@ -235,9 +239,13 @@ const ChartjsLineChart = (props: LineProps) => {
           <ChipsIcon riskValue={riskValue} />
         </Grid>
       </Grid>
-      <CardContent>
-        <Line data={data} height={400} options={options} />
-      </CardContent>
+      {loading ? (
+        <FallbackSpinner />
+      ) : (
+        <CardContent>
+          <Line data={data} height={400} options={options} />
+        </CardContent>
+      )}
     </Card>
   )
 }
