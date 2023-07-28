@@ -21,6 +21,8 @@ import { AppDispatch, RootState } from 'src/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPieStatsData } from 'src/store/apps/pieStats'
 
+import FallbackSpinner from 'src/layouts/components/spinner'
+
 // ** Custom Components Imports
 // import OptionsMenu from 'src/@core/components/option-menu'
 
@@ -41,6 +43,7 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   // States
   const [OS, setOS] = useState<string>('All')
   const [activeDate, setActiveDate] = useState<number>(30)
+  const [loading, setLoading] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
@@ -59,11 +62,13 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
   }
 
   useEffect(() => {
+    setLoading(true)
     dispatch(
       fetchPieStatsData({
         OS
       })
     )
+    setLoading(false)
   }, [dispatch, OS])
 
   const options: ChartOptions<'polarArea'> = {
@@ -144,9 +149,14 @@ const ChartjsPolarAreaChart = (props: PolarAreaProps) => {
           </ToggleButtonGroup>
         </Grid>
       </Grid>
-      <CardContent>
-        <PolarArea data={data} height={350} options={options} />
-      </CardContent>
+      {/* render spinner component if data is not fetched or else show CardContent if data is fetched */}
+      {loading ? (
+        <FallbackSpinner />
+      ) : (
+        <CardContent>
+          <PolarArea data={data} height={350} options={options} />
+        </CardContent>
+      )}
     </Card>
   )
 }

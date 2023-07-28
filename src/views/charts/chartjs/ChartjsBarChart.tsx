@@ -22,6 +22,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import { useEffect, useState } from 'react'
+import FallbackSpinner from 'src/layouts/components/spinner'
 
 interface BarProp {
   labelColor: string
@@ -35,6 +36,7 @@ const ChartjsBarChart = (props: BarProp) => {
   // ** States
   const [OS, setOS] = useState<string>('All')
   const [activeDate, setActiveDate] = useState<number>(30)
+  const [loading, setLoading] = useState<boolean>(false)
   const [yAxis, setYAxis] = useState({
     min: 0,
     max: 160,
@@ -58,11 +60,13 @@ const ChartjsBarChart = (props: BarProp) => {
   }
 
   useEffect(() => {
+    setLoading(true)
     dispatch(
       fetchPieStatsData({
         OS
       })
     )
+    setLoading(false)
   }, [dispatch, OS])
 
   const findYAxis = () => {
@@ -179,9 +183,13 @@ const ChartjsBarChart = (props: BarProp) => {
           </ToggleButtonGroup>
         </Grid>
       </Grid>
-      <CardContent>
-        <Bar data={data} height={400} options={options} />
-      </CardContent>
+      {loading ? (
+        <FallbackSpinner />
+      ) : (
+        <CardContent>
+          <Bar data={data} height={400} options={options} />
+        </CardContent>
+      )}
     </Card>
   )
 }
