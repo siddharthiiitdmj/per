@@ -6,16 +6,14 @@ const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
   return (
     <Box
       sx={{
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
+        display: 'flex', // Use flexbox
+        alignItems: 'center', // Center vertically
+        justifyContent: 'center', // Center horizontally
+        height: '100%', 
         ...sx
       }}
     >
-      <img src='/images/logo.svg' alt='aletheia' width={82} height={68}></img>
-      <CircularProgress disableShrink sx={{ mt: 6 }} />
+      <CircularProgress disableShrink />
     </Box>
   )
 }
