@@ -14,7 +14,7 @@ To get a lightweight GUI for viewing and editing database tables, run:
 yarn prisma studio
 ```
 
-### This week's goals:
+### This week's goals (Aug 1-4):
 
 - [ ] Change Country Info chart to world map (heatmap).
 - [ ] Seperate chart for risk threshold.
