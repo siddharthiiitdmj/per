@@ -19,29 +19,26 @@ import { AppDispatch, RootState } from 'src/store'
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchLineStatsData } from 'src/store/apps/lineStats'
-import api from 'src/helper/api'
-import ChipsIcon from 'src/views/components/chips/ChipsIcon'
 import { Grid } from '@mui/material'
 import FallbackSpinner from 'src/layouts/components/spinner'
 
-interface LineProps {
+interface AreaProps {
+  red: string
   white: string
-  warning: string
-  primary: string
-  success: string
+  blueLight: string
+  greyLight: string
   labelColor: string
   borderColor: string
   legendColor: string
 }
 
-const ChartjsLineChart = (props: LineProps) => {
+const ChartjsAreaChart = (props: AreaProps) => {
   // ** Props
-  const { white, primary, warning, labelColor, borderColor, legendColor } = props
-  const colors = ['#d437af', '#ff8131', '#28dac6', '#299aff', '#836af9', '#ffe802']
+  const {  red, greyLight, labelColor, borderColor, legendColor } = props
 
+  // ** States
   const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
-  const [riskValue, setRiskValue] = useState(0)
   const [loading, setLoading] = useState<boolean>(false)
 
   const [yAxis, setYAxis] = useState({
@@ -61,25 +58,8 @@ const ChartjsLineChart = (props: LineProps) => {
         OS
       })
     )
-
-    fetchConfig()
     setLoading(false)
   }, [dispatch, OS])
-
-  const fetchConfig = async () => {
-    const res = await api.get('/configurations/')
-    const configData = res.data
-    let value = 0
-    configData.map((item: any) => {
-      if (item.field == 'Threshold') {
-        value = item.value
-      }
-    })
-
-    // console.log('Risk value: ', value)
-
-    setRiskValue(value)
-  }
 
   const findYAxis = () => {
     const yAxisData = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
@@ -125,6 +105,9 @@ const ChartjsLineChart = (props: LineProps) => {
   const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: { top: -20 }
+    },
     scales: {
       x: {
         ticks: { color: labelColor },
@@ -159,27 +142,27 @@ const ChartjsLineChart = (props: LineProps) => {
   }
 
   const labels = (store?.lineChartData as { [key: string]: any })[timePeriod]
-    ? Object.keys((store?.lineChartData as { [key: string]: any })[timePeriod]?.['isVPNSpoofed'])
+    ? Object.keys((store?.lineChartData as { [key: string]: any })[timePeriod]?.['riskyDevices'])
     : []
   const datasets = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).filter(
-    key => key[0] !== 'riskyDevices'
+    key => key[0] === 'riskyDevices'
   )
 
   const data: ChartData<'line'> = {
     labels: labels,
-    datasets: datasets.map(([property, values], index) => ({
-      fill: false,
-      tension: 0.5,
-      pointRadius: 1,
+    datasets: datasets.map(([property, values]) => ({
+      fill: true,
+      tension: 0,
+      pointRadius: 0.5,
       label: property,
       pointHoverRadius: 5,
       pointStyle: 'circle',
-      borderColor: colors[index],
-      backgroundColor: colors[index],
       pointHoverBorderWidth: 5,
-      pointHoverBorderColor: white,
+      borderColor: 'transparent',
+      backgroundColor: red,
+      pointHoverBorderColor: greyLight,
       pointBorderColor: 'transparent',
-      pointHoverBackgroundColor: index === 0 ? primary : warning,
+      pointHoverBackgroundColor: red,
       data: Object.values(values as { [s: string]: number | null }) as (number | null)[]
     }))
   }
@@ -194,7 +177,7 @@ const ChartjsLineChart = (props: LineProps) => {
 
   return (
     <Card>
-      <CardHeader title='Malicious Device Info' subheader='Can sort by OS and Time Period' />
+      <CardHeader title='Riskey Device Info' subheader='Can sort by OS and Time Period' />
       <Grid container justifyContent='space-between' alignItems='center'>
         <Grid item>
           <FormControl sx={{ width: 100, mx: 8 }}>
@@ -238,9 +221,6 @@ const ChartjsLineChart = (props: LineProps) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item>
-          <ChipsIcon riskValue={riskValue} />
-        </Grid>
       </Grid>
       {loading ? (
         <FallbackSpinner />
@@ -253,4 +233,4 @@ const ChartjsLineChart = (props: LineProps) => {
   )
 }
 
-export default ChartjsLineChart
+export default ChartjsAreaChart
