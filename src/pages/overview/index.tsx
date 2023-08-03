@@ -31,6 +31,7 @@ import { useDispatch } from 'react-redux'
 import { fetchDeviceData } from 'src/store/apps/device'
 import { fetchData } from 'src/store/apps/events'
 import ChartjsBarChart from 'src/views/charts/chartjs/ChartjsBarChart'
+import ChartjsAreaChart from 'src/views/charts/chartjs/ChartjsAreaChart'
 
 // import RechartsLineChart from 'src/views/charts/recharts/RechartsLineChart'
 
@@ -49,10 +50,13 @@ const ChartJS = () => {
   const polarChartInfo = '#299aff'
   const polarChartGreen = '#28dac6'
   const polarChartWarning = '#ff8131'
-  const legendColor = '#FFF'
+  const legendColor = '#8a8891de'
   const lineChartWarning = '#ff9800'
   const lineChartYellow = '#d4e157'
   const lineChartPrimary = '#9e69fd'
+  const areaChartRed = 'rgb(247, 56, 42,0.7)'
+  const areaChartBlueLight = '#84d0ff'
+  const areaChartGreyLight = '#edf1f4'
   const borderColor = theme.palette.divider
   const labelColor = theme.palette.text.disabled
   const whiteColor = '#fff'
@@ -109,9 +113,17 @@ const ChartJS = () => {
             warning={lineChartWarning}
           />
         </Grid>
-        {/* <Grid item xs={12}>
-          <RechartsLineChart direction={settings.direction} />
-        </Grid> */}
+        <Grid item xs={12}>
+          <ChartjsAreaChart
+           white={whiteColor}
+           red={areaChartRed}
+           labelColor={labelColor}
+           borderColor={borderColor}
+           legendColor={legendColor}
+           blueLight={areaChartBlueLight}
+           greyLight={areaChartGreyLight}
+          />
+        </Grid>
       </Grid>
     </DatePickerWrapper>
   )
