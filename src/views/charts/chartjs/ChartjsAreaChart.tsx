@@ -198,7 +198,7 @@ const ChartjsAreaChart = (props: AreaProps) => {
 
   return (
     <Card>
-      <CardHeader title='Riskey Device Info' subheader='Can sort by OS and Time Period' />
+      <CardHeader title='Risky Devices Info' subheader='Can sort by OS and Time Period' />
       <Grid container justifyContent='space-between' alignItems='center'>
         <Grid item>
           <FormControl sx={{ width: 100, mx: 8 }}>
