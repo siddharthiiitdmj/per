@@ -14,11 +14,11 @@ To get a lightweight GUI for viewing and editing database tables, run:
 yarn prisma studio
 ```
 
-### This week's goals:
+### This week's goals (Aug 1-4):
 
-- [x] a) Device ID to be randomized and not numbers.
-- [x] b) Configuration page to have sliders for different issues. So client can choose which issue is more important.
-- [x] c) Client can choose which Risk Score he wants to have a look. This will also be in the Configuration page.
-- [x] d) Dashboard must have a graph showing Risky devices over time.
-- [x] e) Activity Timeline to be real data and not hardcoded.
-- [x] f) Show the latitude and longitude in one Column, on Clicking it, it should open within a Map that shows the location. The Page should be inside the application, and could embed other service like Google maps etc.
+- [ ] Have a Users section in the Left Menu Bar, where one can search for Users based on the User IDs.
+- [ ] Remove Redundant Section from Profile Page.
+- [ ] Modify the Country Map Chart on the Home Page.
+- [x] Create a different Chart for the Risk Score on the Home Page.
+- [ ] Allow login and Sign up from only 8kSec.io emails in the Backend.
+- [ ] Implement Pagination for Events in the API.
