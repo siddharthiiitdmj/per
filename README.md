@@ -20,5 +20,5 @@ yarn prisma studio
 - [ ] Remove Redundant Section from Profile Page.
 - [ ] Modify the Country Map Chart on the Home Page.
 - [x] Create a different Chart for the Risk Score on the Home Page.
-- [ ] Allow login and Sign up from only 8kSec.io emails in the Backend.
+- [x] Allow login and Sign up from only 8kSec.io emails in the Backend.
 - [ ] Implement Pagination for Events in the API.
