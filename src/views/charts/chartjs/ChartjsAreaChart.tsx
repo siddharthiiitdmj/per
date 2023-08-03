@@ -13,8 +13,9 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { ChartData, ChartOptions } from 'chart.js'
 import { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
-
+import api from 'src/helper/api'
 import { AppDispatch, RootState } from 'src/store'
+import ChipsIcon from 'src/views/components/chips/ChipsIcon'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
@@ -39,6 +40,7 @@ const ChartjsAreaChart = (props: AreaProps) => {
   // ** States
   const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
+  const [riskValue, setRiskValue] = useState(0)
   const [loading, setLoading] = useState<boolean>(false)
 
   const [yAxis, setYAxis] = useState({
@@ -58,8 +60,27 @@ const ChartjsAreaChart = (props: AreaProps) => {
         OS
       })
     )
+
+    fetchConfig()
+
     setLoading(false)
   }, [dispatch, OS])
+
+
+  const fetchConfig = async () => {
+    const res = await api.get('/configurations/')
+    const configData = res.data
+    let value = 0
+    configData.map((item: any) => {
+      if (item.field == 'Threshold') {
+        value = item.value
+      }
+    })
+
+    // console.log('Risk value: ', value)
+
+    setRiskValue(value)
+  }
 
   const findYAxis = () => {
     const yAxisData = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
@@ -158,8 +179,8 @@ const ChartjsAreaChart = (props: AreaProps) => {
       pointHoverRadius: 5,
       pointStyle: 'circle',
       pointHoverBorderWidth: 5,
-      borderColor: 'transparent',
-      backgroundColor: red,
+      borderColor: red,
+      backgroundColor: '#e52d2da6',
       pointHoverBorderColor: greyLight,
       pointBorderColor: 'transparent',
       pointHoverBackgroundColor: red,
@@ -220,6 +241,9 @@ const ChartjsAreaChart = (props: AreaProps) => {
               <MenuItem value={'monthly'}>Monthly</MenuItem>
             </Select>
           </FormControl>
+        </Grid>
+        <Grid item>
+          <ChipsIcon riskValue={riskValue} />
         </Grid>
       </Grid>
       {loading ? (

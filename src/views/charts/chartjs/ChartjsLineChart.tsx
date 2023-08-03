@@ -19,8 +19,7 @@ import { AppDispatch, RootState } from 'src/store'
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchLineStatsData } from 'src/store/apps/lineStats'
-import api from 'src/helper/api'
-import ChipsIcon from 'src/views/components/chips/ChipsIcon'
+
 import { Grid } from '@mui/material'
 import FallbackSpinner from 'src/layouts/components/spinner'
 
@@ -41,7 +40,6 @@ const ChartjsLineChart = (props: LineProps) => {
 
   const [timePeriod, setTimePeriod] = useState<string>('monthly')
   const [OS, setOS] = useState('All')
-  const [riskValue, setRiskValue] = useState(0)
   const [loading, setLoading] = useState<boolean>(false)
 
   const [yAxis, setYAxis] = useState({
@@ -62,24 +60,8 @@ const ChartjsLineChart = (props: LineProps) => {
       })
     )
 
-    fetchConfig()
     setLoading(false)
   }, [dispatch, OS])
-
-  const fetchConfig = async () => {
-    const res = await api.get('/configurations/')
-    const configData = res.data
-    let value = 0
-    configData.map((item: any) => {
-      if (item.field == 'Threshold') {
-        value = item.value
-      }
-    })
-
-    // console.log('Risk value: ', value)
-
-    setRiskValue(value)
-  }
 
   const findYAxis = () => {
     const yAxisData = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
@@ -237,9 +219,6 @@ const ChartjsLineChart = (props: LineProps) => {
               <MenuItem value={'monthly'}>Monthly</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
-        <Grid item>
-          <ChipsIcon riskValue={riskValue} />
         </Grid>
       </Grid>
       {loading ? (
