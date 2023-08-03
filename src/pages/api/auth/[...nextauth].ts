@@ -1,10 +1,10 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import bcrypt from "bcryptjs"
-import NextAuth, { AuthOptions } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import GoogleProvider from "next-auth/providers/google"
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import bcrypt from 'bcryptjs'
+import NextAuth, { AuthOptions } from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
 
-import prisma from "src/libs/prismadb"
+import prisma from 'src/libs/prismadb'
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -25,29 +25,31 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Invalid credentials');
+          throw new Error('Invalid credentials')
+        }
+
+        // Check if the email ends with "@8ksec.io"
+        if (!credentials?.email?.endsWith('@8ksec.io')) {
+          throw new Error('You can only login with 8kSec.io emails.')
         }
 
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email
           }
-        });
+        })
 
         if (!user || !user?.hashedPassword) {
-          throw new Error('Invalid credentials');
+          throw new Error('Invalid credentials')
         }
 
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
-          user.hashedPassword
-        );
+        const isCorrectPassword = await bcrypt.compare(credentials.password, user.hashedPassword)
 
         if (!isCorrectPassword) {
-          throw new Error('Invalid credentials');
+          throw new Error('Invalid credentials')
         }
 
-        return user;
+        return user
       }
     })
   ],
@@ -58,8 +60,8 @@ export const authOptions: AuthOptions = {
   },
   debug: process.env.NODE_ENV === 'development',
   session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60 // ** 30 days
+    strategy: 'jwt',
+    maxAge: 2 * 60 * 60 // ** 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
@@ -74,6 +76,12 @@ export const authOptions: AuthOptions = {
          * For adding custom parameters to user in session, we first need to add those parameters
          * in token which then will be available in the `session()` callback
          */
+
+        // if (user.email?.endsWith('@8ksec.io')) {
+        //   token.role = user.role
+        //   token.id = user.id
+        // }
+
         token.role = user.role
         token.id = user.id
       }
@@ -92,4 +100,4 @@ export const authOptions: AuthOptions = {
   }
 }
 
-export default NextAuth(authOptions);
+export default NextAuth(authOptions)
