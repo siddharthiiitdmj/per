@@ -16,9 +16,9 @@ yarn prisma studio
 
 ### This week's goals (Aug 1-4):
 
-- [ ] Change Country Info chart to world map (heatmap).
-- [ ] Seperate chart for risk threshold.
-- [ ] Users tab with search functionality.
-- [ ] Clear boilerplate code and display only useful information in profile page.
-- [ ] Only emails ending with @8ksec.io can login.
-- [ ] Pagination on backend to fetch small chunks of data at a time (optimization).
+- [ ] Have a Users section in the Left Menu Bar, where one can search for Users based on the User IDs.
+- [ ] Remove Redundant Section from Profile Page.
+- [ ] Modify the Country Map Chart on the Home Page.
+- [x] Create a different Chart for the Risk Score on the Home Page.
+- [ ] Allow login and Sign up from only 8kSec.io emails in the Backend.
+- [ ] Implement Pagination for Events in the API.
