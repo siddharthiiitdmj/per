@@ -12,6 +12,11 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
 import DeleteIcon from '@mui/icons-material/Delete'
 
+//** store
+import { useDispatch } from 'react-redux'
+import { fetchLineStatsData } from 'src/store/apps/lineStats'
+import { AppDispatch } from 'src/store'
+
 import api from '../../helper/api'
 
 // const Fields: string[] = [
@@ -42,6 +47,9 @@ export default function Configurations() {
     isSwitchedOn: boolean
   } | null>(null)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const OS = 'All'
+
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
     // Fetch data from the API when the component mounts
@@ -160,11 +168,20 @@ export default function Configurations() {
         console.log(response.data)
         setHasUpdates(false)
       })
-      .finally(async () => {
+      .then(async () => {
         await api.get('/devices/stats3')
         await api.get('/devices/stats3?os=iOS')
         await api.get('/devices/stats3?os=Android')
       })
+      .finally(async () => {
+        dispatch(
+          fetchLineStatsData({
+            OS
+          })
+        )
+      }
+        
+      )
       .catch(error => {
         console.error('Error updating configurations:', error)
       })
