@@ -14,6 +14,11 @@ const navigation = (): VerticalNavItemsType => {
       icon: 'ph:devices-duotone'
     },
     {
+      title: 'Users',
+      path: '/users',
+      icon: 'ant-design:user-outlined'
+    },
+    {
       path: '/events',
       action: 'read',
       subject: 'acl-page',
