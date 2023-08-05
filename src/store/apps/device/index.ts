@@ -11,7 +11,7 @@ interface DataParams {
 
 // ** Fetch Users
 export const fetchDeviceData = createAsyncThunk('appDevices/fetchDeviceData', async (params: DataParams) => {
-  const response = await axios.get(`/api/devices/data`,{
+  const response = await axios.get(`/api/devices/data`, {
     params
   })
 

@@ -7,11 +7,12 @@ import TextField from '@mui/material/TextField'
 interface TableHeaderProps {
   value: string
   handleFilter: (val: string) => void
+  source?: string
 }
 
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
-  const { value, handleFilter } = props
+  const { value, handleFilter, source } = props
 
   return (
     <Box
@@ -30,7 +31,7 @@ const TableHeader = (props: TableHeaderProps) => {
           size='small'
           value={value}
           sx={{ mr: 4, mb: 2 }}
-          placeholder='Search Event'
+          placeholder={`${source == 'events' ? 'Search Event' : 'Search userId'}`}
           onChange={e => handleFilter(e.target.value)}
         />
       </Box>
