@@ -36,6 +36,10 @@ const DeviceInfoPreview = () => {
       })
   }, [id])
 
+  useEffect(() => {
+    console.log('data: ', data)
+  }, [data])
+
   if (data) {
     return (
       <>
@@ -50,9 +54,7 @@ const DeviceInfoPreview = () => {
     return (
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Alert severity='error'>
-            User with the id: {id} does not exist.
-          </Alert>
+          <Alert severity='error'>User with the id: {id} does not exist.</Alert>
         </Grid>
       </Grid>
     )
