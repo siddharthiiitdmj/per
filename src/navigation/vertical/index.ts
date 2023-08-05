@@ -16,7 +16,7 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Users',
       path: '/users',
-      icon: 'ph:devices-duotone'
+      icon: 'ant-design:user-outlined'
     },
     {
       path: '/events',
