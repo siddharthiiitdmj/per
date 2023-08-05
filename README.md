@@ -1,4 +1,5 @@
 # Aletheia
+Latest Deployment link: https://aletheia-lilac.vercel.app/
 
 To run the application, run following commands in order :
 
@@ -21,4 +22,5 @@ yarn prisma studio
 - [ ] Modify the Country Map Chart on the Home Page.
 - [x] Create a different Chart for the Risk Score on the Home Page.
 - [x] Allow login and Sign up from only 8kSec.io emails in the Backend.
+- [x] Modify UI for User Dropdown.
 - [ ] Implement Pagination for Events in the API.
