@@ -143,7 +143,7 @@ const UserDropdown = (props: Props) => {
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/configurations')}>
           <Box sx={styles}>
             <Icon icon='mdi:cog-outline' />
-            Configrations
+            Configurations
           </Box>
         </MenuItem>
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
