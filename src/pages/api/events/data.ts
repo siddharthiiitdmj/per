@@ -8,9 +8,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const filters: any = {}
 
-    const { OS = '', q = ''} = req.query ?? ''
-    
-    const dates = req.query['dates[]'];
+    const { OS = '', q = '', source = '' } = req.query ?? ''
+
+    const dates = req.query['dates[]']
 
     const queryLowered = (q as any).toLowerCase()
 
@@ -54,21 +54,31 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           }
         })
 
-        if (filtered.length && filtered.includes(event.id.toString())) {
+        if (source === 'events') {
+          if (filtered.length && filtered.includes(event.id.toString())) {
+            return (
+              event.userId.toString().toLowerCase().includes(queryLowered) ||
+              event.deviceId.toString().toLowerCase().includes(queryLowered) ||
+              event.OS.toLowerCase().includes(queryLowered) ||
+              event.nodename.toLowerCase().includes(queryLowered)
+            )
+          }
+        } else if (source === 'users') {
+          if (filtered.length && filtered.includes(event.id.toString())) {
+            return event.userId.toString().toLowerCase().includes(queryLowered)
+          }
+        }
+      } else {
+        if (source === 'events') {
           return (
             event.userId.toString().toLowerCase().includes(queryLowered) ||
             event.deviceId.toString().toLowerCase().includes(queryLowered) ||
             event.OS.toLowerCase().includes(queryLowered) ||
             event.nodename.toLowerCase().includes(queryLowered)
           )
+        } else if (source === 'users') {
+          return event.userId.toString().toLowerCase().includes(queryLowered)
         }
-      } else {
-        return (
-          event.userId.toString().toLowerCase().includes(queryLowered) ||
-          event.deviceId.toString().toLowerCase().includes(queryLowered) ||
-          event.OS.toLowerCase().includes(queryLowered) ||
-          event.nodename.toLowerCase().includes(queryLowered)
-        )
       }
     })
 

@@ -281,7 +281,8 @@ const EventsList = () => {
       fetchData({
         OS,
         q: value,
-        dates
+        dates,
+        source: 'users'
       })
     )
   }, [dispatch, OS, value, dates])
@@ -366,7 +367,7 @@ const EventsList = () => {
           </Grid>
           <Grid item xs={12}>
             <Card>
-              <TableHeader value={value} handleFilter={handleFilter} />
+              <TableHeader value={value} handleFilter={handleFilter} source='users' />
               <DataGrid
                 autoHeight
                 pagination

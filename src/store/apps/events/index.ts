@@ -8,11 +8,12 @@ interface DataParams {
   OS: string
   q: string
   dates?: Date[]
+  source?: string
 }
 
 // ** Fetch Users
 export const fetchData = createAsyncThunk('appEvents/fetchData', async (params: DataParams) => {
-  const response = await axios.get('/api/events/data',{
+  const response = await axios.get('/api/events/data', {
     params
   })
 
