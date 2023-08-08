@@ -1,24 +1,25 @@
-// API to get device data with OS and Date range filters and pagination
-
 import prisma from 'src/libs/prismadb'
 import { NextApiRequest, NextApiResponse } from 'next/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { os, startDate, endDate, page, rowsPerPage } = req.query
+    const { os, startDate, endDate, page } = req.query
+    const rowsPerPage = 10
 
     // Define the filters based on the parameters received
     const filters: any = {}
 
     if (os && os !== 'All') {
-      filters.OS = os
+      filters.device = {
+        OS: os
+      }
     }
 
     if (startDate && endDate) {
       const startDateValue = Array.isArray(startDate) ? startDate[0] : startDate
       const endDateValue = Array.isArray(endDate) ? endDate[0] : endDate
 
-      filters.updatedAt = {
+      filters.createdAt = {
         gte: new Date(startDateValue),
         lte: new Date(endDateValue)
       }
@@ -26,22 +27,29 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Calculate the number of rows to skip based on the current page and rows per page
     const currentPage = parseInt(page as string, 10) || 1
-    const skipRows = (currentPage - 1) * (parseInt(rowsPerPage as string, 10) || 10)
+    const skipRows = (currentPage - 1) * rowsPerPage
 
-    // Fetch devices from the database with the applied filters and pagination
-    const [devices, totalCount] = await Promise.all([
-      prisma.deviceInfo.findMany({
+    // Fetch events from the database with the applied filters and pagination
+    const [events, totalCount] = await Promise.all([
+      prisma.events.findMany({
         where: filters,
         skip: skipRows,
-        take: parseInt(rowsPerPage as string) || 10
+        take: rowsPerPage,
+        include: {
+          device: {
+            select: {
+              OS: true
+            }
+          }
+        }
       }),
-      prisma.deviceInfo.count({
+      prisma.events.count({
         where: filters
       })
     ])
 
-    // Return the devices and total count as a JSON response
-    res.status(200).json({ devices, totalCount })
+    // Return the events and total count as a JSON response
+    res.status(200).json({ events, totalCount })
   } catch (err) {
     // Handle any errors that occur during the process
     res.status(500).send(err)
