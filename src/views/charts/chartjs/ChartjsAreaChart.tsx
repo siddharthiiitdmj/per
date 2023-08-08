@@ -19,7 +19,7 @@ import ChipsIcon from 'src/views/components/chips/ChipsIcon'
 
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchLineStatsData } from 'src/store/apps/lineStats'
+import { fetchAreaStatsData } from 'src/store/apps/areaStats'
 import { Grid } from '@mui/material'
 import FallbackSpinner from 'src/layouts/components/spinner'
 
@@ -51,12 +51,12 @@ const ChartjsAreaChart = (props: AreaProps) => {
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.lineStats)
+  const store = useSelector((state: RootState) => state.areaStats)
 
   useEffect(() => {
     setLoading(true)
     dispatch(
-      fetchLineStatsData({
+      fetchAreaStatsData({
         OS
       })
     )
@@ -83,7 +83,7 @@ const ChartjsAreaChart = (props: AreaProps) => {
   }
 
   const findYAxis = () => {
-    const yAxisData = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).map(
+    const yAxisData = Object.entries((store?.areaChartData as { [key: string]: any })[timePeriod] || {}).map(
       ([, values]) => ({
         data: Object.values(values as { [s: string]: number | null }) as (number | null)[]
       })
@@ -162,10 +162,10 @@ const ChartjsAreaChart = (props: AreaProps) => {
     }
   }
 
-  const labels = (store?.lineChartData as { [key: string]: any })[timePeriod]
-    ? Object.keys((store?.lineChartData as { [key: string]: any })[timePeriod]?.['riskyDevices'])
+  const labels = (store?.areaChartData as { [key: string]: any })[timePeriod]
+    ? Object.keys((store?.areaChartData as { [key: string]: any })[timePeriod]?.['riskyDevices'])
     : []
-  const datasets = Object.entries((store?.lineChartData as { [key: string]: any })[timePeriod] || {}).filter(
+  const datasets = Object.entries((store?.areaChartData as { [key: string]: any })[timePeriod] || {}).filter(
     key => key[0] === 'riskyDevices'
   )
 

@@ -7,6 +7,7 @@ import deviceSpecificEvents from './apps/deviceSpecificEvents'
 import uniqueUsers from './apps/uniqueUsers'
 import pieStats from './apps/pieStats'
 import lineStats from './apps/lineStats'
+import areaStats from './apps/areaStats'
 import userSpecificEvents from './apps/userSpecificEvents'
 import uniqueDevices from './apps/uniqueDevices'
 import configurations from './apps/configurations'
@@ -19,6 +20,7 @@ export const store = configureStore({
     uniqueUsers,
     pieStats,
     lineStats,
+    areaStats,
     userSpecificEvents,
     uniqueDevices,
     configurations

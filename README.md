@@ -17,7 +17,7 @@ yarn prisma studio
 
 ### This week's goals (Aug 1-4):
 
-- [ ] Have a Users section in the Left Menu Bar, where one can search for Users based on the User IDs.
+- [x] Have a Users section in the Left Menu Bar, where one can search for Users based on the User IDs.
 - [x] Remove Redundant Section from Profile Page.
 - [ ] Modify the Country Map Chart on the Home Page.
 - [x] Create a different Chart for the Risk Score on the Home Page.
