@@ -39,16 +39,22 @@ const AuthProvider = ({ children }: Props) => {
       await getSession()
         .then(Session => {
           setLoading(false)
+          if (Session == null) {
+            window.localStorage.removeItem('userData')
+            if (!router.pathname.includes('login')) {
+              router.replace('/login')
+            }
+          }
 
           // console.log('Session -- ', Session)
           if (Session?.user.role === 'admin') {
+            // console.log('Session -- inside ', Session)
             setUser({
-              id: 1,
-              role: 'admin',
-              password: 'admin',
-              fullName: 'John Doe',
-              username: 'johndoe',
-              email: 'admin@materio.com'
+              id: Session?.user.id,
+              role: Session?.user?.role,
+              name: Session?.user.name ?? 'Name not Defined',
+              image: Session?.user.image,
+              email: Session?.user.email ?? 'Email Not Defined'
             })
             window.localStorage.setItem('userData', JSON.stringify(Session?.user))
             if (router.pathname.includes('login') || router.pathname.includes('register')) {
@@ -57,8 +63,16 @@ const AuthProvider = ({ children }: Props) => {
             setLoading(false)
           }
         })
+        .then(() => {
+          setUser(user => {
+            // console.log('user --- ', user)
+
+            return user
+          })
+        })
         .catch(() => {
           setUser(null)
+          window.localStorage.removeItem('userData')
           setLoading(false)
           if (!router.pathname.includes('login')) {
             router.replace('/login')

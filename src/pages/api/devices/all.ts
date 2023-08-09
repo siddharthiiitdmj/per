@@ -6,6 +6,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { os, startDate, endDate, page } = req.query
     const rowsPerPage = 10
 
+    console.log('os: ', os)
+
     // Define the filters based on the parameters received
     const filters: any = {}
 
