@@ -3,8 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { OS, startDate, endDate, page } = req.query
+    const { q, OS, startDate, endDate, page } = req.query
     const rowsPerPage = 10
+    console.log('q: ', q)
 
     // console.log('startDate: ', startDate, ' endDate: ', endDate)
     // console.log('startDate: ', typeof startDate, ' endDate: ', typeof endDate)
@@ -26,6 +27,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         gte: new Date(startDateValue),
         lte: new Date(endDateValue)
       }
+    }
+
+    if (q) {
+      filters.OR = [
+        // { userId: { contains: q, mode: 'insensitive' } },
+        { deviceId: { contains: q, mode: 'insensitive' } },
+        { nodename: { contains: q, mode: 'insensitive' } }
+
+        // { IPaddress: { contains: q, mode: 'insensitive' } }
+      ]
     }
 
     // Calculate the number of rows to skip based on the current page and rows per page

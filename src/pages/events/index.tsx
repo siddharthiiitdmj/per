@@ -251,7 +251,7 @@ const columns: GridColDef[] = [
     flex: 0.2,
     minWidth: 230,
     field: 'latLong',
-    headerName: 'Lat/Long',
+    headerName: 'Coordinates',
     renderCell: (props: CellType) => {
       // renderCell: (props: CellType & { setMapModalOpen: any; setClickedCoordinate: any }) => {
       // const setMapModalOpen = ()=>{
