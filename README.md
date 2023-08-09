@@ -15,12 +15,12 @@ To get a lightweight GUI for viewing and editing database tables, run:
 yarn prisma studio
 ```
 
-### This week's goals (Aug 1-4):
+### This week's goals (Aug 7-11):
 
-- [x] Have a Users section in the Left Menu Bar, where one can search for Users based on the User IDs.
-- [x] Remove Redundant Section from Profile Page.
-- [ ] Modify the Country Map Chart on the Home Page.
-- [x] Create a different Chart for the Risk Score on the Home Page.
-- [x] Allow login and Sign up from only 8kSec.io emails in the Backend.
-- [x] Modify UI for User Dropdown.
-- [ ] Implement Pagination for Events in the API.
+- [x] Implement Pagination for Tables in the API.
+- [x] Fix Loading state bug when trying to open application
+- [ ] Fix bugs related to filter in overview line Chart and Events/Users table.
+- [ ] Make lat/lon field clickable (across entire website) and it should open google maps.
+- [ ] Add an activity chart in place of activity timeline in Users Detail page
+- [ ] Other UI improvements
+
