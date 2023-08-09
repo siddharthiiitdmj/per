@@ -452,7 +452,7 @@ const EventsList = () => {
     setMapModalOpen(false)
   }
 
-  //total number of entries
+  // const [currentPage, setCurrentPage] = useState(0)
   const totalRows = store.total
 
   // console.log("no of rows :"+store.allData.length);
@@ -540,6 +540,20 @@ const EventsList = () => {
                     onChange={(event, newPage) => setCurrentPage(newPage)}
                   />
                 }
+                {/* <div>
+                  <button onClick={() => setCurrentPage(Math.max(currentPage - 1, 0))} disabled={currentPage === 0}>
+                    Previous
+                  </button>
+                  <div>
+                    {currentPage}<span>of</span>{Math.ceil(totalRows / 10)}
+                  </div>
+                  <button
+                    onClick={() => setCurrentPage(Math.min(currentPage + 1, Math.ceil(totalRows / 10) - 1))}
+                    disabled={currentPage === Math.ceil(totalRows / 10) - 1}
+                  >
+                    <Icon icon='grommet-icons:next' />
+                  </button>
+                </div> */}
               </Box>
             </Card>
           </Grid>

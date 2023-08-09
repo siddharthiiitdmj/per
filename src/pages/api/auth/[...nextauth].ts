@@ -15,7 +15,10 @@ export const authOptions: AuthOptions = {
     // }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      httpOptions: {
+        timeout: 10000
+      }
     }),
     CredentialsProvider({
       name: 'credentials',
@@ -62,6 +65,7 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60 // ** 30 days
+    // maxAge: 30 * 24 * 60 * 60 // ** 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
@@ -70,29 +74,6 @@ export const authOptions: AuthOptions = {
      * the `session()` callback. So we have to add custom parameters in `token`
      * via `jwt()` callback to make them accessible in the `session()` callback
      */
-    async signIn({ profile }) {
-      // const isAllowedToSignIn = true
-      console.log('profile -- ', profile, ' -- ')
-
-      // if (profile?.email?.endsWith('@8ksec.io')) {
-      //   // if (email) {
-      //   return true
-      // } else {
-      //   return false
-      // };
-      return true
-
-      // if (isAllowedToSignIn) {
-
-      //   return true
-      // } else {
-      //   // Return false to display a default error message
-      //   return false
-
-      //   // Or you can return a URL to redirect to:
-      //   // return '/unauthorized'
-      // }
-    },
     async jwt({ token, user }) {
       if (user) {
         // console.log('user: ', user)
