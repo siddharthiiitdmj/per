@@ -61,7 +61,7 @@ export const authOptions: AuthOptions = {
   debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'jwt',
-    maxAge: 2 * 60 * 60 // ** 30 days
+    maxAge: 30 * 24 * 60 * 60 // ** 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
@@ -70,8 +70,33 @@ export const authOptions: AuthOptions = {
      * the `session()` callback. So we have to add custom parameters in `token`
      * via `jwt()` callback to make them accessible in the `session()` callback
      */
+    async signIn({ profile }) {
+      // const isAllowedToSignIn = true
+      console.log('profile -- ', profile, ' -- ')
+
+      // if (profile?.email?.endsWith('@8ksec.io')) {
+      //   // if (email) {
+      //   return true
+      // } else {
+      //   return false
+      // };
+      return true
+
+      // if (isAllowedToSignIn) {
+
+      //   return true
+      // } else {
+      //   // Return false to display a default error message
+      //   return false
+
+      //   // Or you can return a URL to redirect to:
+      //   // return '/unauthorized'
+      // }
+    },
     async jwt({ token, user }) {
       if (user) {
+        // console.log('user: ', user)
+
         /*
          * For adding custom parameters to user in session, we first need to add those parameters
          * in token which then will be available in the `session()` callback
@@ -89,6 +114,7 @@ export const authOptions: AuthOptions = {
       return token
     },
     async session({ session, token }) {
+      // console.log('session -- .', session)
       if (session.user) {
         // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
         session.user.role = token.role
