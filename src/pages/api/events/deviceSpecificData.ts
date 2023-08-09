@@ -64,7 +64,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           return (
             event.userId.toString().toLowerCase().includes(queryLowered) ||
             event.deviceId.toString().toLowerCase().includes(queryLowered) ||
-            event.OS.toLowerCase().includes(queryLowered) ||
+            event.device.OS.toLowerCase().includes(queryLowered) ||
             event.nodename.toLowerCase().includes(queryLowered)
           )
         }
@@ -72,7 +72,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return (
           event.userId.toString().toLowerCase().includes(queryLowered) ||
           event.deviceId.toString().toLowerCase().includes(queryLowered) ||
-          event.OS.toLowerCase().includes(queryLowered) ||
+          event.device.OS.toLowerCase().includes(queryLowered) ||
           event.nodename.toLowerCase().includes(queryLowered)
         )
       }

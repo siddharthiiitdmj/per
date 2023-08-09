@@ -74,7 +74,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           return (
             event.userId.toString().toLowerCase().includes(queryLowered) ||
             event.deviceId.toString().toLowerCase().includes(queryLowered) ||
-            event.OS.toLowerCase().includes(queryLowered) ||
+            event.device.OS.toLowerCase().includes(queryLowered) ||
             event.nodename.toLowerCase().includes(queryLowered)
           )
         }
@@ -82,21 +82,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return (
           event.userId.toString().toLowerCase().includes(queryLowered) ||
           event.deviceId.toString().toLowerCase().includes(queryLowered) ||
-          event.OS.toLowerCase().includes(queryLowered) ||
+          event.device.OS.toLowerCase().includes(queryLowered) ||
           event.nodename.toLowerCase().includes(queryLowered)
         )
       }
     })
 
     const uniqueUsers = Array.from(new Set(filteredData.map((event: EventsType) => event.userId))).map(userId => {
-      const userEvent = filteredData.find((event: EventsType) => event.userId === userId);
-      
+      const userEvent = filteredData.find((event: EventsType) => event.userId === userId)
+
       return {
         id: userId,
         username: userEvent.username,
         email: userEvent.email
-      };
-    });
+      }
+    })
 
     res.status(200).json({ allData: uniqueUsers, total: uniqueUsers.length })
   } catch (err) {
