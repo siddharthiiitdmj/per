@@ -1,5 +1,6 @@
 // ** React Imports
 import { forwardRef, useEffect, useState } from 'react'
+import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
 
 // ** Next Import
 
@@ -11,6 +12,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { Dialog, DialogContent, DialogTitle, DialogActions, Button } from '@mui/material'
 
 // ** Icon Imports
 
@@ -44,6 +46,8 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 interface CellType {
   row: EventsType
+  setClickedCoordinate?: any
+  setMapModalOpen?: any
 }
 
 interface CustomInputProps {
@@ -220,29 +224,33 @@ const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 230,
-    field: 'Latitude',
-    headerName: 'Latitude',
-    renderCell: ({ row }: CellType) => {
-      const { Latitude } = row
+    field: 'latLong',
+    headerName: 'Lat/Long',
+    renderCell: (props: CellType) => {
+      // renderCell: (props: CellType & { setMapModalOpen: any; setClickedCoordinate: any }) => {
+      // const setMapModalOpen = ()=>{
+      //   console.log("asdf")
+      // }
+      const { row, setMapModalOpen, setClickedCoordinate } = props
+
+      // const { row } = props
+      const { Latitude, Longitude } = row
+
+      // Rounding latitude and longitude values to 6 decimal places
+      const roundedLatitude = parseFloat(Latitude).toFixed(6)
+      const roundedLongitude = parseFloat(Longitude).toFixed(6)
+
+      const handleMapClick = () => {
+        // Set the state to open the map modal and pass the latitude and longitude to the modal
+        setMapModalOpen(true)
+        setClickedCoordinate({ lat: parseFloat(Latitude), lng: parseFloat(Longitude) })
+      }
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Latitude}</Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.2,
-    minWidth: 230,
-    field: 'Longitude',
-    headerName: 'Longitude',
-    renderCell: ({ row }: CellType) => {
-      const { Longitude } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Longitude}</Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            <Button onClick={handleMapClick}>{`(${roundedLatitude}, ${roundedLongitude})`}</Button>
+          </Box>
         </Box>
       )
     }
@@ -327,6 +335,32 @@ interface Props {
   data: any
 }
 
+interface MapModalProps {
+  isOpen: boolean
+  onClose: () => void
+  coordinate: { lat: number; lng: number }
+}
+
+const MapModal: React.FC<MapModalProps> = ({ isOpen, onClose, coordinate }) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose} maxWidth='md' fullWidth>
+      <DialogTitle>Location Map</DialogTitle>
+      <DialogContent>
+        <LoadScript googleMapsApiKey='AIzaSyCfsah35lxjcYxzIq8ip5UW9mzYeEBdk5E'>
+          <GoogleMap mapContainerStyle={{ height: '400px', width: '100%' }} center={coordinate} zoom={10}>
+            <Marker position={coordinate} />
+          </GoogleMap>
+        </LoadScript>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color='primary'>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
 const UserEvents = ({ data }: Props) => {
   // ** State
   const [id] = useState<string>(data)
@@ -361,57 +395,81 @@ const UserEvents = ({ data }: Props) => {
     setEndDateRange(end)
   }
 
+  const [mapModalOpen, setMapModalOpen] = useState(false)
+  const [clickedCoordinate, setClickedCoordinate] = useState({ lat: 0, lng: 0 })
+
+  const handleMapModalClose = () => {
+    setMapModalOpen(false)
+  }
+
   return (
-    <DatePickerWrapper>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
+    <>
+      <MapModal isOpen={mapModalOpen} onClose={handleMapModalClose} coordinate={clickedCoordinate} />
+      <DatePickerWrapper>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
             <Card>
-              <CardContent>
-                <Grid container spacing={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant='h6'>Associated Events</Typography>
+              <Card>
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={6}
+                    sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+                  >
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant='h6'>Associated Events</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <DatePicker
+                        isClearable
+                        selectsRange
+                        monthsShown={2}
+                        endDate={endDateRange}
+                        selected={startDateRange}
+                        startDate={startDateRange}
+                        shouldCloseOnSelect={false}
+                        id='date-range-picker-months'
+                        onChange={handleOnChangeRange}
+                        customInput={
+                          <CustomInput
+                            dates={dates}
+                            setDates={setDates}
+                            label='Event Date'
+                            end={endDateRange as number | Date}
+                            start={startDateRange as number | Date}
+                          />
+                        }
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DatePicker
-                      isClearable
-                      selectsRange
-                      monthsShown={2}
-                      endDate={endDateRange}
-                      selected={startDateRange}
-                      startDate={startDateRange}
-                      shouldCloseOnSelect={false}
-                      id='date-range-picker-months'
-                      onChange={handleOnChangeRange}
-                      customInput={
-                        <CustomInput
-                          dates={dates}
-                          setDates={setDates}
-                          label='Event Date'
-                          end={endDateRange as number | Date}
-                          start={startDateRange as number | Date}
-                        />
+                </CardContent>
+              </Card>
+              {/* <TableHeader value={value} handleFilter={handleFilter} /> */}
+              <DataGrid
+                autoHeight
+                pagination
+                rows={store.allData}
+                columns={columns.map(column =>
+                  column.field === 'latLong'
+                    ? {
+                        ...column,
+                        renderCell: (cellProps: any) =>
+                          column?.renderCell
+                            ? column.renderCell({ ...cellProps, setMapModalOpen, setClickedCoordinate })
+                            : null
                       }
-                    />
-                  </Grid>
-                </Grid>
-              </CardContent>
+                    : column
+                )}
+                disableRowSelectionOnClick
+                pageSizeOptions={[5, 10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+              />
             </Card>
-            {/* <TableHeader value={value} handleFilter={handleFilter} /> */}
-            <DataGrid
-              autoHeight
-              pagination
-              rows={store.allData}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[5, 10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-            />
-          </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </DatePickerWrapper>
+      </DatePickerWrapper>
+    </>
   )
 }
 
