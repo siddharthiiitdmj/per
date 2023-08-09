@@ -24,7 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const lat = latestEvent?.Latitude.toFixed(4) || null
     const lon = latestEvent?.Longitude.toFixed(4) || null
-    const location = lat && lon ? `{${lat}, ${lon}}` : null
+    const location = lat && lon ? `(${lat}, ${lon})` : null
 
     // Check if a user was found
     if (device.length > 0) {

@@ -18,7 +18,7 @@ export const fetchData = createAsyncThunk('appEvents/fetchData', async (params: 
   console.log('params:')
   console.log(params)
 
-  const response = await axios.get(`/api/devices/all?page=${params.page}`, {
+  const response = await axios.get(`/api/devices/all?`, {
     params
   })
 
