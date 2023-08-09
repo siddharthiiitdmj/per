@@ -220,23 +220,8 @@ const columns: GridColDef[] = [
   {
     flex: 0.2,
     minWidth: 230,
-    field: 'Latitude',
-    headerName: 'Latitude',
-    renderCell: ({ row }: CellType) => {
-      const { Latitude } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>{Latitude}</Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.2,
-    minWidth: 230,
     field: 'latLong',
-    headerName: 'Lat/Long',
+    headerName: 'Coordinates',
     renderCell: (props: CellType) => {
       // renderCell: (props: CellType & { setMapModalOpen: any; setClickedCoordinate: any }) => {
       // const setMapModalOpen = ()=>{
