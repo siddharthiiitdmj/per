@@ -3,17 +3,17 @@ import { NextApiRequest, NextApiResponse } from 'next/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { os, startDate, endDate, page } = req.query
+    const { OS, startDate, endDate, page } = req.query
     const rowsPerPage = 10
 
-    console.log('os: ', os)
+    console.log('OS: ', OS)
 
     // Define the filters based on the parameters received
     const filters: any = {}
 
-    if (os && os !== 'All') {
+    if (OS && OS !== 'All') {
       filters.device = {
-        OS: os || undefined
+        OS: OS || undefined
       }
     }
 
