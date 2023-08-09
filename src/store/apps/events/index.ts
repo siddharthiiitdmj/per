@@ -7,8 +7,8 @@ import axios from 'axios'
 interface DataParams {
   OS: string
   q: string
-  startDate: Date
-  endDate: Date
+  startDate?: Date
+  endDate?: Date
   source?: string
   page?: number
 }
