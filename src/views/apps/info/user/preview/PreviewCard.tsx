@@ -9,7 +9,8 @@ import Typography from '@mui/material/Typography'
 
 // ** Types
 import AboutOverview from './AboutOverview'
-import ActivityTimeline from './ActivityTimeline'
+
+// import ActivityTimeline from './ActivityTimeline'
 import UserEvents from './UserEvents'
 import DeviceEvents from './DevicesList'
 
@@ -37,7 +38,7 @@ const PreviewCard = ({ data }: Props) => {
             <Grid sx={{ mb: 7 }}>
               <AboutOverview data={data.data[0]} />
             </Grid>
-            <ActivityTimeline />
+            {/* <ActivityTimeline /> */}
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
             <Grid item xs={12} sx={{ mb: 7 }}>

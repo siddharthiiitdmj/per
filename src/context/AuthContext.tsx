@@ -39,6 +39,8 @@ const AuthProvider = ({ children }: Props) => {
       await getSession()
         .then(Session => {
           setLoading(false)
+
+          // console.log('Session -- ', Session)
           if (Session?.user.role === 'admin') {
             setUser({
               id: 1,
@@ -71,18 +73,25 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = async () => {
-    await signIn('google').then(async res => {
-      if (res && res.ok) {
-        // console.log(res)
-        const session = await getSession()
-        window.localStorage.setItem('userData', JSON.stringify(session?.user) || 'present')
+    await signIn('google')
 
-        // const returnUrl = router.query.returnUrl
-        // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-        router.push('/overview')
-        window.location.reload()
-      }
-    })
+    // console.log('res ---> ', res)
+
+    // .then(async res => {
+    //   if (res && res.ok) {
+    //     console.log('hello', res)
+    //     const session = await getSession()
+    //     window.localStorage.setItem('userData', JSON.stringify(session?.user) || 'present')
+
+    //     // const returnUrl = router.query.returnUrl
+    //     // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+    //     router.push('/overview')
+    //     window.location.reload()
+    //   }
+    // })
+    // .catch(err => {
+    //   console.log('err - ', err)
+    // })
   }
 
   const handleLogout = async () => {
