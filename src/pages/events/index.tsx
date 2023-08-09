@@ -104,10 +104,12 @@ const columns: GridColDef[] = [
     headerName: 'OS',
     renderCell: ({ row }: CellType) => {
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.OS].color } }}>
-          <Icon icon={deviceOSObj[row.OS].icon} fontSize={20} />
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.device.OS].color } }}
+        >
+          <Icon icon={deviceOSObj[row.device.OS].icon} fontSize={20} />
           <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row.OS}
+            {row.device.OS}
           </Typography>
         </Box>
       )
@@ -389,6 +391,8 @@ const EventsList = () => {
   const [endDateRange, setEndDateRange] = useState<DateType>(null)
   const [startDateRange, setStartDateRange] = useState<DateType>(null)
 
+  const [currentPage, setCurrentPage] = useState(1)
+
   // const [IPaddress] = useState<string>('')
   // const [nodename] = useState<string>('')
   // const [deviceId] = useState<string>('')
@@ -418,10 +422,11 @@ const EventsList = () => {
         OS,
         q: value,
         dates,
-        source: 'events'
+        source: 'events',
+        page: currentPage
       })
     )
-  }, [dispatch, OS, value, dates])
+  }, [dispatch, OS, value, dates, currentPage])
 
   const handleOSChange = useCallback((e: SelectChangeEvent) => {
     setOS(e.target.value)
@@ -447,8 +452,8 @@ const EventsList = () => {
     setMapModalOpen(false)
   }
 
-  const [currentPage, setCurrentPage] = useState(0)
-  const totalRows = 200
+  // const [currentPage, setCurrentPage] = useState(0)
+  const totalRows = store.total
 
   // console.log("no of rows :"+store.allData.length);
 
@@ -511,7 +516,7 @@ const EventsList = () => {
               <TableHeader value={value} handleFilter={handleFilter} source='events' />
               <DataGrid
                 autoHeight
-                rows={store.allData.slice(0, 15)}
+                rows={store.currPageData}
                 columns={columns.map(column =>
                   column.field === 'latLong'
                     ? {
@@ -527,14 +532,17 @@ const EventsList = () => {
                 hideFooter
               />
               <Box my={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  {/* <Pagination count={10} shape='rounded'  />
+                {
+                  
+                  /* <Pagination count={10} shape='rounded'  />
                    */
                   <Pagination
-                  count={Math.ceil(totalRows / 10)} // Adjust the count accordingly
-                  shape='rounded'
-                  page={currentPage + 1} // Pagination starts from 1, not 0
-                  onChange={(event, newPage) => setCurrentPage(newPage - 1)}
-                />}
+                    count={Math.ceil(totalRows / 10)} // Adjust the count accordingly
+                    shape='rounded'
+                    page={currentPage} // Pagination starts from 1, not 0
+                    onChange={(event, newPage) => setCurrentPage(newPage)}
+                  />
+                }
                 {/* <div>
                   <button onClick={() => setCurrentPage(Math.max(currentPage - 1, 0))} disabled={currentPage === 0}>
                     Previous

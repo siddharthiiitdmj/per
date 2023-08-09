@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (os && os !== 'All') {
       filters.device = {
-        OS: os
+        OS: os || undefined
       }
     }
 
@@ -47,6 +47,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         where: filters
       })
     ])
+
+    // const events = event.map((event: EventsType & { device: DeviceType }) => ({
+    //   ...event,
+    //   OS: event.device?.OS
+    // }))
 
     // Return the events and total count as a JSON response
     res.status(200).json({ events, totalCount })

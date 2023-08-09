@@ -9,13 +9,16 @@ interface DataParams {
   q: string
   dates?: Date[]
   source?: string
+  page?:number
 }
 
 // ** Fetch Users
 export const fetchData = createAsyncThunk('appEvents/fetchData', async (params: DataParams) => {
-  console.log();
+  console.log("params:");
+  console.log(params);
   
-  const response = await axios.get('/api/events/data', {
+  
+  const response = await axios.get(`/api/devices/all?page=${params.page}`, {
     params
   })
 
@@ -26,13 +29,13 @@ export const appEventsSlice = createSlice({
   name: 'appEvents',
   initialState: {
     total: 1,
-    allData: []
+    currPageData: []
   },
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
-      state.total = action.payload.total
-      state.allData = action.payload.allData
+      state.total = action.payload.totalCount
+      state.currPageData = action.payload.events
     })
   }
 })
