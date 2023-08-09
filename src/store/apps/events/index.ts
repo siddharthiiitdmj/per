@@ -13,6 +13,8 @@ interface DataParams {
 
 // ** Fetch Users
 export const fetchData = createAsyncThunk('appEvents/fetchData', async (params: DataParams) => {
+  console.log();
+  
   const response = await axios.get('/api/events/data', {
     params
   })

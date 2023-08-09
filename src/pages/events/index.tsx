@@ -6,7 +6,7 @@ import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
 import Link from 'next/link'
 
 // ** MUI Imports
-import { Dialog, DialogContent, DialogTitle, DialogActions, Button } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, DialogActions, Button, Pagination } from '@mui/material'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -406,7 +406,7 @@ const EventsList = () => {
   // const [createdAt] = useState<string>('')
   // const [updatedAt] = useState<string>('')
 
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
+  // const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
@@ -446,6 +446,11 @@ const EventsList = () => {
   const handleMapModalClose = () => {
     setMapModalOpen(false)
   }
+
+  const [currentPage, setCurrentPage] = useState(0)
+  const totalRows = 200
+
+  // console.log("no of rows :"+store.allData.length);
 
   return (
     <>
@@ -506,8 +511,7 @@ const EventsList = () => {
               <TableHeader value={value} handleFilter={handleFilter} source='events' />
               <DataGrid
                 autoHeight
-                pagination
-                rows={store.allData}
+                rows={store.allData.slice(0, 15)}
                 columns={columns.map(column =>
                   column.field === 'latLong'
                     ? {
@@ -520,10 +524,32 @@ const EventsList = () => {
                     : column
                 )}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooter
               />
+              <Box my={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  {/* <Pagination count={10} shape='rounded'  />
+                   */
+                  <Pagination
+                  count={Math.ceil(totalRows / 10)} // Adjust the count accordingly
+                  shape='rounded'
+                  page={currentPage + 1} // Pagination starts from 1, not 0
+                  onChange={(event, newPage) => setCurrentPage(newPage - 1)}
+                />}
+                {/* <div>
+                  <button onClick={() => setCurrentPage(Math.max(currentPage - 1, 0))} disabled={currentPage === 0}>
+                    Previous
+                  </button>
+                  <div>
+                    {currentPage}<span>of</span>{Math.ceil(totalRows / 10)}
+                  </div>
+                  <button
+                    onClick={() => setCurrentPage(Math.min(currentPage + 1, Math.ceil(totalRows / 10) - 1))}
+                    disabled={currentPage === Math.ceil(totalRows / 10) - 1}
+                  >
+                    <Icon icon='grommet-icons:next' />
+                  </button>
+                </div> */}
+              </Box>
             </Card>
           </Grid>
         </Grid>
