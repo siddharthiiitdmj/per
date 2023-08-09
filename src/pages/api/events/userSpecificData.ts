@@ -11,9 +11,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { id } = req.query
     const parsedId = parseInt(id as string)
 
-    const { OS = '', q = ''} = req.query ?? ''
-    
-    const dates = req.query['dates[]'];
+    const { OS = '', q = '' } = req.query ?? ''
+
+    const dates = req.query['dates[]']
 
     const queryLowered = (q as any).toLowerCase()
 
@@ -29,13 +29,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         userId: parsedId
       },
       include: {
-        device: { select: { OS: true } },
+        device: { select: { OS: true } }
       }
     })
 
     const formattedEvents = events.map((event: EventsType & { device: DeviceType }) => ({
       ...event,
-      OS: event.device?.OS,
+      OS: event.device?.OS
     }))
 
     const filteredData = formattedEvents.filter((event: EventsType) => {
@@ -62,7 +62,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           return (
             event.userId.toString().toLowerCase().includes(queryLowered) ||
             event.deviceId.toString().toLowerCase().includes(queryLowered) ||
-            event.OS.toLowerCase().includes(queryLowered) ||
+            event.device.OS.toLowerCase().includes(queryLowered) ||
             event.nodename.toLowerCase().includes(queryLowered)
           )
         }
@@ -70,13 +70,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return (
           event.userId.toString().toLowerCase().includes(queryLowered) ||
           event.deviceId.toString().toLowerCase().includes(queryLowered) ||
-          event.OS.toLowerCase().includes(queryLowered) ||
+          event.device.OS.toLowerCase().includes(queryLowered) ||
           event.nodename.toLowerCase().includes(queryLowered)
         )
       }
     })
 
-    res.status(200).json({ allData: filteredData, total: filteredData.length})
+    res.status(200).json({ allData: filteredData, total: filteredData.length })
   } catch (err) {
     res.status(500).send(err)
   }

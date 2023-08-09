@@ -6,7 +6,7 @@ import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
 import Link from 'next/link'
 
 // ** MUI Imports
-import { Dialog, DialogContent, DialogTitle, DialogActions, Button } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, DialogActions, Button, Pagination } from '@mui/material'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -104,10 +104,12 @@ const columns: GridColDef[] = [
     headerName: 'OS',
     renderCell: ({ row }: CellType) => {
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.OS].color } }}>
-          <Icon icon={deviceOSObj[row.OS].icon} fontSize={20} />
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: deviceOSObj[row.device.OS].color } }}
+        >
+          <Icon icon={deviceOSObj[row.device.OS].icon} fontSize={20} />
           <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row.OS}
+            {row.device.OS}
           </Typography>
         </Box>
       )
@@ -389,6 +391,8 @@ const EventsList = () => {
   const [endDateRange, setEndDateRange] = useState<DateType>(null)
   const [startDateRange, setStartDateRange] = useState<DateType>(null)
 
+  const [currentPage, setCurrentPage] = useState(1)
+
   // const [IPaddress] = useState<string>('')
   // const [nodename] = useState<string>('')
   // const [deviceId] = useState<string>('')
@@ -406,7 +410,7 @@ const EventsList = () => {
   // const [createdAt] = useState<string>('')
   // const [updatedAt] = useState<string>('')
 
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
+  // const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
@@ -418,10 +422,11 @@ const EventsList = () => {
         OS,
         q: value,
         dates,
-        source: 'events'
+        source: 'events',
+        page: currentPage
       })
     )
-  }, [dispatch, OS, value, dates])
+  }, [dispatch, OS, value, dates, currentPage])
 
   const handleOSChange = useCallback((e: SelectChangeEvent) => {
     setOS(e.target.value)
@@ -446,6 +451,11 @@ const EventsList = () => {
   const handleMapModalClose = () => {
     setMapModalOpen(false)
   }
+
+  //total number of entries
+  const totalRows = store.total
+
+  // console.log("no of rows :"+store.allData.length);
 
   return (
     <>
@@ -506,8 +516,7 @@ const EventsList = () => {
               <TableHeader value={value} handleFilter={handleFilter} source='events' />
               <DataGrid
                 autoHeight
-                pagination
-                rows={store.allData}
+                rows={store.currPageData}
                 columns={columns.map(column =>
                   column.field === 'latLong'
                     ? {
@@ -520,10 +529,18 @@ const EventsList = () => {
                     : column
                 )}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooter
               />
+              <Box my={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                {
+                  <Pagination
+                    count={Math.ceil(totalRows / 10)} // Adjust the count accordingly
+                    shape='rounded'
+                    page={currentPage} // Pagination starts from 1, not 0
+                    onChange={(event, newPage) => setCurrentPage(newPage)}
+                  />
+                }
+              </Box>
             </Card>
           </Grid>
         </Grid>
