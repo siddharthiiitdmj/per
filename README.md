@@ -20,7 +20,7 @@ yarn prisma studio
 - [x] Implement Pagination for Tables in the API.
 - [x] Fix Loading state bug when trying to open application
 - [ ] Fix bugs related to filter in overview line Chart and Events/Users table.
-- [ ] Make lat/lon field clickable (across entire website) and it should open google maps.
+- [x] Make lat/lon field clickable (across entire website) and it should open google maps.
 - [ ] Add an activity chart in place of activity timeline in Users Detail page
 - [ ] Other UI improvements
 
