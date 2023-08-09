@@ -283,7 +283,8 @@ const EventsList = () => {
       fetchData({
         OS,
         q: value,
-        dates,
+        startDate: dates[0],
+        endDate: dates[1],
         source: 'users',
         page: currentPage
       })
@@ -301,7 +302,7 @@ const EventsList = () => {
   const handleOnChangeRange = (dates: any) => {
     const [start, end] = dates
     if (start !== null && end !== null) {
-      setDates(dates)
+      setDates([start.toISOString(), end.toISOString()])
     }
     setStartDateRange(start)
     setEndDateRange(end)
