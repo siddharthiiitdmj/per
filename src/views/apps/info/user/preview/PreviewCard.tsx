@@ -4,13 +4,14 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import dynamic from 'next/dynamic'
 
 // ** Configs
 
 // ** Types
 import AboutOverview from './AboutOverview'
 
-// import ActivityTimeline from './ActivityTimeline'
+const ActivityMap = dynamic(() => import("./ActivityMap"), { ssr: false });
 import UserEvents from './UserEvents'
 import DeviceEvents from './DevicesList'
 
@@ -38,7 +39,7 @@ const PreviewCard = ({ data }: Props) => {
             <Grid sx={{ mb: 7 }}>
               <AboutOverview data={data.data[0]} />
             </Grid>
-            {/* <ActivityTimeline /> */}
+            <ActivityMap />
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
             <Grid item xs={12} sx={{ mb: 7 }}>
