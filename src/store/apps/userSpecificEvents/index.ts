@@ -6,19 +6,22 @@ import axios from 'axios'
 
 interface DataParams {
   id: string
-  OS: string
-  q: string
+  OS?: string
+  q?: string
   dates?: Date[]
 }
 
 // ** Fetch Users
-export const fetchUserSpecificEventsData = createAsyncThunk('userSpecificEvents/fetchUserSpecificEventsData', async (params: DataParams) => {
-  const response = await axios.get('/api/events/userSpecificData',{
-    params
-  })
+export const fetchUserSpecificEventsData = createAsyncThunk(
+  'userSpecificEvents/fetchUserSpecificEventsData',
+  async (params: DataParams) => {
+    const response = await axios.get('/api/events/userSpecificData', {
+      params
+    })
 
-  return response.data
-})
+    return response.data
+  }
+)
 
 export const userSpecificEventsSlice = createSlice({
   name: 'userSpecificEvents',
