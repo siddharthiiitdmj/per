@@ -5,12 +5,18 @@ import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
+import { useEffect, useState } from 'react'
+import { Button, DialogActions, DialogTitle } from '@mui/material'
+
 interface arrType {
   value: string
   property: string
 }
 
-const renderList = (arr: arrType[]) => {
+const renderList = (arr: arrType[], handleLocationClick: any) => {
   if (arr && arr.length) {
     return arr.map((item, index) => {
       return (
@@ -19,8 +25,16 @@ const renderList = (arr: arrType[]) => {
           sx={{
             display: 'flex',
             '&:not(:last-of-type)': { mb: 4 },
-            '& svg': { color: 'text.secondary' }
+            '& svg': { color: 'text.secondary' },
+            cursor: item.property === 'location' ? 'pointer' : 'default' // Make the location clickable
           }}
+          onClick={
+            item.property === 'location'
+              ? () => handleLocationClick(item.value)
+              : () => {
+                  return
+                }
+          } // Handle location click
         >
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', width: '100%' }}>
             <Typography
@@ -38,11 +52,7 @@ const renderList = (arr: arrType[]) => {
                 color: 'text.secondary'
               }}
             >
-              {typeof item.value === 'string' ? (
-                item.value.charAt(0).toUpperCase() + item.value.slice(1)
-              ) : (
-                item.value
-              )}
+              {typeof item.value === 'string' ? item.value.charAt(0).toUpperCase() + item.value.slice(1) : item.value}
             </Typography>
           </Box>
         </Box>
@@ -64,6 +74,22 @@ interface Props {
 const AboutOverview = ({ data }: Props) => {
   const arr = convertData(data)
 
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [selectedLocation, setSelectedLocation] = useState('')
+
+  const handleLocationClick = (location: string) => {
+    setSelectedLocation(location)
+    setDialogOpen(true)
+  }
+
+  useEffect(() => {
+    console.log('location: ', selectedLocation)
+  }, [selectedLocation])
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false)
+  }
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -73,11 +99,47 @@ const AboutOverview = ({ data }: Props) => {
               <Typography variant='caption' sx={{ mb: 5, display: 'block', textTransform: 'uppercase' }}>
                 Details
               </Typography>
-              {renderList(arr)}
+              {renderList(arr, handleLocationClick)}
             </Box>
           </CardContent>
         </Card>
       </Grid>
+      {/* Google Maps Dialog */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog} fullWidth maxWidth='md'>
+        <DialogTitle>Location Map</DialogTitle>
+        <DialogContent>
+          <LoadScript googleMapsApiKey='AIzaSyCfsah35lxjcYxzIq8ip5UW9mzYeEBdk5E'>
+            <GoogleMap
+              mapContainerStyle={{ width: '100%', height: '400px' }}
+              center={{ lat: 0, lng: 0 }} // Set initial center or provide an actual default location
+              zoom={10} // Set an appropriate zoom level
+            >
+              <Marker position={{ lat: 0, lng: 0 }} /> {/* Set the marker position */}
+            </GoogleMap>
+          </LoadScript>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color='primary'>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* <Dialog open={isOpen} onClose={onClose} maxWidth='md' fullWidth>
+        <DialogTitle>Location Map</DialogTitle>
+        <DialogContent>
+          <LoadScript googleMapsApiKey='AIzaSyCfsah35lxjcYxzIq8ip5UW9mzYeEBdk5E'>
+            <GoogleMap mapContainerStyle={{ height: '400px', width: '100%' }} center={coordinate} zoom={10}>
+              <Marker position={coordinate} />
+            </GoogleMap>
+          </LoadScript>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color='primary'>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog> */}
     </Grid>
   )
 }

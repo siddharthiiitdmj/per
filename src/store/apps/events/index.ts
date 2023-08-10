@@ -7,18 +7,18 @@ import axios from 'axios'
 interface DataParams {
   OS: string
   q: string
-  dates?: Date[]
+  startDate?: Date
+  endDate?: Date
   source?: string
-  page?:number
+  page?: number
 }
 
 // ** Fetch Users
 export const fetchData = createAsyncThunk('appEvents/fetchData', async (params: DataParams) => {
-  console.log("params:");
-  console.log(params);
-  
-  
-  const response = await axios.get(`/api/devices/all?page=${params.page}`, {
+  console.log('params:')
+  console.log(params)
+
+  const response = await axios.get(`/api/devices/all?`, {
     params
   })
 

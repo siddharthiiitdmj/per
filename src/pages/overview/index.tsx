@@ -68,7 +68,8 @@ const ChartJS = () => {
         fetchData({
           OS,
           q: value,
-          dates
+          startDate: new Date(''),
+          endDate: new Date('')
         })
       )
       dispatch(
@@ -115,13 +116,13 @@ const ChartJS = () => {
         </Grid>
         <Grid item xs={12}>
           <ChartjsAreaChart
-           white={whiteColor}
-           red={areaChartRed}
-           labelColor={labelColor}
-           borderColor={borderColor}
-           legendColor={legendColor}
-           blueLight={areaChartBlueLight}
-           greyLight={areaChartGreyLight}
+            white={whiteColor}
+            red={areaChartRed}
+            labelColor={labelColor}
+            borderColor={borderColor}
+            legendColor={legendColor}
+            blueLight={areaChartBlueLight}
+            greyLight={areaChartGreyLight}
           />
         </Grid>
       </Grid>
