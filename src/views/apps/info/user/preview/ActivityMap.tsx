@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Popup, CircleMarker, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Popup, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
 
 import { AppDispatch, RootState } from 'src/store'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,17 +17,17 @@ interface Props {
   data: any
 }
 
+const customIcon = L.icon({
+  iconUrl: '/images/location-icon.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
 const ActivityMap = ({ data }: Props) => {
   const [locationData, setLocationData] = useState([])
   const id = data
 
-  // const position = { lat: 51.505, lng: -0.09 }; // Example initial position
-  // const positions = [
-  //   { lat: 51.505, lng: -0.09 },
-  //   { lat: 52.52, lng: 13.405 },
-  //   { lat: 40.712, lng: -74.006 },
-  //   { lat: 50.434, lng: -23.877 }
-  // ]
 
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.userSpecificEvents)
@@ -56,10 +61,7 @@ const ActivityMap = ({ data }: Props) => {
     }
   }, [store.allData])
 
-  // useEffect(() => {
-  //   // console.log('locationData: ', locationData)
-  //   positions = locationData
-  // }, [locationData])
+
 
   const FitBoundsMap: React.FC = () => {
     const map = useMap()
@@ -75,20 +77,31 @@ const ActivityMap = ({ data }: Props) => {
   }
 
   return (
-    <MapContainer center={locationData[0]} zoom={2} style={{ width: '100%', height: '500px' }}>
-      <TileLayer
-        url='https://a.tile.openstreetmap.org/{z}/{x}/{y}.png?lang=en'
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <FitBoundsMap />
-      {locationData?.map((position, index) => (
-        <CircleMarker key={index} center={position} radius={8} color='blue'>
+    <Card>
+      <Card>
+        <CardContent>
+          <Grid container spacing={6} sx={{ display: 'flex' }}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant='h6'>Recent Locations</Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      <MapContainer center={locationData[0]} zoom={2} style={{ width: '100%', height: '500px' }}>
+        <TileLayer
+          url='https://a.tile.openstreetmap.org/{z}/{x}/{y}.png?lang=en'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <FitBoundsMap />
+        {locationData.map((position, index) => (
+          <Marker key={index} position={position} icon={customIcon}>
           <Popup>
-            Circle marker #{index + 1}. <br /> Easily customizable.
+            Location marker #{index + 1}. <br /> Easily customizable.
           </Popup>
-        </CircleMarker>
+        </Marker>
       ))}
-    </MapContainer>
+      </MapContainer>
+      </Card>
+    </Card>
   )
 }
 
