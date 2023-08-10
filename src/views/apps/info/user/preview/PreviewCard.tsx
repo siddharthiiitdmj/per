@@ -11,15 +11,20 @@ import dynamic from 'next/dynamic'
 // ** Types
 import AboutOverview from './AboutOverview'
 
-const ActivityMap = dynamic(() => import("./ActivityMap"), { ssr: false });
+const ActivityMap = dynamic(() => import('./ActivityMap'), { ssr: false })
 import UserEvents from './UserEvents'
 import DeviceEvents from './DevicesList'
+import { useEffect } from 'react'
 
 interface Props {
   data: any
 }
 
 const PreviewCard = ({ data }: Props) => {
+  useEffect(() => {
+    console.log('myData: ', data.data[0].altUserId)
+  }, [data.data[0].altUserId])
+
   if (data.data[0]) {
     return (
       <>
@@ -39,7 +44,7 @@ const PreviewCard = ({ data }: Props) => {
             <Grid sx={{ mb: 7 }}>
               <AboutOverview data={data.data[0]} />
             </Grid>
-            <ActivityMap />
+            <ActivityMap data={data.data[0].altUserId} />
           </Grid>
           <Grid item lg={6} md={6} xs={12}>
             <Grid item xs={12} sx={{ mb: 7 }}>
