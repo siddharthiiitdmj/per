@@ -30,11 +30,12 @@ const navigation = (): VerticalNavItemsType => {
       path: '/integrations',
       icon: 'grommet-icons:connect'
     },
-    {
-      title: 'Payments',
-      path: '/payments',
-      icon: 'fluent-mdl2:money'
-    },
+    
+    // {
+    //   title: 'Payments',
+    //   path: '/payments',
+    //   icon: 'fluent-mdl2:money'
+    // },
     {
       title: 'Configurations',
       path: '/configurations',
