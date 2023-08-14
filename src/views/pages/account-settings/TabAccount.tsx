@@ -221,16 +221,6 @@ const TabAccount = () => {
                     onChange={e => handleFormChange('lastName', e.target.value)}
                   />
                 </Grid>
-                {/* <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    type='email'
-                    label='Email'
-                    value={formData.email}
-                    placeholder='john.doe@example.com'
-                    onChange={e => handleFormChange('email', e.target.value)}
-                  />
-                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
@@ -296,49 +286,6 @@ const TabAccount = () => {
                     onChange={e => handleFormChange('language', e.target.value)}
                   />
                 </Grid>
-                {/* <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Timezone</InputLabel>
-                    <Select
-                      label='Timezone'
-                      value={formData.timezone}
-                      onChange={e => handleFormChange('timezone', e.target.value)}
-                    >
-                      <MenuItem value='gmt-12'>(GMT-12:00) International Date Line West</MenuItem>
-                      <MenuItem value='gmt-11'>(GMT-11:00) Midway Island, Samoa</MenuItem>
-                      <MenuItem value='gmt-10'>(GMT-10:00) Hawaii</MenuItem>
-                      <MenuItem value='gmt-09'>(GMT-09:00) Alaska</MenuItem>
-                      <MenuItem value='gmt-08'>(GMT-08:00) Pacific Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-08-baja'>(GMT-08:00) Tijuana, Baja California</MenuItem>
-                      <MenuItem value='gmt-07'>(GMT-07:00) Chihuahua, La Paz, Mazatlan</MenuItem>
-                      <MenuItem value='gmt-07-mt'>(GMT-07:00) Mountain Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-06'>(GMT-06:00) Central America</MenuItem>
-                      <MenuItem value='gmt-06-ct'>(GMT-06:00) Central Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-06-mc'>(GMT-06:00) Guadalajara, Mexico City, Monterrey</MenuItem>
-                      <MenuItem value='gmt-06-sk'>(GMT-06:00) Saskatchewan</MenuItem>
-                      <MenuItem value='gmt-05'>(GMT-05:00) Bogota, Lima, Quito, Rio Branco</MenuItem>
-                      <MenuItem value='gmt-05-et'>(GMT-05:00) Eastern Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-05-ind'>(GMT-05:00) Indiana (East)</MenuItem>
-                      <MenuItem value='gmt-04'>(GMT-04:00) Atlantic Time (Canada)</MenuItem>
-                      <MenuItem value='gmt-04-clp'>(GMT-04:00) Caracas, La Paz</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid> */}
-                {/* <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Currency</InputLabel>
-                    <Select
-                      label='Currency'
-                      value={formData.currency}
-                      onChange={e => handleFormChange('currency', e.target.value)}
-                    >
-                      <MenuItem value='usd'>USD</MenuItem>
-                      <MenuItem value='eur'>EUR</MenuItem>
-                      <MenuItem value='pound'>Pound</MenuItem>
-                      <MenuItem value='bitcoin'>Bitcoin</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid> */}
 
                 <Grid item xs={12}>
                   <Button variant='contained' sx={{ mr: 4 }} onClick={onFormSubmit}>
@@ -353,130 +300,6 @@ const TabAccount = () => {
           </form>
         </Card>
       </Grid>
-
-      {/* Delete Account Card */}
-      {/* <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Delete Account' />
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box sx={{ mb: 4 }}>
-                <FormControl>
-                  <Controller
-                    name='checkbox'
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <FormControlLabel
-                        label='I confirm my account deactivation'
-                        sx={errors.checkbox ? { '& .MuiTypography-root': { color: 'error.main' } } : null}
-                        control={
-                          <Checkbox
-                            {...field}
-                            size='small'
-                            name='validation-basic-checkbox'
-                            sx={errors.checkbox ? { color: 'error.main' } : null}
-                          />
-                        }
-                      />
-                    )}
-                  />
-                  {errors.checkbox && (
-                    <FormHelperText sx={{ color: 'error.main' }} id='validation-basic-checkbox'>
-                      Please confirm you want to delete account
-                    </FormHelperText>
-                  )}
-                </FormControl>
-              </Box>
-              <Button variant='contained' color='error' type='submit' disabled={errors.checkbox !== undefined}>
-                Deactivate Account
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </Grid> */}
-
-      {/* Deactivate Account Dialogs */}
-      {/* <Dialog fullWidth maxWidth='xs' open={open} onClose={handleClose}>
-        <DialogContent
-          sx={{
-            pb: theme => `${theme.spacing(6)} !important`,
-            px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              textAlign: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              '& svg': { mb: 6, color: 'warning.main' }
-            }}
-          >
-            <Icon icon='mdi:alert-circle-outline' fontSize='5.5rem' />
-            <Typography>Are you sure you would like to cancel your subscription?</Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            justifyContent: 'center',
-            px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-          }}
-        >
-          <Button variant='contained' sx={{ mr: 2 }} onClick={() => handleConfirmation('yes')}>
-            Yes
-          </Button>
-          <Button variant='outlined' color='secondary' onClick={() => handleConfirmation('cancel')}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog fullWidth maxWidth='xs' open={secondDialogOpen} onClose={handleSecondDialogClose}>
-        <DialogContent
-          sx={{
-            pb: theme => `${theme.spacing(6)} !important`,
-            px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-              '& svg': {
-                mb: 8,
-                color: userInput === 'yes' ? 'success.main' : 'error.main'
-              }
-            }}
-          >
-            <Icon
-              fontSize='5.5rem'
-              icon={userInput === 'yes' ? 'mdi:check-circle-outline' : 'mdi:close-circle-outline'}
-            />
-            <Typography variant='h4' sx={{ mb: 5 }}>
-              {userInput === 'yes' ? 'Deleted!' : 'Cancelled'}
-            </Typography>
-            <Typography>
-              {userInput === 'yes' ? 'Your subscription cancelled successfully.' : 'Unsubscription Cancelled!!'}
-            </Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            justifyContent: 'center',
-            px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-          }}
-        >
-          <Button variant='contained' color='success' onClick={handleSecondDialogClose}>
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </Grid>
   )
 }
