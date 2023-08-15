@@ -15,12 +15,12 @@ To get a lightweight GUI for viewing and editing database tables, run:
 yarn prisma studio
 ```
 
-### This week's goals (Aug 7-11):
+### This week's goals (Aug 14-20):
 
-- [x] Implement Pagination for Tables in the API.
-- [x] Fix Loading state bug when trying to open application
-- [ ] Fix bugs related to filter in overview line Chart and Events/Users table.
-- [x] Make lat/lon field clickable (across entire website) and it should open google maps.
-- [x] Add an activity chart in place of activity timeline in Users Detail page
-- [ ] Other UI improvements
-
+- [x] 1. Design a new database schema according to new fields
+- [ ] 3. Populate the new database with realistic dummy data
+- [ ] 2. Modify the API using which SDK will send data to the database
+- [ ] 4. Change all the APIs across the project according to the new schema
+- [x] 5. Clear codebase and delete unused files.
+- [ ] 6. Add cards showing device statistics on the overview page.
+- [ ] 7. Change the world map showing recent locations of the user in the user Detail page.
