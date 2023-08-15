@@ -25,10 +25,6 @@ import Icon from 'src/@core/components/icon'
 import TabAccount from 'src/views/pages/account-settings/TabAccount'
 import TabSecurity from 'src/views/pages/account-settings/TabSecurity'
 
-// import TabBilling from 'src/views/pages/account-settings/TabBilling'
-// import TabConnections from 'src/views/pages/account-settings/TabConnections'
-// import TabNotifications from 'src/views/pages/account-settings/TabNotifications'
-
 const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   '& .MuiTabs-indicator': {
     display: 'none'
@@ -73,10 +69,6 @@ const AccountSettings = ({ tab }: { tab: string}) => {
   const tabContentList: { [key: string]: ReactElement } = {
     account: <TabAccount />,
     security: <TabSecurity />
-
-    // connections: <TabConnections />,
-    // notifications: <TabNotifications />,
-    // billing: <TabBilling apiPricingPlanData={apiPricingPlanData} />
   }
 
   return (

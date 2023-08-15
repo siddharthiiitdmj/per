@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid'
 // ** Types
 import { ProfileTabType } from 'src/@fake-db/types'
 
-const ProfileTab = ({ data }: { data: ProfileTabType }) => {
+const Profile = ({ data }: { data: ProfileTabType }) => {
   return data && Object.values(data).length ? (
     <Grid container spacing={6}>
       <Grid item lg={4} md={5} xs={12}>
@@ -31,4 +31,4 @@ const ProfileTab = ({ data }: { data: ProfileTabType }) => {
   ) : null
 }
 
-export default ProfileTab
+export default Profile

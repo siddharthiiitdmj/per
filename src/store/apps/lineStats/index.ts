@@ -21,7 +21,8 @@ export const fetchLineStatsData = createAsyncThunk('appLineStats/fetchData', asy
 export const appLineStatsSlice = createSlice({
   name: 'appLineStats',
   initialState: {
-    lineChartData: []
+    lineChartData: [],
+    isLoading:false,
   },
   reducers: {},
   extraReducers: builder => {

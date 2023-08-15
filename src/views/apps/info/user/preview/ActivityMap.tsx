@@ -86,7 +86,7 @@ const ActivityMap = ({ data }: Props) => {
             </Grid>
           </Grid>
         </CardContent>
-      <MapContainer center={locationData[0]} zoom={2} style={{ width: '100%', height: '500px' }}>
+      <MapContainer center={locationData[0]} zoom={2} style={{ width: '100%', height: '400px' }}>
         <TileLayer
           url='https://a.tile.openstreetmap.org/{z}/{x}/{y}.png?lang=en'
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

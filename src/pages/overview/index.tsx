@@ -6,10 +6,17 @@
 import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
+
+// ** Custom Components Imports
+import CardStatisticsVerticalComponent from 'src/@core/components/card-statistics/card-stats-vertical'
+
 // ** Styled Component
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 // ** Demo Components Imports
+import AnalyticsTotalProfit from 'src/views/dashboards/analytics/AnalyticsTotalProfit'
 
 import ChartjsPolarAreaChart from 'src/views/charts/chartjs/ChartjsPolarAreaChart'
 import ApexDonutChart from 'src/views/charts/apex-charts/ApexDonutChart'
@@ -86,6 +93,67 @@ const ChartJS = () => {
   return (
     <DatePickerWrapper>
       <Grid container spacing={6} className='match-height'>
+        <Grid item xs={12} md={6}>
+          <Grid container spacing={6}>
+          <Grid item xs={6}>
+              <CardStatisticsVerticalComponent
+                stats='10.23k'
+                icon={<Icon icon='mdi:poll' />}
+                color='secondary'
+                trendNumber='+42%'
+                title='Total Devices'
+                subtitle='Weekly Devices'
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <CardStatisticsVerticalComponent
+                stats='5.644k'
+                icon={<Icon icon='mdi:poll' />}
+                color='secondary'
+                trendNumber='+42%'
+                title='Total Users'
+                subtitle='Weekly users'
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <AnalyticsTotalProfit />
+            </Grid>
+            <Grid item xs={6}>
+              <AnalyticsTotalProfit />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Grid container spacing={6}>
+            <Grid item xs={6}>
+              <CardStatisticsVerticalComponent
+                stats='4.4k'
+                icon={<Icon icon='mdi:poll' />}
+                color='secondary'
+                trendNumber='+42%'
+                title='New Devices'
+                subtitle='Weekly Devices'
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <CardStatisticsVerticalComponent
+                stats='2.34k'
+                icon={<Icon icon='mdi:poll' />}
+                color='secondary'
+                trendNumber='+42%'
+                title='New Users'
+                subtitle='Weekly users'
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <AnalyticsTotalProfit />
+            </Grid>
+            <Grid item xs={6}>
+              <AnalyticsTotalProfit />
+            </Grid>
+          </Grid>
+        </Grid>
+
         <Grid item xs={12} md={6}>
           <ChartjsPolarAreaChart
             yellow={yellowColor}
