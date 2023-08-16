@@ -97,7 +97,7 @@ const ListWithSwitch = () => {
         return(
           <ListItem key={index} disablePadding>
           <ListItemButton>
-            <ListItemText primary={regionNames.of(item.countryCode)}/>
+            <ListItemText primary={regionNames.of(item.countryCode)+ ' : '+`${item.gdpValue}`}/>
           </ListItemButton>
         </ListItem>
         )
