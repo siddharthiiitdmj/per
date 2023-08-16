@@ -86,7 +86,6 @@ interface CountryGDP {
 const gdpArray: CountryGDP[] = Object.keys(gdpData).map(countryCode => {
   return { countryCode: countryCode, gdpValue: gdpData[countryCode] }
 })
-console.log(gdpArray)
 
 const regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
 

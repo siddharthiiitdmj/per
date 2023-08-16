@@ -99,7 +99,6 @@
     "@types/nprogress": "0.2.0",
     "@types/payment": "2.1.4",
     "@types/prismjs": "1.26.0",
-    "@types/react": "^18.2.20",
     "@types/react-credit-cards": "0.8.1",
     "@types/react-datepicker": "4.11.2",
     "@types/react-draft-wysiwyg": "1.13.4",
@@ -118,6 +117,7 @@
   },
   "resolutions": {
     "minipass": "5.0.0",
+    "@types/react": "^17.0.38",
     "@mui/x-data-grid/@mui/system": "5.12.1",
     "react-credit-cards/prop-types": "15.7.2",
     "react-hot-toast/goober/csstype": "3.1.2",
