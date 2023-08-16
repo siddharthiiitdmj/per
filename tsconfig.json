@@ -36,6 +36,7 @@
     "src",
     "declaration.d.ts",
     "src/types/next-auth.d.ts",
+    "src/types/react-jvectormap.d.ts",
     "helper",
   ],
   "exclude": [

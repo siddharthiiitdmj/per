@@ -1,4 +1,5 @@
 // ** Next Import
+import dynamic from 'next/dynamic'
 
 // import axios from 'axios'
 
@@ -19,7 +20,8 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import AnalyticsTotalProfit from 'src/views/dashboards/analytics/AnalyticsTotalProfit'
 
 import ChartjsPolarAreaChart from 'src/views/charts/chartjs/ChartjsPolarAreaChart'
-import ApexDonutChart from 'src/views/charts/apex-charts/ApexDonutChart'
+
+// import ApexDonutChart from 'src/views/charts/apex-charts/ApexDonutChart'
 
 // ** Third Party Styles Import
 import 'chart.js/auto'
@@ -39,6 +41,9 @@ import { fetchDeviceData } from 'src/store/apps/device'
 import { fetchData } from 'src/store/apps/events'
 import ChartjsBarChart from 'src/views/charts/chartjs/ChartjsBarChart'
 import ChartjsAreaChart from 'src/views/charts/chartjs/ChartjsAreaChart'
+import ListWithSwitch from 'src/views/components/list/ListStickySubheader'
+
+const CountryMap = dynamic(() => import('src/views/charts/maps/CountryMap'), { ssr: false })
 
 // import RechartsLineChart from 'src/views/charts/recharts/RechartsLineChart'
 
@@ -168,8 +173,13 @@ const ChartJS = () => {
         <Grid item xs={12} md={6}>
           <ChartjsBarChart labelColor={labelColor} borderColor={borderColor} />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <ApexDonutChart />
+        <Grid item xs={12} md={8}>
+          {/* <ApexDonutChart />
+           */}
+           <CountryMap/>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <ListWithSwitch/>
         </Grid>
         <Grid item xs={12}>
           <ChartjsLineChart
