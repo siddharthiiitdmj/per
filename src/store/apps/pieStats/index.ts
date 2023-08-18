@@ -21,7 +21,8 @@ export const fetchPieStatsData = createAsyncThunk('appPieStats/fetchData', async
 export const appPieStatsSlice = createSlice({
   name: 'appPieStats',
   initialState: {
-    pieChartData: []
+    pieChartData: [],
+    isLoading:false,
   },
   reducers: {},
   extraReducers: builder => {

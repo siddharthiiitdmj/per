@@ -60,6 +60,8 @@ import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import '../../styles/map.css'
+import '../../styles/customScrollBar.css'
 import { Provider } from 'react-redux'
 import { store } from 'src/store'
 
@@ -130,7 +132,7 @@ const App = (props: ExtendedAppProps) => {
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
-      
+
       <SessionProvider session={pageProps.session}>
       <AuthProvider>
         <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
@@ -153,7 +155,7 @@ const App = (props: ExtendedAppProps) => {
         </SettingsProvider>
         </AuthProvider>
       </SessionProvider>
-      
+
     </CacheProvider>
     </Provider>
   )

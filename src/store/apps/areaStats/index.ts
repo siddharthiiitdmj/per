@@ -22,6 +22,7 @@ export const appAreaStatsSlice = createSlice({
   name: 'appAreaStats',
   initialState: {
     areaChartData: [],
+    isLoading:false,
   },
   reducers: {},
   extraReducers: builder => {
